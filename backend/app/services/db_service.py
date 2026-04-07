@@ -1,207 +1,36 @@
 import csv
 import io
+import json
 import logging
-import os
-import sqlite3
 from datetime import datetime, timezone
+
+from sqlalchemy import select, update, delete
+
+from app.core.database import SessionLocal, engine, get_engine_type
+from app.core.models import Base, Student, Session, OTPCode, Submission
 
 logger = logging.getLogger(__name__)
 
-DB_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
-DB_PATH = os.path.join(DB_DIR, "wp200.db")
-
-
-def _get_db() -> sqlite3.Connection:
-    os.makedirs(DB_DIR, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA foreign_keys=ON")
-    return conn
-
 
 def init_db():
-    """Create all tables if they don't exist."""
-    conn = _get_db()
-    conn.executescript("""
-        CREATE TABLE IF NOT EXISTS students (
-            handle TEXT PRIMARY KEY,
-            student_id TEXT NOT NULL,
-            email TEXT NOT NULL,
-            kanji_name TEXT DEFAULT '',
-            romaji_name TEXT DEFAULT '',
-            registered_at TEXT DEFAULT (datetime('now'))
-        );
-
-        CREATE TABLE IF NOT EXISTS sessions (
-            token TEXT PRIMARY KEY,
-            handle TEXT NOT NULL REFERENCES students(handle),
-            created_at TEXT DEFAULT (datetime('now')),
-            expires_at TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS otp_codes (
-            handle TEXT PRIMARY KEY REFERENCES students(handle),
-            otp TEXT NOT NULL,
-            created_at TEXT DEFAULT (datetime('now')),
-            attempts INTEGER DEFAULT 0
-        );
-
-        CREATE TABLE IF NOT EXISTS submissions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id TEXT NOT NULL,
-            handle TEXT DEFAULT '',
-            assignment_id INTEGER NOT NULL,
-            code TEXT,
-            files_json TEXT,
-            deterministic_results_json TEXT,
-            deterministic_score INTEGER DEFAULT 0,
-            ai_score INTEGER DEFAULT 0,
-            ai_max INTEGER DEFAULT 0,
-            ai_feedback TEXT DEFAULT '',
-            ai_raw_response TEXT DEFAULT '',
-            total_proposed_score INTEGER DEFAULT 0,
-            max_score INTEGER DEFAULT 100,
-            status TEXT DEFAULT 'ai-graded',
-            final_score INTEGER,
-            final_feedback TEXT,
-            published INTEGER DEFAULT 0,
-            submitted_at TEXT DEFAULT (datetime('now')),
-            reviewed_at TEXT
-        );
-
-        CREATE INDEX IF NOT EXISTS idx_submissions_student ON submissions(student_id);
-        CREATE INDEX IF NOT EXISTS idx_submissions_assignment ON submissions(assignment_id);
-        CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status);
-    """)
-    conn.commit()
-    conn.close()
-    logger.info(f"Database initialized at {DB_PATH}")
+    """Create all tables."""
+    Base.metadata.create_all(bind=engine)
+    logger.info(f"Database initialized ({get_engine_type()})")
 
 
 # Initialize on import
 init_db()
 
 
-# ========== Student Registry ==========
-
-def upsert_student(handle: str, student_id: str, email: str,
-                   kanji_name: str = "", romaji_name: str = ""):
-    conn = _get_db()
-    conn.execute("""
-        INSERT INTO students (handle, student_id, email, kanji_name, romaji_name)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(handle) DO UPDATE SET
-            student_id=excluded.student_id,
-            email=excluded.email,
-            kanji_name=excluded.kanji_name,
-            romaji_name=excluded.romaji_name
-    """, (handle, student_id, email, kanji_name, romaji_name))
-    conn.commit()
-    conn.close()
+def _utcnow():
+    return datetime.now(timezone.utc)
 
 
-def get_student(handle: str) -> dict:
-    conn = _get_db()
-    row = conn.execute("SELECT * FROM students WHERE handle = ?", (handle,)).fetchone()
-    conn.close()
-    return dict(row) if row else None
-
-
-def get_all_students() -> list:
-    conn = _get_db()
-    rows = conn.execute("SELECT * FROM students ORDER BY student_id").fetchall()
-    conn.close()
-    return [dict(r) for r in rows]
-
-
-def is_registered(handle: str) -> bool:
-    return get_student(handle) is not None
-
-
-# ========== OTP ==========
-
-def save_otp(handle: str, otp: str):
-    conn = _get_db()
-    conn.execute("""
-        INSERT INTO otp_codes (handle, otp, created_at, attempts)
-        VALUES (?, ?, datetime('now'), 0)
-        ON CONFLICT(handle) DO UPDATE SET
-            otp=excluded.otp, created_at=datetime('now'), attempts=0
-    """, (handle, otp))
-    conn.commit()
-    conn.close()
-
-
-def get_otp(handle: str) -> dict:
-    conn = _get_db()
-    row = conn.execute("SELECT * FROM otp_codes WHERE handle = ?", (handle,)).fetchone()
-    conn.close()
-    return dict(row) if row else None
-
-
-def increment_otp_attempts(handle: str):
-    conn = _get_db()
-    conn.execute("UPDATE otp_codes SET attempts = attempts + 1 WHERE handle = ?", (handle,))
-    conn.commit()
-    conn.close()
-
-
-def delete_otp(handle: str):
-    conn = _get_db()
-    conn.execute("DELETE FROM otp_codes WHERE handle = ?", (handle,))
-    conn.commit()
-    conn.close()
-
-
-# ========== Sessions ==========
-
-def save_session(token: str, handle: str, expires_at: str):
-    conn = _get_db()
-    conn.execute("""
-        INSERT INTO sessions (token, handle, expires_at)
-        VALUES (?, ?, ?)
-    """, (token, handle, expires_at))
-    conn.commit()
-    conn.close()
-
-
-def get_session(token: str) -> dict:
-    conn = _get_db()
-    row = conn.execute("""
-        SELECT s.token, s.handle, s.created_at, s.expires_at,
-               st.student_id, st.romaji_name, st.kanji_name
-        FROM sessions s
-        JOIN students st ON s.handle = st.handle
-        WHERE s.token = ?
-    """, (token,)).fetchone()
-    conn.close()
-    return dict(row) if row else None
-
-
-def delete_session(token: str):
-    conn = _get_db()
-    conn.execute("DELETE FROM sessions WHERE token = ?", (token,))
-    conn.commit()
-    conn.close()
-
-
-def cleanup_expired_sessions():
-    conn = _get_db()
-    conn.execute("DELETE FROM sessions WHERE expires_at < datetime('now')")
-    conn.commit()
-    conn.close()
-
-
-# ========== Submissions ==========
-
-def _serialize_json(data) -> str:
-    import json
+def _json_dumps(data) -> str:
     return json.dumps(data, default=str) if data else ""
 
 
-def _deserialize_json(text: str):
-    import json
+def _json_loads(text: str):
     if not text:
         return None
     try:
@@ -209,6 +38,132 @@ def _deserialize_json(text: str):
     except Exception:
         return None
 
+
+# ========== Students ==========
+
+def upsert_student(handle: str, student_id: str, email: str,
+                   kanji_name: str = "", romaji_name: str = ""):
+    with SessionLocal() as db:
+        existing = db.get(Student, handle)
+        if existing:
+            existing.student_id = student_id
+            existing.email = email
+            existing.kanji_name = kanji_name
+            existing.romaji_name = romaji_name
+        else:
+            db.add(Student(
+                handle=handle, student_id=student_id, email=email,
+                kanji_name=kanji_name, romaji_name=romaji_name,
+            ))
+        db.commit()
+
+
+def get_student(handle: str) -> dict:
+    with SessionLocal() as db:
+        s = db.get(Student, handle)
+        return _student_to_dict(s) if s else None
+
+
+def get_all_students() -> list:
+    with SessionLocal() as db:
+        rows = db.execute(select(Student).order_by(Student.student_id)).scalars().all()
+        return [_student_to_dict(s) for s in rows]
+
+
+def is_registered(handle: str) -> bool:
+    return get_student(handle) is not None
+
+
+def _student_to_dict(s: Student) -> dict:
+    return {
+        "handle": s.handle,
+        "student_id": s.student_id,
+        "email": s.email,
+        "kanji_name": s.kanji_name or "",
+        "romaji_name": s.romaji_name or "",
+    }
+
+
+# ========== OTP ==========
+
+def save_otp(handle: str, otp: str):
+    with SessionLocal() as db:
+        existing = db.get(OTPCode, handle)
+        if existing:
+            existing.otp = otp
+            existing.created_at = _utcnow()
+            existing.attempts = 0
+        else:
+            db.add(OTPCode(handle=handle, otp=otp, created_at=_utcnow(), attempts=0))
+        db.commit()
+
+
+def get_otp(handle: str) -> dict:
+    with SessionLocal() as db:
+        o = db.get(OTPCode, handle)
+        if not o:
+            return None
+        return {
+            "handle": o.handle,
+            "otp": o.otp,
+            "created_at": o.created_at.isoformat() if o.created_at else "",
+            "attempts": o.attempts,
+        }
+
+
+def increment_otp_attempts(handle: str):
+    with SessionLocal() as db:
+        db.execute(update(OTPCode).where(OTPCode.handle == handle).values(attempts=OTPCode.attempts + 1))
+        db.commit()
+
+
+def delete_otp(handle: str):
+    with SessionLocal() as db:
+        db.execute(delete(OTPCode).where(OTPCode.handle == handle))
+        db.commit()
+
+
+# ========== Sessions ==========
+
+def save_session(token: str, handle: str, expires_at: str):
+    with SessionLocal() as db:
+        db.add(Session(
+            token=token, handle=handle,
+            expires_at=datetime.fromisoformat(expires_at),
+        ))
+        db.commit()
+
+
+def get_session(token: str) -> dict:
+    with SessionLocal() as db:
+        sess = db.get(Session, token)
+        if not sess:
+            return None
+        student = db.get(Student, sess.handle)
+        return {
+            "token": sess.token,
+            "handle": sess.handle,
+            "created_at": sess.created_at.isoformat() if sess.created_at else "",
+            "expires_at": sess.expires_at.isoformat() if sess.expires_at else "",
+            "student_id": student.student_id if student else "",
+            "romaji_name": student.romaji_name if student else "",
+            "kanji_name": student.kanji_name if student else "",
+        }
+
+
+def delete_session(token: str):
+    with SessionLocal() as db:
+        db.execute(delete(Session).where(Session.token == token))
+        db.commit()
+
+
+def cleanup_expired_sessions():
+    with SessionLocal() as db:
+        db.execute(delete(Session).where(Session.expires_at < _utcnow()))
+        db.commit()
+
+
+# ========== Submissions ==========
 
 def create_submission(
     student_id: str,
@@ -225,99 +180,78 @@ def create_submission(
     handle: str = "",
 ) -> dict:
     total = deterministic_score + ai_score
-    conn = _get_db()
-    cursor = conn.execute("""
-        INSERT INTO submissions (
-            student_id, handle, assignment_id, code, files_json,
-            deterministic_results_json, deterministic_score,
-            ai_score, ai_max, ai_feedback, ai_raw_response,
-            total_proposed_score, max_score, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ai-graded')
-    """, (
-        student_id, handle, assignment_id, code,
-        _serialize_json(files),
-        _serialize_json(deterministic_results),
-        deterministic_score, ai_score, ai_max,
-        ai_feedback, ai_raw_response, total, max_score,
-    ))
-    submission_id = cursor.lastrowid
-    conn.commit()
-
-    row = conn.execute("SELECT * FROM submissions WHERE id = ?", (submission_id,)).fetchone()
-    conn.close()
-    return _row_to_submission(row)
+    with SessionLocal() as db:
+        sub = Submission(
+            student_id=student_id, handle=handle, assignment_id=assignment_id,
+            code=code, files_json=_json_dumps(files),
+            deterministic_results_json=_json_dumps(deterministic_results),
+            deterministic_score=deterministic_score,
+            ai_score=ai_score, ai_max=ai_max,
+            ai_feedback=ai_feedback, ai_raw_response=ai_raw_response,
+            total_proposed_score=total, max_score=max_score,
+            status="ai-graded",
+        )
+        db.add(sub)
+        db.commit()
+        db.refresh(sub)
+        return _submission_to_dict(sub)
 
 
 def get_submission(submission_id: int) -> dict:
-    conn = _get_db()
-    row = conn.execute("SELECT * FROM submissions WHERE id = ?", (submission_id,)).fetchone()
-    conn.close()
-    return _row_to_submission(row) if row else None
+    with SessionLocal() as db:
+        sub = db.get(Submission, submission_id)
+        return _submission_to_dict(sub) if sub else None
 
 
 def get_submissions_by_student(student_id: str) -> list:
-    conn = _get_db()
-    rows = conn.execute(
-        "SELECT * FROM submissions WHERE student_id = ? ORDER BY submitted_at DESC",
-        (student_id,)
-    ).fetchall()
-    conn.close()
-    return [_row_to_submission(r) for r in rows]
+    with SessionLocal() as db:
+        rows = db.execute(
+            select(Submission).where(Submission.student_id == student_id)
+            .order_by(Submission.submitted_at.desc())
+        ).scalars().all()
+        return [_submission_to_dict(s) for s in rows]
 
 
 def get_published_grades(student_id: str) -> list:
-    conn = _get_db()
-    rows = conn.execute("""
-        SELECT assignment_id, final_score, max_score, final_feedback
-        FROM submissions
-        WHERE student_id = ? AND published = 1
-        ORDER BY assignment_id
-    """, (student_id,)).fetchall()
-    conn.close()
-    return [
-        {
-            "assignment_id": r["assignment_id"],
-            "score": r["final_score"],
-            "max_score": r["max_score"],
-            "feedback": r["final_feedback"],
-        }
-        for r in rows
-    ]
+    with SessionLocal() as db:
+        rows = db.execute(
+            select(Submission)
+            .where(Submission.student_id == student_id, Submission.published == True)
+            .order_by(Submission.assignment_id)
+        ).scalars().all()
+        return [
+            {
+                "assignment_id": s.assignment_id,
+                "score": s.final_score,
+                "max_score": s.max_score,
+                "feedback": s.final_feedback,
+            }
+            for s in rows
+        ]
 
 
 def get_all_submissions(assignment_id: int = None, status: str = None) -> list:
-    conn = _get_db()
-    query = "SELECT * FROM submissions WHERE 1=1"
-    params = []
-    if assignment_id is not None:
-        query += " AND assignment_id = ?"
-        params.append(assignment_id)
-    if status is not None:
-        query += " AND status = ?"
-        params.append(status)
-    query += " ORDER BY submitted_at DESC"
-    rows = conn.execute(query, params).fetchall()
-    conn.close()
-    return [_row_to_submission(r) for r in rows]
+    with SessionLocal() as db:
+        q = select(Submission)
+        if assignment_id is not None:
+            q = q.where(Submission.assignment_id == assignment_id)
+        if status is not None:
+            q = q.where(Submission.status == status)
+        q = q.order_by(Submission.submitted_at.desc())
+        rows = db.execute(q).scalars().all()
+        return [_submission_to_dict(s) for s in rows]
 
 
 def update_submission(submission_id: int, updates: dict) -> dict:
-    conn = _get_db()
-    set_clauses = []
-    params = []
-    for key, val in updates.items():
-        set_clauses.append(f"{key} = ?")
-        params.append(val)
-    params.append(submission_id)
-
-    conn.execute(
-        f"UPDATE submissions SET {', '.join(set_clauses)} WHERE id = ?",
-        params,
-    )
-    conn.commit()
-    row = conn.execute("SELECT * FROM submissions WHERE id = ?", (submission_id,)).fetchone()
-    conn.close()
-    return _row_to_submission(row) if row else None
+    with SessionLocal() as db:
+        sub = db.get(Submission, submission_id)
+        if not sub:
+            return None
+        for key, val in updates.items():
+            setattr(sub, key, val)
+        db.commit()
+        db.refresh(sub)
+        return _submission_to_dict(sub)
 
 
 def review_submission(submission_id: int, final_score: int, final_feedback: str, publish: bool = False) -> dict:
@@ -325,119 +259,129 @@ def review_submission(submission_id: int, final_score: int, final_feedback: str,
         "final_score": final_score,
         "final_feedback": final_feedback,
         "status": "published" if publish else "reviewed",
-        "published": 1 if publish else 0,
-        "reviewed_at": datetime.now(timezone.utc).isoformat(),
+        "published": publish,
+        "reviewed_at": _utcnow(),
     })
 
 
 def publish_submission(submission_id: int) -> dict:
     return update_submission(submission_id, {
         "status": "published",
-        "published": 1,
+        "published": True,
     })
 
 
-def _row_to_submission(row) -> dict:
-    if not row:
+def _submission_to_dict(s: Submission) -> dict:
+    if not s:
         return None
-    d = dict(row)
-    d["files"] = _deserialize_json(d.pop("files_json", ""))
-    d["deterministic_results"] = _deserialize_json(d.pop("deterministic_results_json", ""))
-    d["published"] = bool(d.get("published", 0))
-    return d
+    return {
+        "id": s.id,
+        "student_id": s.student_id,
+        "handle": s.handle or "",
+        "assignment_id": s.assignment_id,
+        "code": s.code,
+        "files": _json_loads(s.files_json),
+        "deterministic_results": _json_loads(s.deterministic_results_json),
+        "deterministic_score": s.deterministic_score,
+        "ai_score": s.ai_score,
+        "ai_max": s.ai_max,
+        "ai_feedback": s.ai_feedback,
+        "ai_raw_response": s.ai_raw_response,
+        "total_proposed_score": s.total_proposed_score,
+        "max_score": s.max_score,
+        "status": s.status,
+        "final_score": s.final_score,
+        "final_feedback": s.final_feedback,
+        "published": bool(s.published),
+        "submitted_at": s.submitted_at.isoformat() if s.submitted_at else "",
+        "reviewed_at": s.reviewed_at.isoformat() if s.reviewed_at else None,
+    }
 
 
 # ========== CSV Export ==========
 
 def export_grades_csv(assignment_id: int = None) -> str:
-    """Export all final grades as CSV. Returns CSV string.
-    Columns: Student ID, Handle, Kanji Name, Romaji Name, Assignment, Score, Max Score, Feedback, Submitted, Reviewed
-    """
-    conn = _get_db()
-    query = """
-        SELECT sub.student_id, sub.handle,
-               COALESCE(st.kanji_name, '') as kanji_name,
-               COALESCE(st.romaji_name, '') as romaji_name,
-               sub.assignment_id, sub.final_score, sub.max_score,
-               sub.final_feedback, sub.submitted_at, sub.reviewed_at
-        FROM submissions sub
-        LEFT JOIN students st ON sub.student_id = st.student_id
-        WHERE sub.published = 1
-    """
-    params = []
-    if assignment_id is not None:
-        query += " AND sub.assignment_id = ?"
-        params.append(assignment_id)
-    query += " ORDER BY sub.student_id, sub.assignment_id"
-
-    rows = conn.execute(query, params).fetchall()
-    conn.close()
+    """Export all published grades as CSV."""
+    with SessionLocal() as db:
+        q = (
+            select(
+                Submission.student_id, Submission.handle, Submission.assignment_id,
+                Submission.final_score, Submission.max_score, Submission.final_feedback,
+                Submission.submitted_at, Submission.reviewed_at,
+                Student.kanji_name, Student.romaji_name,
+            )
+            .outerjoin(Student, Submission.handle == Student.handle)
+            .where(Submission.published == True)
+        )
+        if assignment_id is not None:
+            q = q.where(Submission.assignment_id == assignment_id)
+        q = q.order_by(Submission.student_id, Submission.assignment_id)
+        rows = db.execute(q).all()
 
     output = io.StringIO()
     writer = csv.writer(output)
     writer.writerow([
         "Student ID", "Handle", "Kanji Name", "Romaji Name",
         "Assignment", "Score", "Max Score", "Feedback",
-        "Submitted", "Reviewed"
+        "Submitted", "Reviewed",
     ])
     for r in rows:
         writer.writerow([
-            r["student_id"], r["handle"], r["kanji_name"], r["romaji_name"],
-            r["assignment_id"], r["final_score"], r["max_score"],
-            r["final_feedback"], r["submitted_at"], r["reviewed_at"],
+            r.student_id, r.handle, r.kanji_name or "", r.romaji_name or "",
+            r.assignment_id, r.final_score, r.max_score,
+            r.final_feedback or "",
+            r.submitted_at.isoformat() if r.submitted_at else "",
+            r.reviewed_at.isoformat() if r.reviewed_at else "",
         ])
-
     return output.getvalue()
 
 
 def export_summary_csv() -> str:
-    """Export grade summary: one row per student with all assignment scores.
-    Designed for importing into university course management system.
-    Columns: Student ID, Handle, Kanji Name, Romaji Name, A1, A2, ..., A9, Total, Average
+    """Export grade summary: one row per student, all assignment scores.
+    Designed for university course management system import.
     """
-    conn = _get_db()
-    students = conn.execute("""
-        SELECT DISTINCT sub.student_id, sub.handle,
-               COALESCE(st.kanji_name, '') as kanji_name,
-               COALESCE(st.romaji_name, '') as romaji_name
-        FROM submissions sub
-        LEFT JOIN students st ON sub.student_id = st.student_id
-        WHERE sub.published = 1
-        ORDER BY sub.student_id
-    """).fetchall()
+    with SessionLocal() as db:
+        # Get all students with published grades
+        student_rows = db.execute(
+            select(
+                Submission.student_id, Submission.handle,
+                Student.kanji_name, Student.romaji_name,
+            )
+            .outerjoin(Student, Submission.handle == Student.handle)
+            .where(Submission.published == True)
+            .group_by(Submission.student_id, Submission.handle,
+                      Student.kanji_name, Student.romaji_name)
+            .order_by(Submission.student_id)
+        ).all()
 
-    # Get all published scores per student
-    all_scores = {}
-    rows = conn.execute("""
-        SELECT student_id, assignment_id, final_score, max_score
-        FROM submissions
-        WHERE published = 1
-        ORDER BY student_id, assignment_id
-    """).fetchall()
-    conn.close()
+        # Get all published scores
+        score_rows = db.execute(
+            select(Submission.student_id, Submission.assignment_id, Submission.final_score)
+            .where(Submission.published == True)
+        ).all()
 
-    for r in rows:
-        sid = r["student_id"]
-        if sid not in all_scores:
-            all_scores[sid] = {}
-        all_scores[sid][r["assignment_id"]] = r["final_score"]
+    # Build scores lookup
+    scores = {}
+    for r in score_rows:
+        scores.setdefault(r.student_id, {})[r.assignment_id] = r.final_score
 
     output = io.StringIO()
     writer = csv.writer(output)
+
     header = ["Student ID", "Handle", "Kanji Name", "Romaji Name"]
     for i in range(1, 10):
         header.append(f"A{i}")
     header.extend(["Total", "Average"])
     writer.writerow(header)
 
-    for s in students:
-        sid = s["student_id"]
-        scores = all_scores.get(sid, {})
-        row = [sid, s["handle"], s["kanji_name"], s["romaji_name"]]
+    for s in student_rows:
+        sid = s.student_id
+        student_scores = scores.get(sid, {})
+        row = [sid, s.handle, s.kanji_name or "", s.romaji_name or ""]
         total = 0
         count = 0
         for i in range(1, 10):
-            score = scores.get(i, "")
+            score = student_scores.get(i, "")
             row.append(score)
             if score != "":
                 total += score
@@ -447,3 +391,18 @@ def export_summary_csv() -> str:
         writer.writerow(row)
 
     return output.getvalue()
+
+
+def get_db_info() -> dict:
+    """Return database type and stats."""
+    engine_type = get_engine_type()
+    with SessionLocal() as db:
+        student_count = db.query(Student).count()
+        submission_count = db.query(Submission).count()
+        published_count = db.query(Submission).filter(Submission.published == True).count()
+    return {
+        "engine": engine_type,
+        "students": student_count,
+        "submissions": submission_count,
+        "published_grades": published_count,
+    }

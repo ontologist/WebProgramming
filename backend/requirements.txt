@@ -10,6 +10,10 @@ langchain-community==0.0.10
 chromadb==0.4.18
 ollama==0.1.7
 
+# Database
+sqlalchemy>=2.0.23
+psycopg2-binary>=2.9.9
+
 # HTTP client
 httpx>=0.25.0
 

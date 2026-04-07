@@ -129,20 +129,37 @@ async def export_summary(_user: str = Depends(verify_instructor)):
 
 @router.get("/export/db")
 async def export_database(_user: str = Depends(verify_instructor)):
-    """Download the entire SQLite database file as a backup."""
-    import os
-    db_path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "wp200.db")
-    if not os.path.exists(db_path):
-        raise HTTPException(status_code=404, detail="Database file not found")
+    """Download a database backup. SQLite: raw .db file. PostgreSQL: pg_dump SQL."""
+    import subprocess
+    from app.core.database import get_engine_type, SQLITE_PATH
 
-    with open(db_path, "rb") as f:
-        content = f.read()
-
-    return Response(
-        content=content,
-        media_type="application/x-sqlite3",
-        headers={"Content-Disposition": "attachment; filename=wp200_backup.db"},
-    )
+    if get_engine_type() == "sqlite":
+        import os
+        if not os.path.exists(SQLITE_PATH):
+            raise HTTPException(status_code=404, detail="Database file not found")
+        with open(SQLITE_PATH, "rb") as f:
+            content = f.read()
+        return Response(
+            content=content,
+            media_type="application/x-sqlite3",
+            headers={"Content-Disposition": "attachment; filename=wp200_backup.db"},
+        )
+    else:
+        # PostgreSQL: use pg_dump
+        try:
+            result = subprocess.run(
+                ["pg_dump", settings.DATABASE_URL, "--no-owner", "--no-acl"],
+                capture_output=True, text=True, timeout=60,
+            )
+            if result.returncode != 0:
+                raise HTTPException(status_code=500, detail=f"pg_dump failed: {result.stderr[:200]}")
+            return Response(
+                content=result.stdout,
+                media_type="application/sql",
+                headers={"Content-Disposition": "attachment; filename=wp200_backup.sql"},
+            )
+        except FileNotFoundError:
+            raise HTTPException(status_code=500, detail="pg_dump not found. Install PostgreSQL client tools.")
 
 
 @router.get("/rubrics")

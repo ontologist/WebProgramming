@@ -63,14 +63,17 @@ async def root():
 async def health():
     from app.services.ollama_service import ollama_service
     from app.services.rag_service import rag_service
+    from app.services.db_service import get_db_info
 
     ollama_ok = await ollama_service.health_check()
     rag_info = rag_service.get_collection_info()
+    db_info = get_db_info()
 
     return {
         "status": "ok" if ollama_ok else "degraded",
         "ollama": {"connected": ollama_ok, "model": settings.OLLAMA_MODEL},
         "rag": rag_info,
+        "database": db_info,
     }
 
 
