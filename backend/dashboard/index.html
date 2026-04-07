@@ -137,6 +137,12 @@
     <div class="container">
         <div class="stats" id="stats"></div>
 
+        <div class="filters" style="margin-bottom: 10px;">
+            <button onclick="exportCSV('summary')" style="background: #10b981;">📥 Export Grade Summary (CSV)</button>
+            <button onclick="exportCSV('grades')" style="background: #7c3aed;">📥 Export All Grades (CSV)</button>
+            <button onclick="exportDB()" style="background: #6b7280;">💾 Backup Database (.db)</button>
+        </div>
+
         <div class="filters">
             <select id="filterAssignment" onchange="loadSubmissions()">
                 <option value="">All Assignments</option>
@@ -340,6 +346,33 @@
 
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function exportCSV(type) {
+            const url = apiUrl + '/instructor/export/' + type;
+            const a = document.createElement('a');
+            a.href = url;
+            // Need auth header - use fetch + blob
+            fetch(url, { headers: { 'Authorization': authHeader } })
+                .then(r => r.blob())
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    a.href = blobUrl;
+                    a.download = type === 'summary' ? 'wp200_grade_summary.csv' : 'wp200_grades.csv';
+                    a.click();
+                    URL.revokeObjectURL(blobUrl);
+                });
+        }
+
+        function exportDB() {
+            fetch(apiUrl + '/instructor/export/db', { headers: { 'Authorization': authHeader } })
+                .then(r => r.blob())
+                .then(blob => {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'wp200_backup_' + new Date().toISOString().slice(0,10) + '.db';
+                    a.click();
+                });
         }
 
         function escapeHtml(text) {

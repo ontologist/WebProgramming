@@ -144,10 +144,10 @@ async def list_students(_auth: bool = Depends(verify_instructor)):
             {
                 "student_id": s["student_id"],
                 "handle": s["handle"],
-                "email": s["email"],
+                "email": s.get("email", ""),
                 "kanji_name": s.get("kanji_name", ""),
                 "romaji_name": s.get("romaji_name", ""),
             }
-            for s in students.values()
+            for s in students
         ],
     }

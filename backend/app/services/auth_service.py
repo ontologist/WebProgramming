@@ -1,7 +1,5 @@
 import csv
-import json
 import logging
-import os
 import random
 import smtplib
 import string
@@ -10,37 +8,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 from app.core.config import settings
+from app.services import db_service
 
 logger = logging.getLogger(__name__)
-
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
-STUDENTS_FILE = os.path.join(DATA_DIR, "students.json")
-OTP_FILE = os.path.join(DATA_DIR, "otp_store.json")
-SESSIONS_FILE = os.path.join(DATA_DIR, "sessions.json")
 
 EMAIL_DOMAIN = "kwansei.ac.jp"
 OTP_EXPIRY_MINUTES = 10
 SESSION_EXPIRY_DAYS = 30
-
-
-def _ensure_data():
-    os.makedirs(DATA_DIR, exist_ok=True)
-    for filepath in [STUDENTS_FILE, OTP_FILE, SESSIONS_FILE]:
-        if not os.path.exists(filepath):
-            with open(filepath, "w") as f:
-                json.dump({} if filepath != SESSIONS_FILE else {}, f)
-
-
-def _load_json(filepath: str) -> dict:
-    _ensure_data()
-    with open(filepath, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def _save_json(filepath: str, data: dict):
-    _ensure_data()
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
 
 # ========== Student Registry ==========
@@ -49,12 +23,10 @@ def load_students_from_csv(csv_path: str) -> int:
     """Load students from CSV file.
     Expected columns: Student ID, Handle, Kanji Last, Kanji First, Romaji Last, Romaji First
     """
-    students = {}
     count = 0
-
     with open(csv_path, "r", encoding="utf-8-sig") as f:
         reader = csv.reader(f)
-        header = next(reader, None)  # skip header row
+        next(reader, None)  # skip header
 
         for row in reader:
             if len(row) < 6:
@@ -70,107 +42,63 @@ def load_students_from_csv(csv_path: str) -> int:
             if not student_id or not handle:
                 continue
 
-            students[handle] = {
-                "student_id": student_id,
-                "handle": handle,
-                "email": f"{handle}@{EMAIL_DOMAIN}",
-                "kanji_name": f"{kanji_last} {kanji_first}",
-                "romaji_name": f"{romaji_last} {romaji_first}",
-            }
+            db_service.upsert_student(
+                handle=handle,
+                student_id=student_id,
+                email=f"{handle}@{EMAIL_DOMAIN}",
+                kanji_name=f"{kanji_last} {kanji_first}",
+                romaji_name=f"{romaji_last} {romaji_first}",
+            )
             count += 1
 
-    _save_json(STUDENTS_FILE, students)
     logger.info(f"Loaded {count} students from CSV")
     return count
 
 
-def load_students_from_data(rows: list) -> int:
-    """Load students from list of dicts (API upload)."""
-    students = _load_json(STUDENTS_FILE)
-    count = 0
-
-    for row in rows:
-        handle = row.get("handle", "").strip().lower()
-        student_id = row.get("student_id", "").strip()
-        if not handle or not student_id:
-            continue
-
-        students[handle] = {
-            "student_id": student_id,
-            "handle": handle,
-            "email": f"{handle}@{EMAIL_DOMAIN}",
-            "kanji_name": f"{row.get('kanji_last', '')} {row.get('kanji_first', '')}".strip(),
-            "romaji_name": f"{row.get('romaji_last', '')} {row.get('romaji_first', '')}".strip(),
-        }
-        count += 1
-
-    _save_json(STUDENTS_FILE, students)
-    logger.info(f"Loaded {count} students via API")
-    return count
-
-
 def get_student(handle: str) -> dict:
-    handle = handle.strip().lower()
-    students = _load_json(STUDENTS_FILE)
-    return students.get(handle)
+    return db_service.get_student(handle.strip().lower())
 
 
-def get_all_students() -> dict:
-    return _load_json(STUDENTS_FILE)
+def get_all_students() -> list:
+    return db_service.get_all_students()
 
 
 def is_registered(handle: str) -> bool:
-    return get_student(handle) is not None
+    return db_service.is_registered(handle.strip().lower())
 
 
 # ========== OTP Management ==========
 
-def _generate_otp() -> str:
-    return "".join(random.choices(string.digits, k=6))
-
-
 def create_otp(handle: str) -> str:
-    """Generate and store a 6-digit OTP for the given handle."""
-    otp_store = _load_json(OTP_FILE)
-    otp = _generate_otp()
-    otp_store[handle] = {
-        "otp": otp,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "attempts": 0,
-    }
-    _save_json(OTP_FILE, otp_store)
+    otp = "".join(random.choices(string.digits, k=6))
+    db_service.save_otp(handle, otp)
     return otp
 
 
 def verify_otp(handle: str, otp: str) -> bool:
-    """Verify OTP for the given handle. Returns True if valid."""
-    otp_store = _load_json(OTP_FILE)
-    entry = otp_store.get(handle)
-
+    entry = db_service.get_otp(handle)
     if not entry:
         return False
 
     # Check expiry
     created = datetime.fromisoformat(entry["created_at"])
-    if datetime.now(timezone.utc) - created > timedelta(minutes=OTP_EXPIRY_MINUTES):
-        del otp_store[handle]
-        _save_json(OTP_FILE, otp_store)
+    # SQLite stores as naive UTC, so compare accordingly
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    if isinstance(created, datetime) and created.tzinfo:
+        created = created.replace(tzinfo=None)
+    if (now - created) > timedelta(minutes=OTP_EXPIRY_MINUTES):
+        db_service.delete_otp(handle)
         return False
 
-    # Check max attempts
+    # Max attempts
     if entry["attempts"] >= 5:
-        del otp_store[handle]
-        _save_json(OTP_FILE, otp_store)
+        db_service.delete_otp(handle)
         return False
 
-    # Increment attempts
-    entry["attempts"] += 1
-    _save_json(OTP_FILE, otp_store)
+    db_service.increment_otp_attempts(handle)
 
     if entry["otp"] == otp.strip():
-        # Valid - clean up
-        del otp_store[handle]
-        _save_json(OTP_FILE, otp_store)
+        db_service.delete_otp(handle)
         return True
 
     return False
@@ -203,7 +131,6 @@ def _build_otp_email_html(name: str, otp: str) -> str:
 
 
 async def send_otp_email(handle: str, otp: str) -> bool:
-    """Send OTP email. Uses Cloudflare Email Workers if configured, otherwise SMTP."""
     email = f"{handle}@{EMAIL_DOMAIN}"
     student = get_student(handle)
     name = student.get("romaji_name", handle) if student else handle
@@ -212,28 +139,19 @@ async def send_otp_email(handle: str, otp: str) -> bool:
     body_html = _build_otp_email_html(name, otp)
     body_text = f"Your WP-200 verification code is: {otp}\nExpires in {OTP_EXPIRY_MINUTES} minutes."
 
-    # Try Cloudflare Email Workers first
     if settings.CLOUDFLARE_EMAIL_WORKER_URL:
         return await _send_via_cloudflare(email, subject, body_html, body_text)
 
-    # Fallback to SMTP
     return _send_via_smtp(email, subject, body_html, body_text)
 
 
 async def _send_via_cloudflare(email: str, subject: str, body_html: str, body_text: str) -> bool:
-    """Send email via Cloudflare Email Worker."""
     import httpx
-
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 settings.CLOUDFLARE_EMAIL_WORKER_URL,
-                json={
-                    "to": email,
-                    "subject": subject,
-                    "html": body_html,
-                    "text": body_text,
-                },
+                json={"to": email, "subject": subject, "html": body_html, "text": body_text},
                 headers={
                     "Authorization": f"Bearer {settings.CLOUDFLARE_EMAIL_API_KEY}",
                     "Content-Type": "application/json",
@@ -242,16 +160,14 @@ async def _send_via_cloudflare(email: str, subject: str, body_html: str, body_te
             if response.status_code == 200:
                 logger.info(f"OTP email sent via Cloudflare to {email}")
                 return True
-            else:
-                logger.error(f"Cloudflare email failed: {response.status_code} {response.text}")
-                return False
+            logger.error(f"Cloudflare email failed: {response.status_code} {response.text}")
+            return False
     except Exception as e:
         logger.error(f"Cloudflare email error: {e}")
         return False
 
 
 def _send_via_smtp(email: str, subject: str, body_html: str, body_text: str) -> bool:
-    """Send email via SMTP (fallback)."""
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = settings.SMTP_FROM or settings.SMTP_USERNAME
@@ -274,46 +190,36 @@ def _send_via_smtp(email: str, subject: str, body_html: str, body_text: str) -> 
 # ========== Session Management ==========
 
 def create_session(handle: str) -> str:
-    """Create a session token for authenticated user."""
-    sessions = _load_json(SESSIONS_FILE)
     token = "".join(random.choices(string.ascii_letters + string.digits, k=48))
-
-    student = get_student(handle)
-    sessions[token] = {
-        "handle": handle,
-        "student_id": student["student_id"] if student else "",
-        "name": student.get("romaji_name", handle) if student else handle,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "expires_at": (datetime.now(timezone.utc) + timedelta(days=SESSION_EXPIRY_DAYS)).isoformat(),
-    }
-    _save_json(SESSIONS_FILE, sessions)
+    expires_at = (datetime.now(timezone.utc) + timedelta(days=SESSION_EXPIRY_DAYS)).isoformat()
+    db_service.save_session(token, handle, expires_at)
     return token
 
 
 def validate_session(token: str) -> dict:
-    """Validate session token. Returns session data or None."""
     if not token:
         return None
 
-    sessions = _load_json(SESSIONS_FILE)
-    session = sessions.get(token)
-
+    session = db_service.get_session(token)
     if not session:
         return None
 
     # Check expiry
     expires = datetime.fromisoformat(session["expires_at"])
-    if datetime.now(timezone.utc) > expires:
-        del sessions[token]
-        _save_json(SESSIONS_FILE, sessions)
+    now = datetime.now(timezone.utc)
+    if expires.tzinfo is None:
+        now = now.replace(tzinfo=None)
+    if now > expires:
+        db_service.delete_session(token)
         return None
 
-    return session
+    return {
+        "handle": session["handle"],
+        "student_id": session["student_id"],
+        "name": session.get("romaji_name", session["handle"]),
+        "kanji_name": session.get("kanji_name", ""),
+    }
 
 
 def invalidate_session(token: str):
-    """Remove a session token."""
-    sessions = _load_json(SESSIONS_FILE)
-    if token in sessions:
-        del sessions[token]
-        _save_json(SESSIONS_FILE, sessions)
+    db_service.delete_session(token)

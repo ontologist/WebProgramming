@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 import secrets
@@ -97,6 +98,51 @@ async def publish_submission(
 
     updated = db_service.publish_submission(submission_id)
     return {"message": "Grade published", "submission": updated}
+
+
+@router.get("/export/grades")
+async def export_grades(
+    assignment_id: int = None,
+    _user: str = Depends(verify_instructor),
+):
+    """Export published grades as CSV (one row per submission)."""
+    csv_data = db_service.export_grades_csv(assignment_id)
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=wp200_grades.csv"},
+    )
+
+
+@router.get("/export/summary")
+async def export_summary(_user: str = Depends(verify_instructor)):
+    """Export grade summary as CSV (one row per student, all assignments).
+    Designed for importing into the university course management system.
+    """
+    csv_data = db_service.export_summary_csv()
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=wp200_grade_summary.csv"},
+    )
+
+
+@router.get("/export/db")
+async def export_database(_user: str = Depends(verify_instructor)):
+    """Download the entire SQLite database file as a backup."""
+    import os
+    db_path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "wp200.db")
+    if not os.path.exists(db_path):
+        raise HTTPException(status_code=404, detail="Database file not found")
+
+    with open(db_path, "rb") as f:
+        content = f.read()
+
+    return Response(
+        content=content,
+        media_type="application/x-sqlite3",
+        headers={"Content-Disposition": "attachment; filename=wp200_backup.db"},
+    )
 
 
 @router.get("/rubrics")
