@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+# Unauthorized copying, modification, or distribution of this file is prohibited.
 import logging
 
 from app.services.ollama_service import ollama_service

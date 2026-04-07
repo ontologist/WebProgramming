@@ -1,3 +1,6 @@
+<!-- Copyright (c) 2026 Yuri Tijerino. All rights reserved. -->
+<!-- Unauthorized copying, modification, or distribution of this file is prohibited. -->
+
 # WP-200 Weekly Curriculum
 
 ## Phase 1: HTML & CSS Foundations

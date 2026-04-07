@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+# Unauthorized copying, modification, or distribution of this file is prohibited.
 """
 Database engine setup. Uses PostgreSQL if available, falls back to SQLite.
 """

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+# Unauthorized copying, modification, or distribution of this file is prohibited.
 """
 Script to load course documents into ChromaDB for RAG.
 

@@ -1,4 +1,6 @@
 @echo off
+REM Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+REM Unauthorized copying, modification, or distribution of this file is prohibited.
 REM ============================================================
 REM WP-200 Daily Backup - Windows Task Scheduler Setup
 REM ============================================================

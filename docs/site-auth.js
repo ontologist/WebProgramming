@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+ * Unauthorized copying, modification, or distribution of this file is prohibited.
+ */
 // WP-200 Site Authentication
 // Requires student handle + OTP email verification to access course content
 

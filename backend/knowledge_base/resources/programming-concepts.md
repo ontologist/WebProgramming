@@ -1,3 +1,6 @@
+<!-- Copyright (c) 2026 Yuri Tijerino. All rights reserved. -->
+<!-- Unauthorized copying, modification, or distribution of this file is prohibited. -->
+
 # Programming Concepts Reference for WP-200
 
 ## Session 4: Variables and Data Types

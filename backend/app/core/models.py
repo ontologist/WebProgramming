@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+# Unauthorized copying, modification, or distribution of this file is prohibited.
 from datetime import datetime, timezone
 
 from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, ForeignKey
