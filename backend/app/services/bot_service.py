@@ -59,10 +59,13 @@ class BotService:
         # Build system prompt with RAG context
         system_prompt = SYSTEM_PROMPT
 
-        if language == "ja":
-            system_prompt += "\n\nPlease respond primarily in Japanese (日本語で回答してください)."
-        else:
-            system_prompt += "\n\nPlease respond primarily in English."
+        language_instructions = {
+            "ja": "\n\nPlease respond primarily in Japanese (日本語で回答してください).",
+            "zh": "\n\nPlease respond primarily in Chinese (请用中文回答).",
+            "ko": "\n\nPlease respond primarily in Korean (한국어로 답변해 주세요).",
+            "es": "\n\nPlease respond primarily in Spanish (Por favor responde en español).",
+        }
+        system_prompt += language_instructions.get(language, "\n\nPlease respond primarily in English.")
 
         # Retrieve relevant context from knowledge base
         context_used = False

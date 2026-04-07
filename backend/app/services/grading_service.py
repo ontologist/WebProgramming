@@ -246,7 +246,7 @@ def _has_file_or_content(files: dict, code_lower: str, keywords: list) -> bool:
     return any(kw in code_lower for kw in keywords)
 
 
-async def ai_evaluate(assignment_id: int, code: str, files: dict = None, deterministic_results: list = None) -> dict:
+async def ai_evaluate(assignment_id: int, code: str, files: dict = None, deterministic_results: list = None, language: str = "en") -> dict:
     """Use AI to evaluate code quality against rubric criteria."""
     rubric = ASSIGNMENT_RUBRICS.get(assignment_id)
     if not rubric:
@@ -265,6 +265,9 @@ async def ai_evaluate(assignment_id: int, code: str, files: dict = None, determi
     if len(all_code) > 15000:
         all_code = all_code[:15000] + "\n... (truncated)"
 
+    language_names = {"en": "English", "ja": "Japanese", "zh": "Chinese", "ko": "Korean", "es": "Spanish"}
+    feedback_lang = language_names.get(language, "English")
+
     prompt = f"""You are grading a student's Assignment {assignment_id}: {rubric['name']} for a Web Programming course.
 The students are beginners with no prior programming experience.
 
@@ -281,7 +284,7 @@ Student's submitted code:
 
 Provide your evaluation in exactly this format:
 AI_SCORE: [number out of {ai_max}]
-FEEDBACK: [2-4 sentences of constructive feedback in English, then the same in Japanese]
+FEEDBACK: [2-4 sentences of constructive feedback in {feedback_lang}]
 BREAKDOWN:
 {chr(10).join(f'- {c}: [score]' for c in rubric['ai_criteria'])}
 """

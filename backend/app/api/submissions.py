@@ -11,6 +11,7 @@ class SubmissionRequest(BaseModel):
     assignment_id: int
     code: str = None
     files: dict = None  # {filename: content}
+    language: str = "en"  # en, ja, zh, ko, es
 
 
 class SubmissionResponse(BaseModel):
@@ -36,7 +37,7 @@ async def submit_assignment(request: SubmissionRequest):
 
     # Run AI evaluation
     ai_result = await grading_service.ai_evaluate(
-        request.assignment_id, request.code, request.files, det_results
+        request.assignment_id, request.code, request.files, det_results, request.language
     )
 
     # Save submission

@@ -142,24 +142,43 @@ class WP200BotChat {
         } catch (error) {
             console.error('Chat error:', error);
 
+            const errorMessages = {
+                mixed_content: {
+                    en: 'Cannot connect to HTTP API from HTTPS page (mixed content blocked).',
+                    ja: 'セキュリティ上の理由により、HTTPSページからHTTP APIに接続できません。',
+                    zh: '无法从HTTPS页面连接到HTTP API（混合内容被阻止）。',
+                    ko: 'HTTPS 페이지에서 HTTP API에 연결할 수 없습니다 (혼합 콘텐츠 차단).',
+                    es: 'No se puede conectar a la API HTTP desde una página HTTPS (contenido mixto bloqueado).'
+                },
+                connection: {
+                    en: 'Cannot connect to API server. Please ensure the backend server is running at ' + this.apiUrl,
+                    ja: 'APIサーバーに接続できません。バックエンドサーバーが起動しているか確認してください。',
+                    zh: '无法连接到API服务器。请确保后端服务器正在运行。',
+                    ko: 'API 서버에 연결할 수 없습니다. 백엔드 서버가 실행 중인지 확인하세요.',
+                    es: 'No se puede conectar al servidor API. Asegúrese de que el servidor backend esté en ejecución.'
+                },
+                generic: {
+                    en: 'An error occurred: ',
+                    ja: 'エラーが発生しました: ',
+                    zh: '发生错误: ',
+                    ko: '오류가 발생했습니다: ',
+                    es: 'Se produjo un error: '
+                }
+            };
+            const lang = this.currentLanguage;
+
             let errorMessage = '';
             if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
                 const isHttps = window.location.protocol === 'https:';
                 const apiIsHttp = this.apiUrl.startsWith('http://');
 
                 if (isHttps && apiIsHttp) {
-                    errorMessage = this.currentLanguage === 'ja'
-                        ? 'セキュリティ上の理由により、HTTPSページからHTTP APIに接続できません。'
-                        : 'Cannot connect to HTTP API from HTTPS page (mixed content blocked).';
+                    errorMessage = (errorMessages.mixed_content[lang] || errorMessages.mixed_content.en);
                 } else {
-                    errorMessage = this.currentLanguage === 'ja'
-                        ? 'APIサーバーに接続できません。バックエンドサーバーが起動しているか確認してください。'
-                        : 'Cannot connect to API server. Please ensure the backend server is running at ' + this.apiUrl;
+                    errorMessage = (errorMessages.connection[lang] || errorMessages.connection.en);
                 }
             } else {
-                errorMessage = this.currentLanguage === 'ja'
-                    ? 'エラーが発生しました: ' + error.message
-                    : 'An error occurred: ' + error.message;
+                errorMessage = (errorMessages.generic[lang] || errorMessages.generic.en) + error.message;
             }
 
             this.addMessageToUI('system', errorMessage);
@@ -216,11 +235,13 @@ class WP200BotChat {
         const sendButton = document.getElementById('bot-send-btn');
         const messageInput = document.getElementById('bot-message-input');
 
+        const sendLabels = { en: 'Send', ja: '送信', zh: '发送', ko: '전송', es: 'Enviar' };
+        const sendingLabels = { en: 'Sending...', ja: '送信中...', zh: '发送中...', ko: '전송 중...', es: 'Enviando...' };
         if (sendButton) {
             sendButton.disabled = loading;
             sendButton.textContent = loading
-                ? (this.currentLanguage === 'ja' ? '送信中...' : 'Sending...')
-                : (this.currentLanguage === 'ja' ? '送信' : 'Send');
+                ? (sendingLabels[this.currentLanguage] || sendingLabels.en)
+                : (sendLabels[this.currentLanguage] || sendLabels.en);
         }
 
         if (messageInput) {
@@ -253,9 +274,11 @@ class WP200BotChat {
     }
 
     clearConversation() {
-        if (confirm(this.currentLanguage === 'ja'
-            ? '会話履歴をクリアしますか？'
-            : 'Clear conversation history?')) {
+        const clearPrompts = {
+            en: 'Clear conversation history?', ja: '会話履歴をクリアしますか？',
+            zh: '清除对话记录？', ko: '대화 기록을 삭제하시겠습니까?', es: '¿Borrar historial de conversación?'
+        };
+        if (confirm(clearPrompts[this.currentLanguage] || clearPrompts.en)) {
             this.conversationHistory = [];
             this.saveConversationHistory();
             const messagesContainer = document.getElementById('bot-messages');

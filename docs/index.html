@@ -5,70 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WP-200: Web Programming - Spring 2026</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
     <script src="bot-chat.js" defer></script>
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>💻 WP-200: Web Programming</h1>
-            <p class="subtitle">15-Week Web Development Course | ウェブ・プログラミング</p>
-            <p class="instructor">Instructor: Tijerino Y.A. | School of Policy Studies / 総合政策学部</p>
+            <h1 data-i18n="site-title">💻 WP-200: Web Programming</h1>
+            <p class="subtitle" data-i18n="site-subtitle">15-Week Web Development Course</p>
+            <p class="instructor" data-i18n="site-instructor">Instructor: Tijerino Y.A. | School of Policy Studies</p>
         </div>
     </header>
 
     <nav class="main-nav">
         <div class="container">
-            <a href="#overview">Overview / 概要</a>
-            <a href="#curriculum">Curriculum / カリキュラム</a>
-            <a href="#bot-portal">WP Bot / ボット</a>
-            <a href="#submissions">Submissions / 提出</a>
-            <a href="#resources">Resources / リソース</a>
+            <a href="#overview" data-i18n="nav-overview">Overview</a>
+            <a href="#curriculum" data-i18n="nav-curriculum">Curriculum</a>
+            <a href="#bot-portal" data-i18n="nav-bot">WP Bot</a>
+            <a href="#submissions" data-i18n="nav-submissions">Submissions</a>
+            <a href="#resources" data-i18n="nav-resources">Resources</a>
+            <select id="language-selector" style="padding: 5px 10px; border-radius: 5px; border: 1px solid var(--border-color); font-size: 0.9rem; cursor: pointer;">
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="zh">中文</option>
+                <option value="ko">한국어</option>
+                <option value="es">Español</option>
+            </select>
         </div>
     </nav>
 
     <main class="container">
         <!-- Overview Section -->
         <section id="overview" class="section">
-            <h2>Course Overview / コース概要</h2>
+            <h2 data-i18n="overview-title">Course Overview</h2>
             <div class="overview-grid">
                 <div class="overview-card">
-                    <h3>📚 Duration / 期間</h3>
-                    <p>15 weeks (Spring Semester)<br>15週間（春学期）</p>
-                    <p>Tuesday Period 2<br>火曜２時限</p>
+                    <h3 data-i18n="overview-duration-title">📚 Duration</h3>
+                    <p data-i18n="overview-duration-text">15 weeks (Spring Semester)<br>Tuesday Period 2</p>
                 </div>
                 <div class="overview-card">
-                    <h3>🎯 Target Audience / 対象者</h3>
-                    <p>Second-year students<br>2年生</p>
-                    <p>No prior programming experience required<br>プログラミング経験不要</p>
+                    <h3 data-i18n="overview-audience-title">🎯 Target Audience</h3>
+                    <p data-i18n="overview-audience-text">Second-year students<br>No prior programming experience required</p>
                 </div>
                 <div class="overview-card">
-                    <h3>🛠️ Tools / ツール</h3>
-                    <p>HTML5, CSS3, JavaScript<br>Canvas API, VS Code</p>
-                    <p>Browser Developer Tools<br>GitHub</p>
+                    <h3 data-i18n="overview-tools-title">🛠️ Tools</h3>
+                    <p data-i18n="overview-tools-text">HTML5, CSS3, JavaScript<br>Canvas API, VS Code<br>Browser Developer Tools</p>
                 </div>
             </div>
 
             <div class="course-description">
-                <h3>What You'll Learn / 学習内容</h3>
-                <p><strong>English:</strong> Starting from zero programming experience, you will learn web development by building a complete Breakout game. The course progresses from HTML/CSS fundamentals through procedural JavaScript to object-oriented programming, with each session introducing one new concept that produces a visible result in your game.</p>
-                <p><strong>日本語:</strong> プログラミング経験ゼロから始め、ブロック崩しゲームの構築を通じてWeb開発を学びます。HTML/CSSの基礎から手続き型JavaScript、そしてオブジェクト指向プログラミングへと段階的に進み、毎回の授業で1つの新しい概念を学び、ゲームに目に見える変化をもたらします。</p>
+                <h3 data-i18n="overview-learn-title">What You'll Learn</h3>
+                <p data-i18n="overview-learn-desc">Starting from zero programming experience, you will learn web development by building a complete Breakout game.</p>
                 <ul>
-                    <li><strong>Phase 1 - HTML & CSS Foundations (Sessions 1-3):</strong> Build a personal website using semantic HTML5 and CSS3 styling</li>
-                    <li><strong>Phase 2 - Procedural JavaScript (Sessions 4-9):</strong> Learn programming fundamentals by building a Breakout game from an empty canvas</li>
-                    <li><strong>Phase 3 - Object-Oriented JavaScript (Sessions 10-13):</strong> Refactor the game using classes, encapsulation, and modularization</li>
-                    <li><strong>Phase 4 - Presentation & Review (Sessions 14-15):</strong> Showcase your game and reflect on skills learned</li>
+                    <li data-i18n="overview-phase1"><strong>Phase 1 - HTML & CSS Foundations (Sessions 1-3):</strong> Build a personal website using semantic HTML5 and CSS3 styling</li>
+                    <li data-i18n="overview-phase2"><strong>Phase 2 - Procedural JavaScript (Sessions 4-9):</strong> Learn programming fundamentals by building a Breakout game from an empty canvas</li>
+                    <li data-i18n="overview-phase3"><strong>Phase 3 - Object-Oriented JavaScript (Sessions 10-13):</strong> Refactor the game using classes, encapsulation, and modularization</li>
+                    <li data-i18n="overview-phase4"><strong>Phase 4 - Presentation & Review (Sessions 14-15):</strong> Showcase your game and reflect on skills learned</li>
                 </ul>
-                <p class="milestone">🎮 <strong>Game tutorial inspired by:</strong> <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">MDN 2D Breakout Game using Pure JavaScript</a></p>
+                <p class="milestone"><span data-i18n="overview-mdn-credit">🎮 <strong>Game tutorial inspired by:</strong></span> <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">MDN 2D Breakout Game using Pure JavaScript</a></p>
             </div>
         </section>
 
         <!-- Curriculum Section -->
         <section id="curriculum" class="section">
-            <h2>📅 Weekly Curriculum / 週別カリキュラム</h2>
+            <h2 data-i18n="curriculum-title">📅 Weekly Curriculum</h2>
 
             <!-- Phase 1: HTML & CSS Foundations (Sessions 1-3) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 1: HTML & CSS Foundations (Sessions 1-3) | HTML & CSS 基礎</h3>
+                <h3 class="phase-title" data-i18n="phase1-title">Phase 1: HTML & CSS Foundations (Sessions 1-3)</h3>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
@@ -128,8 +132,8 @@
 
             <!-- Phase 2: Procedural JavaScript (Sessions 4-9) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 2: Procedural JavaScript - Building a Breakout Game (Sessions 4-9) | 手続き型JavaScript - ブロック崩しゲーム開発</h3>
-                <p style="margin-bottom: 20px; color: var(--text-light);">Based on <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">MDN 2D Breakout Game Tutorial</a> | MDNブロック崩しチュートリアルに基づく</p>
+                <h3 class="phase-title" data-i18n="phase2-title">Phase 2: Procedural JavaScript - Building a Breakout Game (Sessions 4-9)</h3>
+                <p style="margin-bottom: 20px; color: var(--text-light);"><span data-i18n="phase2-mdn-note">Based on</span> <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">MDN 2D Breakout Game Tutorial</a></p>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
@@ -246,7 +250,7 @@
 
             <!-- Phase 3: Object-Oriented JavaScript (Sessions 10-13) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 3: Object-Oriented JavaScript (Sessions 10-13) | オブジェクト指向JavaScript</h3>
+                <h3 class="phase-title" data-i18n="phase3-title">Phase 3: Object-Oriented JavaScript (Sessions 10-13)</h3>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
@@ -323,7 +327,7 @@
 
             <!-- Phase 4: Presentation & Review (Sessions 14-15) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 4: Presentation & Review (Sessions 14-15) | 発表とまとめ</h3>
+                <h3 class="phase-title" data-i18n="phase4-title">Phase 4: Presentation & Review (Sessions 14-15)</h3>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
@@ -360,30 +364,32 @@
 
         <!-- Bot Portal Section -->
         <section id="bot-portal" class="section">
-            <h2>🤖 WP-200 Bot Portal / ボットポータル</h2>
+            <h2 data-i18n="bot-title">🤖 WP-200 Bot Portal</h2>
 
             <div class="bot-chat-container">
                 <div class="bot-chat-header">
-                    <h3>💬 WP-200 Course Bot / WP-200コースボット</h3>
+                    <h3 data-i18n="bot-chat-title">💬 WP-200 Course Bot</h3>
                     <div class="bot-chat-controls">
                         <label for="bot-language-toggle">Language:</label>
                         <select id="bot-language-toggle">
                             <option value="en">English</option>
                             <option value="ja">日本語</option>
+                            <option value="zh">中文</option>
+                            <option value="ko">한국어</option>
+                            <option value="es">Español</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="bot-messages" id="bot-messages">
                     <div class="bot-message bot-message-assistant">
-                        <div class="bot-message-content bot-message-welcome">
+                        <div class="bot-message-content bot-message-welcome" data-i18n="bot-welcome">
                             <strong>WP-200 Bot:</strong>
                             Welcome! I'm your Web Programming course assistant. I can help you with:
                             <br>- Course content and assignments
                             <br>- HTML, CSS, and JavaScript questions
                             <br>- Game development guidance
                             <br>- Additional learning resources
-                            <br><br>ようこそ！ウェブプログラミングのコースアシスタントです。授業内容、課題、HTML/CSS/JavaScriptの質問にお答えします。
                         </div>
                     </div>
                 </div>
@@ -396,37 +402,36 @@
                 </div>
 
                 <div class="bot-chat-input-container">
-                    <textarea id="bot-message-input" class="bot-message-input" placeholder="Ask a question about the course... / コースについて質問してください..." rows="2"></textarea>
-                    <button id="bot-send-btn" class="btn btn-primary bot-send-btn">Send</button>
+                    <textarea id="bot-message-input" class="bot-message-input" data-i18n-placeholder="bot-placeholder" placeholder="Ask a question about the course..." rows="2"></textarea>
+                    <button id="bot-send-btn" class="btn btn-primary bot-send-btn" data-i18n="bot-send">Send</button>
                 </div>
 
                 <div class="bot-chat-footer">
-                    <small>Powered by Ollama | <a href="#" onclick="window.wp200BotChat && window.wp200BotChat.clearConversation(); return false;">Clear conversation / 会話をクリア</a></small>
+                    <small>Powered by Ollama | <a href="#" onclick="window.wp200BotChat && window.wp200BotChat.clearConversation(); return false;" data-i18n="bot-clear">Clear conversation</a></small>
                 </div>
             </div>
         </section>
 
         <!-- Submissions Section -->
         <section id="submissions" class="section">
-            <h2>📤 Assignment Submissions / 課題提出</h2>
+            <h2 data-i18n="submissions-title">📤 Assignment Submissions</h2>
 
             <div class="course-description">
-                <h3>Submit Your Work / 課題を提出する</h3>
-                <p>Select your assignment and paste your code below. The system will run automated checks and provide AI-assisted feedback. Your instructor will review and publish your final grade.</p>
-                <p>課題を選択し、コードを以下に貼り付けてください。自動チェックとAIによるフィードバックが提供されます。最終成績は講師が確認後に公開されます。</p>
+                <h3 data-i18n="btn-submit">Submit Your Work</h3>
+                <p data-i18n="submissions-desc">Select your assignment and paste your code below. The system will run automated checks and provide AI-assisted feedback. Your instructor will review and publish your final grade.</p>
             </div>
 
             <div class="submission-form" style="margin-top: 20px;">
                 <div class="overview-card" style="text-align: left;">
                     <div style="margin-bottom: 15px;">
-                        <label for="student-id" style="font-weight: bold; display: block; margin-bottom: 5px;">Student ID / 学生番号:</label>
+                        <label for="student-id" style="font-weight: bold; display: block; margin-bottom: 5px;" data-i18n="label-student-id">Student ID:</label>
                         <input type="text" id="student-id" placeholder="e.g., 29024001" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label for="assignment-select" style="font-weight: bold; display: block; margin-bottom: 5px;">Assignment / 課題:</label>
+                        <label for="assignment-select" style="font-weight: bold; display: block; margin-bottom: 5px;" data-i18n="label-assignment">Assignment:</label>
                         <select id="assignment-select" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
-                            <option value="">-- Select Assignment / 課題を選択 --</option>
+                            <option value="" data-i18n="label-select-assignment">-- Select Assignment --</option>
                             <option value="1">Assignment 1: MySite HTML Pages</option>
                             <option value="2">Assignment 2: CSS Styling</option>
                             <option value="3">Assignment 3: Canvas Drawing</option>
@@ -440,16 +445,16 @@
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label for="code-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Your Code / コード:</label>
+                        <label for="code-input" style="font-weight: bold; display: block; margin-bottom: 5px;" data-i18n="label-your-code">Your Code:</label>
                         <textarea id="code-input" rows="15" placeholder="Paste your HTML/CSS/JavaScript code here..." style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; resize: vertical;"></textarea>
                     </div>
 
                     <div style="margin-bottom: 15px;">
-                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Or upload files / ファイルをアップロード:</label>
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;" data-i18n="label-upload-files">Or upload files:</label>
                         <input type="file" id="file-upload" multiple accept=".html,.htm,.css,.js" style="width: 100%; padding: 10px; border: 2px dashed var(--border-color); border-radius: 5px;">
                     </div>
 
-                    <button id="submit-btn" class="btn btn-accent" style="width: 100%; padding: 15px; font-size: 1.1rem;" onclick="submitAssignment()">Submit Assignment / 課題を提出</button>
+                    <button id="submit-btn" class="btn btn-accent" style="width: 100%; padding: 15px; font-size: 1.1rem;" onclick="submitAssignment()" data-i18n="btn-submit">Submit Assignment</button>
 
                     <div id="submission-result" style="margin-top: 20px; display: none;"></div>
                 </div>
@@ -458,12 +463,12 @@
             <!-- Published Grades Section -->
             <div style="margin-top: 30px;">
                 <div class="overview-card" style="text-align: left;">
-                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">📊 My Grades / 成績確認</h3>
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;" data-i18n="grades-title">📊 My Grades</h3>
                     <div style="margin-bottom: 15px;">
-                        <label for="grade-student-id" style="font-weight: bold; display: block; margin-bottom: 5px;">Student ID / 学生番号:</label>
+                        <label for="grade-student-id" style="font-weight: bold; display: block; margin-bottom: 5px;" data-i18n="label-student-id">Student ID:</label>
                         <input type="text" id="grade-student-id" placeholder="e.g., 29024001" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
                     </div>
-                    <button class="btn btn-primary" style="width: 100%;" onclick="viewGrades()">View Published Grades / 公開済み成績を表示</button>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="viewGrades()" data-i18n="btn-view-grades">View Published Grades</button>
                     <div id="grades-display" style="margin-top: 15px;"></div>
                 </div>
             </div>
@@ -471,10 +476,10 @@
 
         <!-- Resources Section -->
         <section id="resources" class="section">
-            <h2>📚 Resources / リソース</h2>
+            <h2 data-i18n="resources-title">📚 Resources</h2>
             <div class="resources-grid">
                 <div class="resource-section">
-                    <h3>MDN Tutorial / MDNチュートリアル</h3>
+                    <h3 data-i18n="resources-mdn">MDN Tutorial</h3>
                     <ul>
                         <li><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">2D Breakout Game (Pure JavaScript)</a></li>
                         <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">HTML Reference</a></li>
@@ -484,7 +489,7 @@
                     </ul>
                 </div>
                 <div class="resource-section">
-                    <h3>Self-Study / 自習教材</h3>
+                    <h3 data-i18n="resources-selfstudy">Self-Study</h3>
                     <ul>
                         <li><a href="https://www.w3schools.com/html/" target="_blank">W3Schools HTML Tutorial</a></li>
                         <li><a href="https://www.w3schools.com/css/" target="_blank">W3Schools CSS Tutorial</a></li>
@@ -493,7 +498,7 @@
                     </ul>
                 </div>
                 <div class="resource-section">
-                    <h3>Development Tools / 開発ツール</h3>
+                    <h3 data-i18n="resources-tools">Development Tools</h3>
                     <ul>
                         <li><a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a></li>
                         <li>Browser Developer Tools (F12)</li>
@@ -501,12 +506,11 @@
                     </ul>
                 </div>
                 <div class="resource-section">
-                    <h3>AI Policy / AI活用方針</h3>
+                    <h3 data-i18n="resources-ai-policy">AI Policy</h3>
                     <ul>
-                        <li><strong>AI use is required</strong> in this course</li>
-                        <li>AI is a complementary tool under instructor supervision</li>
-                        <li>All use must comply with university AI policies</li>
-                        <li>本授業ではAIの使用を必須とします</li>
+                        <li data-i18n="ai-required"><strong>AI use is required</strong> in this course</li>
+                        <li data-i18n="ai-complementary">AI is a complementary tool under instructor supervision</li>
+                        <li data-i18n="ai-comply">All use must comply with university AI policies</li>
                     </ul>
                 </div>
             </div>
@@ -514,23 +518,20 @@
 
         <!-- Assessment Section -->
         <section id="assessment" class="section">
-            <h2>📊 Assessment / 評価</h2>
+            <h2 data-i18n="assessment-title">📊 Assessment</h2>
             <div class="course-description">
-                <h3>Grading / 成績評価</h3>
+                <h3 data-i18n="assessment-grading">Grading</h3>
                 <ul>
-                    <li><strong>100% - Continuous Assessment:</strong> Attendance, discussion participation, individual assignments (9 assignments throughout the course), and online quizzes</li>
+                    <li data-i18n="assessment-breakdown"><strong>100% - Continuous Assessment:</strong> Attendance, discussion participation, individual assignments (9 assignments throughout the course), and online quizzes</li>
                 </ul>
-                <p><strong>出席、ディスカッション参加、個人課題（全9回）、オンラインクイズ等。</strong></p>
-                <p><strong>Course Format:</strong> Face-to-face classes with live Zoom broadcast for students with online permission. All classes are recorded and available on Luna. Individual work only - no group projects.</p>
-                <p><strong>授業方法:</strong> 対面授業形式。オンライン許可の学生にはZoomでライブ配信。全授業はLunaで録画視聴可能。個人課題のみ。</p>
+                <p data-i18n="assessment-format"><strong>Course Format:</strong> Face-to-face classes with live Zoom broadcast for students with online permission. All classes are recorded and available on Luna. Individual work only - no group projects.</p>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2026 Kwansei Gakuin University - School of Policy Studies. All rights reserved.</p>
-            <p>著作権 &copy; 2026 関西学院大学 総合政策学部. 無断転載を禁じます。</p>
+            <p data-i18n="footer-copyright">&copy; 2026 Kwansei Gakuin University - School of Policy Studies. All rights reserved.</p>
         </div>
     </footer>
 
@@ -597,7 +598,8 @@
                         student_id: studentId,
                         assignment_id: parseInt(assignmentId),
                         code: codeInput || null,
-                        files: Object.keys(files).length > 0 ? files : null
+                        files: Object.keys(files).length > 0 ? files : null,
+                        language: (typeof i18n !== 'undefined' ? i18n.currentLang : 'en')
                     })
                 });
 
