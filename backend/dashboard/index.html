@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WP-200 Instructor Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #1f2937; }
+
+        .login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .login-box {
+            background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            text-align: center; max-width: 400px; width: 90%;
+        }
+        .login-box h2 { margin-bottom: 20px; color: #2563eb; }
+        .login-box input {
+            width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #e5e7eb;
+            border-radius: 8px; font-size: 1rem;
+        }
+        .login-box button {
+            width: 100%; padding: 12px; background: #2563eb; color: white;
+            border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
+        }
+        .login-box button:hover { background: #1d4ed8; }
+
+        header {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white; padding: 20px 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        header h1 { font-size: 1.5rem; }
+        header button { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        .filters {
+            display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;
+        }
+        .filters select, .filters button {
+            padding: 10px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 0.95rem;
+        }
+        .filters button { background: #2563eb; color: white; border: none; cursor: pointer; }
+        .filters button:hover { background: #1d4ed8; }
+
+        .stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px; margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white; padding: 20px; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center;
+        }
+        .stat-card .number { font-size: 2rem; font-weight: bold; color: #2563eb; }
+        .stat-card .label { color: #6b7280; font-size: 0.9rem; margin-top: 5px; }
+
+        table {
+            width: 100%; background: white; border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-collapse: collapse; overflow: hidden;
+        }
+        th { background: #f9fafb; padding: 12px 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #e5e7eb; font-size: 0.85rem; }
+        td { padding: 12px 15px; border-bottom: 1px solid #f3f4f6; font-size: 0.9rem; }
+        tr:hover { background: #f9fafb; }
+
+        .status-badge {
+            padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+        }
+        .status-ai-graded { background: #fef3c7; color: #92400e; }
+        .status-reviewed { background: #dbeafe; color: #1e40af; }
+        .status-published { background: #d1fae5; color: #065f46; }
+
+        .action-btn {
+            padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer;
+            font-size: 0.8rem; font-weight: 500;
+        }
+        .btn-review { background: #2563eb; color: white; }
+        .btn-publish { background: #10b981; color: white; }
+        .btn-view { background: #6b7280; color: white; }
+
+        /* Detail Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 500;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white; border-radius: 12px; max-width: 900px; width: 95%;
+            max-height: 90vh; overflow-y: auto; padding: 30px;
+        }
+        .modal h2 { margin-bottom: 20px; color: #2563eb; }
+        .modal pre {
+            background: #1f2937; color: #d1d5db; padding: 15px; border-radius: 8px;
+            overflow-x: auto; font-size: 0.85rem; max-height: 300px; overflow-y: auto;
+        }
+        .modal .check-list { list-style: none; padding: 0; }
+        .modal .check-list li { padding: 6px 0; }
+        .modal .check-pass { color: #059669; }
+        .modal .check-fail { color: #dc2626; }
+
+        .review-form { margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb; }
+        .review-form label { display: block; font-weight: 600; margin-bottom: 5px; margin-top: 15px; }
+        .review-form input, .review-form textarea {
+            width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem;
+        }
+        .review-form textarea { min-height: 100px; resize: vertical; font-family: inherit; }
+        .review-form .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .review-form button {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500;
+        }
+        .review-form .btn-save { background: #2563eb; color: white; }
+        .review-form .btn-save-publish { background: #10b981; color: white; }
+        .review-form .btn-cancel { background: #6b7280; color: white; }
+    </style>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-box">
+            <h2>WP-200 Instructor Dashboard</h2>
+            <p style="margin-bottom: 20px; color: #6b7280;">Enter your credentials to access the grading dashboard.</p>
+            <input type="password" id="loginPassword" placeholder="Password" onkeypress="if(event.key==='Enter') login()">
+            <button onclick="login()">Login</button>
+            <p id="loginError" style="color: #dc2626; margin-top: 10px; display: none;">Invalid password</p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <header>
+        <h1>WP-200 Instructor Dashboard</h1>
+        <button onclick="logout()">Logout</button>
+    </header>
+
+    <div class="container">
+        <div class="stats" id="stats"></div>
+
+        <div class="filters">
+            <select id="filterAssignment" onchange="loadSubmissions()">
+                <option value="">All Assignments</option>
+                <option value="1">1: MySite HTML</option>
+                <option value="2">2: CSS Styling</option>
+                <option value="3">3: Canvas Drawing</option>
+                <option value="4">4: Ball Animation</option>
+                <option value="5">5: Paddle & Input</option>
+                <option value="6">6: Brick Field</option>
+                <option value="7">7: Complete Game</option>
+                <option value="8">8: Ball Class</option>
+                <option value="9">9: Full OOP</option>
+            </select>
+            <select id="filterStatus" onchange="loadSubmissions()">
+                <option value="">All Statuses</option>
+                <option value="ai-graded">Needs Review</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="published">Published</option>
+            </select>
+            <button onclick="loadSubmissions()">Refresh</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student</th>
+                    <th>Assignment</th>
+                    <th>Auto Score</th>
+                    <th>AI Score</th>
+                    <th>Proposed Total</th>
+                    <th>Final Score</th>
+                    <th>Status</th>
+                    <th>Submitted</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="submissionsTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Detail/Review Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal" id="modalContent"></div>
+    </div>
+
+    <script>
+        let apiUrl = '';
+        let authHeader = '';
+
+        function getApiBase() {
+            const loc = window.location;
+            // Dashboard is served at /dashboard, API is at same host
+            return loc.protocol + '//' + loc.host + '/api';
+        }
+
+        function login() {
+            const password = document.getElementById('loginPassword').value;
+            authHeader = 'Basic ' + btoa('instructor:' + password);
+            apiUrl = getApiBase();
+
+            fetch(apiUrl + '/instructor/submissions', { headers: { 'Authorization': authHeader } })
+                .then(r => {
+                    if (r.ok) {
+                        document.getElementById('loginOverlay').style.display = 'none';
+                        localStorage.setItem('wp200_auth', authHeader);
+                        loadSubmissions();
+                    } else {
+                        document.getElementById('loginError').style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('loginError').style.display = 'block';
+                    document.getElementById('loginError').textContent = 'Cannot connect to server';
+                });
+        }
+
+        function logout() {
+            localStorage.removeItem('wp200_auth');
+            location.reload();
+        }
+
+        // Auto-login if stored
+        (function() {
+            const saved = localStorage.getItem('wp200_auth');
+            if (saved) {
+                authHeader = saved;
+                apiUrl = getApiBase();
+                fetch(apiUrl + '/instructor/submissions', { headers: { 'Authorization': authHeader } })
+                    .then(r => {
+                        if (r.ok) {
+                            document.getElementById('loginOverlay').style.display = 'none';
+                            loadSubmissions();
+                        }
+                    });
+            }
+        })();
+
+        async function loadSubmissions() {
+            const assignment = document.getElementById('filterAssignment').value;
+            const status = document.getElementById('filterStatus').value;
+            let url = apiUrl + '/instructor/submissions?';
+            if (assignment) url += 'assignment_id=' + assignment + '&';
+            if (status) url += 'status=' + status;
+
+            const res = await fetch(url, { headers: { 'Authorization': authHeader } });
+            const data = await res.json();
+            const subs = data.submissions || [];
+
+            // Stats
+            const total = subs.length;
+            const needsReview = subs.filter(s => s.status === 'ai-graded').length;
+            const reviewed = subs.filter(s => s.status === 'reviewed').length;
+            const published = subs.filter(s => s.status === 'published').length;
+
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card"><div class="number">${total}</div><div class="label">Total Submissions</div></div>
+                <div class="stat-card"><div class="number" style="color:#f59e0b">${needsReview}</div><div class="label">Needs Review</div></div>
+                <div class="stat-card"><div class="number" style="color:#2563eb">${reviewed}</div><div class="label">Reviewed</div></div>
+                <div class="stat-card"><div class="number" style="color:#10b981">${published}</div><div class="label">Published</div></div>
+            `;
+
+            // Table
+            const tbody = document.getElementById('submissionsTable');
+            tbody.innerHTML = subs.map(s => `
+                <tr>
+                    <td>${s.id}</td>
+                    <td><strong>${s.student_id}</strong></td>
+                    <td>${s.assignment_name}</td>
+                    <td>${s.deterministic_score}</td>
+                    <td>${s.ai_score}</td>
+                    <td><strong>${s.total_proposed_score}</strong> / ${s.max_score}</td>
+                    <td>${s.final_score !== null ? '<strong>' + s.final_score + '</strong>' : '-'}</td>
+                    <td><span class="status-badge status-${s.status}">${s.status}</span></td>
+                    <td>${new Date(s.submitted_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewDetail(${s.id})">View</button>
+                        ${s.status !== 'published' ? `<button class="action-btn btn-review" onclick="viewDetail(${s.id})">Review</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function viewDetail(id) {
+            const res = await fetch(apiUrl + '/instructor/submissions/' + id, { headers: { 'Authorization': authHeader } });
+            const s = await res.json();
+
+            const checksHtml = (s.deterministic_results || []).map(c =>
+                `<li class="${c.passed ? 'check-pass' : 'check-fail'}">${c.passed ? '✅' : '❌'} ${c.name} (${c.points}/${c.max_points})</li>`
+            ).join('');
+
+            const codeDisplay = s.code ? s.code : (s.files ? Object.entries(s.files).map(([f, c]) => `// === ${f} ===\n${c}`).join('\n\n') : 'No code submitted');
+
+            document.getElementById('modalContent').innerHTML = `
+                <h2>Submission #${s.id} — Assignment ${s.assignment_id}</h2>
+                <p><strong>Student:</strong> ${s.student_id} | <strong>Submitted:</strong> ${new Date(s.submitted_at).toLocaleString()}</p>
+
+                <h3 style="margin-top:20px;">Deterministic Checks (${s.deterministic_score} pts)</h3>
+                <ul class="check-list">${checksHtml}</ul>
+
+                <h3 style="margin-top:20px;">AI Evaluation (${s.ai_score}/${s.ai_max} pts)</h3>
+                <p>${(s.ai_feedback || '').replace(/\n/g, '<br>')}</p>
+
+                <h3 style="margin-top:20px;">Proposed Total: ${s.total_proposed_score} / ${s.max_score}</h3>
+
+                <h3 style="margin-top:20px;">Submitted Code</h3>
+                <pre>${escapeHtml(codeDisplay)}</pre>
+
+                <div class="review-form">
+                    <h3>Review & Grade</h3>
+                    <label>Final Score (out of ${s.max_score}):</label>
+                    <input type="number" id="reviewScore" min="0" max="${s.max_score}" value="${s.final_score !== null ? s.final_score : s.total_proposed_score}">
+
+                    <label>Feedback to Student:</label>
+                    <textarea id="reviewFeedback">${s.final_feedback || s.ai_feedback || ''}</textarea>
+
+                    <div class="btn-group">
+                        <button class="btn-save" onclick="saveReview(${s.id}, false)">Save Review</button>
+                        <button class="btn-save-publish" onclick="saveReview(${s.id}, true)">Save & Publish</button>
+                        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        async function saveReview(id, publish) {
+            const score = parseInt(document.getElementById('reviewScore').value);
+            const feedback = document.getElementById('reviewFeedback').value;
+
+            await fetch(apiUrl + '/instructor/submissions/' + id + '/review', {
+                method: 'POST',
+                headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ final_score: score, final_feedback: feedback, publish: publish })
+            });
+
+            closeModal();
+            loadSubmissions();
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WP-200: Web Programming - Spring 2026</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="bot-chat.js" defer></script>
 </head>
 <body>
     <header>
         <div class="container">
             <h1>💻 WP-200: Web Programming</h1>
-            <p class="subtitle">14-Week Web Development Course | ウェブ・プログラミング</p>
+            <p class="subtitle">15-Week Web Development Course | ウェブ・プログラミング</p>
             <p class="instructor">Instructor: Tijerino Y.A. | School of Policy Studies / 総合政策学部</p>
         </div>
     </header>
@@ -19,8 +20,9 @@
         <div class="container">
             <a href="#overview">Overview / 概要</a>
             <a href="#curriculum">Curriculum / カリキュラム</a>
+            <a href="#bot-portal">WP Bot / ボット</a>
+            <a href="#submissions">Submissions / 提出</a>
             <a href="#resources">Resources / リソース</a>
-            <a href="#assessment">Assessment / 評価</a>
         </div>
     </nav>
 
@@ -31,31 +33,32 @@
             <div class="overview-grid">
                 <div class="overview-card">
                     <h3>📚 Duration / 期間</h3>
-                    <p>14 weeks (Spring Semester)<br>14週間（春学期）</p>
+                    <p>15 weeks (Spring Semester)<br>15週間（春学期）</p>
                     <p>Tuesday Period 2<br>火曜２時限</p>
                 </div>
                 <div class="overview-card">
                     <h3>🎯 Target Audience / 対象者</h3>
                     <p>Second-year students<br>2年生</p>
-                    <p>School of Policy Studies<br>総合政策学部</p>
+                    <p>No prior programming experience required<br>プログラミング経験不要</p>
                 </div>
                 <div class="overview-card">
                     <h3>🛠️ Tools / ツール</h3>
-                    <p>HTML5, CSS3, JavaScript<br>Canvas API</p>
-                    <p>Visual Studio Code<br>Browser Developer Tools</p>
+                    <p>HTML5, CSS3, JavaScript<br>Canvas API, VS Code</p>
+                    <p>Browser Developer Tools<br>GitHub</p>
                 </div>
             </div>
 
             <div class="course-description">
                 <h3>What You'll Learn / 学習内容</h3>
-                <p><strong>English:</strong> Students will learn about syntax and semantics of programming languages. They will understand data types and type checking, data scope, binding, and environments. Students will learn about function types and logic programming paradigms, and how to compare with other paradigms. In this course, students will acquire knowledge and hands-on experience about the computer language paradigm through building a complete Breakout game.</p>
-                <p><strong>日本語:</strong> プログラミング言語の構文およびセマンティクスを学びます。データタイプとタイプチェック、スコープ、バインディング、および環境を理解します。関数型とロジックプログラミングパラダイム、および他のパラダイムとの比較のやり方について学習し、ブロック崩しゲームの構築を通じて実践的な経験を積みます。</p>
+                <p><strong>English:</strong> Starting from zero programming experience, you will learn web development by building a complete Breakout game. The course progresses from HTML/CSS fundamentals through procedural JavaScript to object-oriented programming, with each session introducing one new concept that produces a visible result in your game.</p>
+                <p><strong>日本語:</strong> プログラミング経験ゼロから始め、ブロック崩しゲームの構築を通じてWeb開発を学びます。HTML/CSSの基礎から手続き型JavaScript、そしてオブジェクト指向プログラミングへと段階的に進み、毎回の授業で1つの新しい概念を学び、ゲームに目に見える変化をもたらします。</p>
                 <ul>
-                    <li><strong>Phase 1 - HTML & CSS Foundations:</strong> HTML5 semantic elements, CSS3 styling, Flexbox layout, personal website construction</li>
-                    <li><strong>Phase 2 - JavaScript & Canvas:</strong> Variables, data types, Canvas API, game loop, collision detection, user input handling</li>
-                    <li><strong>Phase 3 - Object-Oriented Programming:</strong> Classes, constructors, encapsulation, modularization, Audio API, localStorage</li>
-                    <li><strong>Phase 4 - Final Project:</strong> Game presentations, code review, web development skills reflection</li>
+                    <li><strong>Phase 1 - HTML & CSS Foundations (Sessions 1-3):</strong> Build a personal website using semantic HTML5 and CSS3 styling</li>
+                    <li><strong>Phase 2 - Procedural JavaScript (Sessions 4-9):</strong> Learn programming fundamentals by building a Breakout game from an empty canvas</li>
+                    <li><strong>Phase 3 - Object-Oriented JavaScript (Sessions 10-13):</strong> Refactor the game using classes, encapsulation, and modularization</li>
+                    <li><strong>Phase 4 - Presentation & Review (Sessions 14-15):</strong> Showcase your game and reflect on skills learned</li>
                 </ul>
+                <p class="milestone">🎮 <strong>Game tutorial inspired by:</strong> <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">MDN 2D Breakout Game using Pure JavaScript</a></p>
             </div>
         </section>
 
@@ -70,17 +73,16 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 1</span>
-                        <span class="week-title">Course Overview & HTML5 Basics | コース概要とHTML5基礎</span>
+                        <span class="week-title">Course Overview & HTML Basics | コース概要とHTML基礎</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Startup Week</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Course overview and web development environment setup: HTML5 basics, Visual Studio Code installation, browser developer tools usage</p>
-                        <p><strong>Homework:</strong> Review basic HTML tags (html, head, body, header, nav, section, article, footer) and draft a self-introduction page (60 min)</p>
+                        <p><strong>Startup Week</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> What is the web? HTML document structure (<code>html</code>, <code>head</code>, <code>body</code>), basic tags (<code>h1</code>-<code>h6</code>, <code>p</code>, <code>a</code>, <code>img</code>, <code>ul</code>/<code>ol</code>), VS Code installation, browser developer tools</p>
+                        <p><strong>Concepts:</strong> Document structure, tags and elements, attributes, file paths</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
                         </div>
                     </div>
                 </div>
@@ -88,17 +90,18 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 2</span>
-                        <span class="week-title">HTML5 Semantic Elements & Personal Website | HTML5セマンティック要素と個人Webサイト構築</span>
+                        <span class="week-title">Semantic HTML5 & Multi-page Website | セマンティックHTML5と複数ページサイト</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 1</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> HTML5 semantic elements and personal website construction: Structured markup using header, nav, section, article, footer</p>
-                        <p><strong>Homework:</strong> Create 'About Me', 'Hobbies', and 'Job' pages and link them with navigation (100 min)</p>
+                        <p><strong>Core Week 1</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> Semantic elements (<code>header</code>, <code>nav</code>, <code>section</code>, <code>article</code>, <code>footer</code>), linking pages, file/folder organization, MySite template</p>
+                        <p><strong>Concepts:</strong> Semantic markup, hyperlinks, site navigation, project structure</p>
+                        <p class="milestone">📝 <strong>Assignment 1:</strong> Create MySite with About Me, Hobbies, and Job pages linked via navigation</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 1</a>
                         </div>
                     </div>
                 </div>
@@ -110,36 +113,39 @@
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 2</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> CSS3 fundamentals and styling: Selectors, properties, box model, introduction to Flexbox</p>
-                        <p><strong>Homework:</strong> Apply CSS styles to your website for a consistent design (100 min)</p>
+                        <p><strong>Core Week 2</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> CSS syntax (selectors, properties, values), colors and fonts, box model (margin, border, padding), introduction to Flexbox, external stylesheets</p>
+                        <p><strong>Concepts:</strong> Selectors (element, class, id), cascading and specificity, layout fundamentals</p>
+                        <p class="milestone">📝 <strong>Assignment 2:</strong> Style your MySite with a consistent design using an external CSS file</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 2</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Phase 2: JavaScript & Canvas (Sessions 4-9) -->
+            <!-- Phase 2: Procedural JavaScript (Sessions 4-9) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 2: JavaScript & Canvas Game Development (Sessions 4-9) | JavaScript とCanvas ゲーム開発</h3>
+                <h3 class="phase-title">Phase 2: Procedural JavaScript - Building a Breakout Game (Sessions 4-9) | 手続き型JavaScript - ブロック崩しゲーム開発</h3>
+                <p style="margin-bottom: 20px; color: var(--text-light);">Based on <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">MDN 2D Breakout Game Tutorial</a> | MDNブロック崩しチュートリアルに基づく</p>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 4</span>
-                        <span class="week-title">JavaScript Intro & Canvas API | JavaScript入門とCanvas API</span>
+                        <span class="week-title">Canvas & Drawing | Canvasと描画</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 3</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Introduction to JavaScript and Canvas API: Variables, data types, function basics, creating Canvas element and getting drawing context</p>
-                        <p><strong>Homework:</strong> Write code to draw basic shapes (rectangle, circle, line) on Canvas (100 min)</p>
+                        <p><strong>Core Week 3</strong> | Face-to-face / 100 min | <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Create_the_Canvas_and_draw_on_it" target="_blank">MDN Lesson 1</a></p>
+                        <p><strong>Topics:</strong> The <code>&lt;canvas&gt;</code> element, 2D rendering context, coordinate system, drawing shapes (<code>rect()</code>, <code>arc()</code>), paths (<code>beginPath()</code>, <code>fill()</code>), colors (<code>fillStyle</code>)</p>
+                        <p><strong>Concepts:</strong> <em>Variables</em> (<code>let</code>, <code>const</code>), <em>data types</em> (numbers, strings), <em>the <code>&lt;script&gt;</code> tag</em></p>
+                        <p class="milestone">📝 <strong>Assignment 3:</strong> Draw a ball and a rectangle on canvas using variables for position and size</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 3</a>
                         </div>
                     </div>
                 </div>
@@ -147,17 +153,18 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 5</span>
-                        <span class="week-title">Game Development: Animation & Game Loop | ゲーム開発入門：アニメーションとゲームループ</span>
+                        <span class="week-title">Animation & the Game Loop | アニメーションとゲームループ</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 4</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Introduction to game development: Drawing and moving a ball, implementing game loop with requestAnimationFrame and setInterval</p>
-                        <p><strong>Homework:</strong> Implement ball animation that moves automatically on Canvas (100 min)</p>
+                        <p><strong>Core Week 4</strong> | Face-to-face / 100 min | <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Move_the_ball" target="_blank">MDN Lesson 2</a></p>
+                        <p><strong>Topics:</strong> Animation with <code>setInterval()</code>, clearing the canvas (<code>clearRect()</code>), velocity variables (<code>dx</code>, <code>dy</code>), the clear-update-draw pattern</p>
+                        <p><strong>Concepts:</strong> <em>Functions</em> (defining and calling), <em>parameters</em>, <em>the game loop pattern</em></p>
+                        <p class="milestone">📝 <strong>Assignment 4:</strong> Make the ball move across the screen with a draw function</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 4</a>
                         </div>
                     </div>
                 </div>
@@ -165,17 +172,16 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 6</span>
-                        <span class="week-title">Collision Detection & Boundary Checking | 衝突検出と境界判定</span>
+                        <span class="week-title">Collision Detection & Conditionals | 衝突検出と条件分岐</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 5</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Collision detection and boundary checking: Ball-wall collision, reflection angle calculation, using conditional statements (if-else)</p>
-                        <p><strong>Homework:</strong> Implement ball bouncing off walls (100 min)</p>
+                        <p><strong>Core Week 5</strong> | Face-to-face / 100 min | <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Bounce_off_the_walls" target="_blank">MDN Lesson 3</a></p>
+                        <p><strong>Topics:</strong> Boundary detection, velocity reversal (<code>dx = -dx</code>), accounting for ball radius, compound conditions</p>
+                        <p><strong>Concepts:</strong> <em><code>if</code>/<code>else</code> statements</em>, <em>comparison operators</em> (<code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>), <em>logical operators</em> (<code>&&</code>, <code>||</code>)</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
                         </div>
                     </div>
                 </div>
@@ -183,17 +189,18 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 7</span>
-                        <span class="week-title">User Input Processing | ユーザー入力の処理</span>
+                        <span class="week-title">Paddle & User Input | パドルとユーザー入力</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 6</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Processing user input: Keyboard events (keydown, keyup), mouse events (mousemove), implementing paddle controls</p>
-                        <p><strong>Homework:</strong> Implement paddle control using arrow keys and mouse (100 min)</p>
+                        <p><strong>Core Week 6</strong> | Face-to-face / 100 min | <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Paddle_and_keyboard_controls" target="_blank">MDN Lessons 4, 5 &amp; 9</a></p>
+                        <p><strong>Topics:</strong> Event listeners (<code>keydown</code>, <code>keyup</code>, <code>mousemove</code>), <code>event.key</code>, boolean flags for input state, drawing and moving the paddle, game over condition</p>
+                        <p><strong>Concepts:</strong> <em>Events and event handling</em>, <em>boolean data type</em>, <em><code>addEventListener()</code></em>, <em>callback functions</em></p>
+                        <p class="milestone">📝 <strong>Assignment 5:</strong> Implement paddle with keyboard and mouse control, plus game over on miss</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 5</a>
                         </div>
                     </div>
                 </div>
@@ -201,17 +208,18 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 8</span>
-                        <span class="week-title">Arrays & Loops: Brick Management | 配列とループ：ブロック管理</span>
+                        <span class="week-title">Brick Field: Arrays & Loops | ブロックフィールド：配列とループ</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 7</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Arrays and loops: Building brick field with 2D arrays, drawing bricks with for loops, brick collision detection</p>
-                        <p><strong>Homework:</strong> Manage multiple bricks with arrays and make them disappear on ball collision (100 min)</p>
+                        <p><strong>Core Week 7</strong> | Face-to-face / 100 min | <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Build_the_brick_field" target="_blank">MDN Lessons 6 &amp; 7</a></p>
+                        <p><strong>Topics:</strong> 2D arrays for brick grid, nested <code>for</code> loops, object literals (<code>{x, y, status}</code>), grid positioning math, AABB collision detection, destroying bricks by toggling status</p>
+                        <p><strong>Concepts:</strong> <em>Arrays</em> (1D and 2D), <em><code>for</code> loops</em> (single and nested), <em>object literals</em>, <em>array indexing</em></p>
+                        <p class="milestone">📝 <strong>Assignment 6:</strong> Build the brick field and implement ball-brick collision</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 6</a>
                         </div>
                     </div>
                 </div>
@@ -219,41 +227,42 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 9</span>
-                        <span class="week-title">Game State Management | ゲーム状態管理</span>
+                        <span class="week-title">Score, Lives & Game Completion | スコア、ライフ、ゲーム完成</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 8</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Game state management: Implementing score and lives, game over and win conditions, game reset with alert() and location.reload()</p>
-                        <p><strong>Homework:</strong> Complete the full Breakout game (120 min)</p>
-                        <p class="milestone">🎮 <strong>Milestone:</strong> Complete Breakout Game / ブロック崩しゲーム完成</p>
+                        <p><strong>Core Week 8</strong> | Face-to-face / 100 min | <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Track_the_score_and_win" target="_blank">MDN Lessons 8 &amp; 10</a></p>
+                        <p><strong>Topics:</strong> Canvas text rendering (<code>fillText()</code>, <code>font</code>), score counter, win condition, lives system, <code>requestAnimationFrame()</code>, game state reset</p>
+                        <p><strong>Concepts:</strong> <em>State management with variables</em>, <em>string concatenation</em>, <em><code>requestAnimationFrame()</code> vs <code>setInterval()</code></em></p>
+                        <p class="milestone">🎮 <strong>Assignment 7:</strong> Complete the Breakout game with score, lives, win/lose conditions</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 7</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Phase 3: Object-Oriented Programming (Sessions 10-13) -->
+            <!-- Phase 3: Object-Oriented JavaScript (Sessions 10-13) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 3: Object-Oriented Programming (Sessions 10-13) | オブジェクト指向プログラミング</h3>
+                <h3 class="phase-title">Phase 3: Object-Oriented JavaScript (Sessions 10-13) | オブジェクト指向JavaScript</h3>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 10</span>
-                        <span class="week-title">Introduction to OOP: Player Class | OOP入門：Playerクラス</span>
+                        <span class="week-title">Introduction to OOP: Ball Class | OOP入門：Ballクラス</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 9</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Introduction to OOP: Classes and constructors, static properties, creating the Player class</p>
-                        <p><strong>Homework:</strong> Reimplement the ball as a Player class with draw and move methods (100 min)</p>
+                        <p><strong>Core Week 9</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> Why OOP? Organizing code, <code>class</code> syntax, <code>constructor()</code>, <code>this</code> keyword, methods (<code>draw()</code>, <code>move()</code>, <code>reset()</code>), creating <code>Ball.js</code></p>
+                        <p><strong>Concepts:</strong> <em>Classes and objects</em>, <em>constructors</em>, <em><code>this</code> keyword</em>, <em>methods vs functions</em>, <em>instantiation with <code>new</code></em></p>
+                        <p class="milestone">📝 <strong>Assignment 8:</strong> Refactor the ball into a Ball class with draw, move, and reset methods</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 8</a>
                         </div>
                     </div>
                 </div>
@@ -261,17 +270,16 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 11</span>
-                        <span class="week-title">OOP Continued: Paddle & Brick Classes | OOP継続：PaddleとBrickクラス</span>
+                        <span class="week-title">Paddle & Brick Classes | PaddleとBrickクラス</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 10</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> OOP continued: Implementing Paddle, Brick, BrickGrid classes, single responsibility principle, encapsulation concepts</p>
-                        <p><strong>Homework:</strong> Reimplement paddle and bricks as classes (100 min)</p>
+                        <p><strong>Core Week 10</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> <code>Paddle</code> class, <code>Brick</code> class, <code>BrickGrid</code> class (composition), single responsibility principle, encapsulation</p>
+                        <p><strong>Concepts:</strong> <em>Multiple classes</em>, <em>encapsulation</em> (data + behavior), <em>composition</em> (objects containing objects), <em>single responsibility principle</em></p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
                         </div>
                     </div>
                 </div>
@@ -283,13 +291,14 @@
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 11</strong> | Face-to-face class / 90 minutes</p>
-                        <p><strong>Topics:</strong> Game class and modularization: Game class to orchestrate entire game, splitting into external JavaScript files and module loading</p>
-                        <p><strong>Homework:</strong> Split code into Ball.js, Paddle.js, Brick.js etc. and load as external files (120 min)</p>
+                        <p><strong>Core Week 11</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> <code>Game</code> class to orchestrate the entire game, splitting code into external files (<code>Ball.js</code>, <code>Paddle.js</code>, <code>Brick.js</code>, <code>Game.js</code>), <code>&lt;script src="..."&gt;</code> loading order</p>
+                        <p><strong>Concepts:</strong> <em>Orchestrator pattern</em>, <em>separation of concerns</em>, <em>external script files</em>, <em>code organization</em></p>
+                        <p class="milestone">📝 <strong>Assignment 9:</strong> Complete OOP refactor with all classes in separate files</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
+                            <a href="#" class="btn btn-disabled">📝 Assignment 9</a>
                         </div>
                     </div>
                 </div>
@@ -297,37 +306,35 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 13</span>
-                        <span class="week-title">Game Enhancements: Audio & Customization | ゲーム拡張：効果音とカスタマイズ</span>
+                        <span class="week-title">Enhancements: Audio, Storage & Customization | 拡張：音声、ストレージ、カスタマイズ</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Core Week 12</strong> | Face-to-face class / 90 minutes</p>
-                        <p><strong>Topics:</strong> Game enhancements: Sound effects and BGM with HTML5 Audio API, saving settings with localStorage, customization features</p>
-                        <p><strong>Homework:</strong> Add sound effects, BGM, and custom color settings (120 min)</p>
-                        <p class="milestone">🎮 <strong>Milestone:</strong> OOP Breakout Game Complete / OOPブロック崩しゲーム完成</p>
+                        <p><strong>Core Week 12</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> HTML5 Audio API (sound effects, BGM), <code>localStorage</code> for persistent settings, customization features (colors, audio), settings page</p>
+                        <p><strong>Concepts:</strong> <em>Browser APIs</em>, <em>persistent storage</em>, <em>user preferences</em>, <em>helper functions</em></p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                             <a href="#" class="btn btn-disabled">📖 Lecture</a>
-                            <a href="#" class="btn btn-disabled">📝 Assignment</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Phase 4: Final Presentation (Sessions 14-15) -->
+            <!-- Phase 4: Presentation & Review (Sessions 14-15) -->
             <div class="phase-section">
-                <h3 class="phase-title">Phase 4: Final Presentation (Sessions 14-15) | 最終発表</h3>
+                <h3 class="phase-title">Phase 4: Presentation & Review (Sessions 14-15) | 発表とまとめ</h3>
 
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 14</span>
-                        <span class="week-title">Final Project Presentation & Review | 最終プロジェクト発表と総括</span>
+                        <span class="week-title">Final Project Presentation | 最終プロジェクト発表</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Flex Hours</strong> | Face-to-face class / 100 minutes</p>
-                        <p><strong>Topics:</strong> Final project presentation and review: Student game presentations, code review, web development skills reflection</p>
-                        <p class="milestone">🎓 <strong>Final Presentation:</strong> Student Game Showcase / 学生ゲーム発表会</p>
+                        <p><strong>Flex Hours</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> Student game presentations, live demos, code walkthrough, peer feedback</p>
+                        <p class="milestone">🎮 <strong>Final Assignment:</strong> Present your enhanced Breakout game with personal customizations</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                         </div>
@@ -337,16 +344,127 @@
                 <div class="week-card coming-soon">
                     <div class="week-header">
                         <span class="week-number">Session 15</span>
-                        <span class="week-title">Classes & Examinations Period | 授業・試験期間</span>
+                        <span class="week-title">Course Review & Reflection | コース総括と振り返り</span>
                         <span class="status-badge">⏳ Coming Soon</span>
                     </div>
                     <div class="week-content">
-                        <p><strong>Examinations Period Week 1</strong> | Face-to-face class / 90 minutes</p>
-                        <p><strong>Topics:</strong> Final examination and course wrap-up</p>
+                        <p><strong>Exam Period Week 1</strong> | Face-to-face / 100 min</p>
+                        <p><strong>Topics:</strong> Course review, skills reflection, what you've learned from zero to OOP game development, next steps for continued learning</p>
                         <div class="week-links">
                             <a href="#" class="btn btn-disabled">🖥️ Slides</a>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bot Portal Section -->
+        <section id="bot-portal" class="section">
+            <h2>🤖 WP-200 Bot Portal / ボットポータル</h2>
+
+            <div class="bot-chat-container">
+                <div class="bot-chat-header">
+                    <h3>💬 WP-200 Course Bot / WP-200コースボット</h3>
+                    <div class="bot-chat-controls">
+                        <label for="bot-language-toggle">Language:</label>
+                        <select id="bot-language-toggle">
+                            <option value="en">English</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bot-messages" id="bot-messages">
+                    <div class="bot-message bot-message-assistant">
+                        <div class="bot-message-content bot-message-welcome">
+                            <strong>WP-200 Bot:</strong>
+                            Welcome! I'm your Web Programming course assistant. I can help you with:
+                            <br>- Course content and assignments
+                            <br>- HTML, CSS, and JavaScript questions
+                            <br>- Game development guidance
+                            <br>- Additional learning resources
+                            <br><br>ようこそ！ウェブプログラミングのコースアシスタントです。授業内容、課題、HTML/CSS/JavaScriptの質問にお答えします。
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bot-loading" class="bot-loading" style="display: none;">
+                    <div class="bot-loading-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="bot-loading-text">Thinking...</span>
+                </div>
+
+                <div class="bot-chat-input-container">
+                    <textarea id="bot-message-input" class="bot-message-input" placeholder="Ask a question about the course... / コースについて質問してください..." rows="2"></textarea>
+                    <button id="bot-send-btn" class="btn btn-primary bot-send-btn">Send</button>
+                </div>
+
+                <div class="bot-chat-footer">
+                    <small>Powered by Ollama | <a href="#" onclick="window.wp200BotChat && window.wp200BotChat.clearConversation(); return false;">Clear conversation / 会話をクリア</a></small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Submissions Section -->
+        <section id="submissions" class="section">
+            <h2>📤 Assignment Submissions / 課題提出</h2>
+
+            <div class="course-description">
+                <h3>Submit Your Work / 課題を提出する</h3>
+                <p>Select your assignment and paste your code below. The system will run automated checks and provide AI-assisted feedback. Your instructor will review and publish your final grade.</p>
+                <p>課題を選択し、コードを以下に貼り付けてください。自動チェックとAIによるフィードバックが提供されます。最終成績は講師が確認後に公開されます。</p>
+            </div>
+
+            <div class="submission-form" style="margin-top: 20px;">
+                <div class="overview-card" style="text-align: left;">
+                    <div style="margin-bottom: 15px;">
+                        <label for="student-id" style="font-weight: bold; display: block; margin-bottom: 5px;">Student ID / 学生番号:</label>
+                        <input type="text" id="student-id" placeholder="e.g., 29024001" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="assignment-select" style="font-weight: bold; display: block; margin-bottom: 5px;">Assignment / 課題:</label>
+                        <select id="assignment-select" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
+                            <option value="">-- Select Assignment / 課題を選択 --</option>
+                            <option value="1">Assignment 1: MySite HTML Pages</option>
+                            <option value="2">Assignment 2: CSS Styling</option>
+                            <option value="3">Assignment 3: Canvas Drawing</option>
+                            <option value="4">Assignment 4: Ball Animation</option>
+                            <option value="5">Assignment 5: Paddle & Input</option>
+                            <option value="6">Assignment 6: Brick Field</option>
+                            <option value="7">Assignment 7: Complete Game</option>
+                            <option value="8">Assignment 8: Ball Class (OOP)</option>
+                            <option value="9">Assignment 9: Full OOP Refactor</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="code-input" style="font-weight: bold; display: block; margin-bottom: 5px;">Your Code / コード:</label>
+                        <textarea id="code-input" rows="15" placeholder="Paste your HTML/CSS/JavaScript code here..." style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9rem; resize: vertical;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Or upload files / ファイルをアップロード:</label>
+                        <input type="file" id="file-upload" multiple accept=".html,.htm,.css,.js" style="width: 100%; padding: 10px; border: 2px dashed var(--border-color); border-radius: 5px;">
+                    </div>
+
+                    <button id="submit-btn" class="btn btn-accent" style="width: 100%; padding: 15px; font-size: 1.1rem;" onclick="submitAssignment()">Submit Assignment / 課題を提出</button>
+
+                    <div id="submission-result" style="margin-top: 20px; display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Published Grades Section -->
+            <div style="margin-top: 30px;">
+                <div class="overview-card" style="text-align: left;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 15px;">📊 My Grades / 成績確認</h3>
+                    <div style="margin-bottom: 15px;">
+                        <label for="grade-student-id" style="font-weight: bold; display: block; margin-bottom: 5px;">Student ID / 学生番号:</label>
+                        <input type="text" id="grade-student-id" placeholder="e.g., 29024001" style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 5px; font-size: 1rem;">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="viewGrades()">View Published Grades / 公開済み成績を表示</button>
+                    <div id="grades-display" style="margin-top: 15px;"></div>
                 </div>
             </div>
         </section>
@@ -356,35 +474,39 @@
             <h2>📚 Resources / リソース</h2>
             <div class="resources-grid">
                 <div class="resource-section">
-                    <h3>Textbooks / 教科書</h3>
+                    <h3>MDN Tutorial / MDNチュートリアル</h3>
                     <ul>
-                        <li>No specific textbook required / 特に教科書要求条件はありません</li>
-                        <li>Students may freely purchase textbooks suited to their level / 学生の理解レベルに合わせて自由に購入可能</li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank">2D Breakout Game (Pure JavaScript)</a></li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML" target="_blank">HTML Reference</a></li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank">CSS Reference</a></li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">JavaScript Reference</a></li>
+                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank">Canvas API</a></li>
                     </ul>
                 </div>
                 <div class="resource-section">
-                    <h3>Online Resources / オンラインリソース</h3>
+                    <h3>Self-Study / 自習教材</h3>
                     <ul>
-                        <li><a href="https://developer.mozilla.org/en-US/docs/Web" target="_blank">MDN Web Docs</a></li>
-                        <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank">Canvas API Reference</a></li>
-                        <li><a href="https://javascript.info/" target="_blank">JavaScript.info Tutorial</a></li>
-                        <li><a href="https://www.w3schools.com/" target="_blank">W3Schools</a></li>
+                        <li><a href="https://www.w3schools.com/html/" target="_blank">W3Schools HTML Tutorial</a></li>
+                        <li><a href="https://www.w3schools.com/css/" target="_blank">W3Schools CSS Tutorial</a></li>
+                        <li><a href="https://www.w3schools.com/js/" target="_blank">W3Schools JavaScript Tutorial</a></li>
+                        <li><a href="https://javascript.info/" target="_blank">JavaScript.info</a></li>
                     </ul>
                 </div>
                 <div class="resource-section">
                     <h3>Development Tools / 開発ツール</h3>
                     <ul>
                         <li><a href="https://code.visualstudio.com/" target="_blank">Visual Studio Code</a></li>
-                        <li>Browser Developer Tools (Chrome/Firefox)</li>
-                        <li>GitHub for version control</li>
+                        <li>Browser Developer Tools (F12)</li>
+                        <li><a href="https://github.com/" target="_blank">GitHub</a></li>
                     </ul>
                 </div>
                 <div class="resource-section">
                     <h3>AI Policy / AI活用方針</h3>
                     <ul>
-                        <li><strong>AI use is required</strong> for this course / 本授業ではAIの使用を必須とします</li>
-                        <li>AI is used as a complementary tool under professor supervision / AIは教授の監督のもと補助ツールとして活用</li>
-                        <li>All AI use must comply with university policies / 大学のAIポリシーを遵守してください</li>
+                        <li><strong>AI use is required</strong> in this course</li>
+                        <li>AI is a complementary tool under instructor supervision</li>
+                        <li>All use must comply with university AI policies</li>
+                        <li>本授業ではAIの使用を必須とします</li>
                     </ul>
                 </div>
             </div>
@@ -394,13 +516,13 @@
         <section id="assessment" class="section">
             <h2>📊 Assessment / 評価</h2>
             <div class="course-description">
-                <h3>Grading Breakdown / 成績内訳</h3>
+                <h3>Grading / 成績評価</h3>
                 <ul>
-                    <li><strong>100% - Continuous Assessment (その他):</strong> Attendance, discussion participation, online assignments, group work, online quizzes</li>
+                    <li><strong>100% - Continuous Assessment:</strong> Attendance, discussion participation, individual assignments (9 assignments throughout the course), and online quizzes</li>
                 </ul>
-                <p><strong>出席、ディスカッション参加、オンライン課題、グループワーク、オンラインクイズ等。</strong></p>
-                <p><strong>Course Format / 授業方法:</strong> Includes student presentations, individual and team projects. Classes are primarily face-to-face, but also broadcast live via Zoom for students with online permission. All classes are recorded and available on Luna site.</p>
-                <p><strong>授業方法:</strong> 学生発表、個人及びチーム・プロジェクトを含む。原則的に対面授業形式ですが、オンライン授業の許可を得ている学生のために、同時双方向型オンラインで授業します。全ての授業はZoomにて収録し、Lunaサイトで後日視聴可能です。</p>
+                <p><strong>出席、ディスカッション参加、個人課題（全9回）、オンラインクイズ等。</strong></p>
+                <p><strong>Course Format:</strong> Face-to-face classes with live Zoom broadcast for students with online permission. All classes are recorded and available on Luna. Individual work only - no group projects.</p>
+                <p><strong>授業方法:</strong> 対面授業形式。オンライン許可の学生にはZoomでライブ配信。全授業はLunaで録画視聴可能。個人課題のみ。</p>
             </div>
         </section>
     </main>
@@ -411,5 +533,122 @@
             <p>著作権 &copy; 2026 関西学院大学 総合政策学部. 無断転載を禁じます。</p>
         </div>
     </footer>
+
+    <script>
+        // Submission and grading frontend logic
+        async function getApiUrl() {
+            const isLocal = window.location.hostname === 'localhost' ||
+                           window.location.hostname === '127.0.0.1' ||
+                           window.location.hostname === '';
+            const isHttps = window.location.protocol === 'https:';
+
+            if (isLocal) {
+                const port = localStorage.getItem('bot_api_port') || '8001';
+                return `http://localhost:${port}/api`;
+            } else if (isHttps) {
+                const cloudflareUrl = localStorage.getItem('bot_cloudflare_url');
+                if (cloudflareUrl) return `${cloudflareUrl}/api`;
+                return localStorage.getItem('wp200_api_url') || 'https://wp200bot.tijerino.ai/api';
+            } else {
+                const port = localStorage.getItem('bot_api_port') || '8001';
+                return `http://localhost:${port}/api`;
+            }
+        }
+
+        async function submitAssignment() {
+            const studentId = document.getElementById('student-id').value.trim();
+            const assignmentId = document.getElementById('assignment-select').value;
+            const codeInput = document.getElementById('code-input').value.trim();
+            const fileUpload = document.getElementById('file-upload');
+            const resultDiv = document.getElementById('submission-result');
+
+            if (!studentId || !assignmentId) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<p style="color: red;">Please enter your Student ID and select an assignment.<br>学生番号を入力し、課題を選択してください。</p>';
+                return;
+            }
+
+            if (!codeInput && fileUpload.files.length === 0) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = '<p style="color: red;">Please paste your code or upload files.<br>コードを貼り付けるかファイルをアップロードしてください。</p>';
+                return;
+            }
+
+            // Collect files if uploaded
+            let files = {};
+            if (fileUpload.files.length > 0) {
+                for (const file of fileUpload.files) {
+                    files[file.name] = await file.text();
+                }
+            }
+
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p style="color: var(--primary-color);">Submitting... / 提出中...</p>';
+
+            try {
+                const apiUrl = await getApiUrl();
+                const response = await fetch(`${apiUrl}/submissions/submit`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify({
+                        student_id: studentId,
+                        assignment_id: parseInt(assignmentId),
+                        code: codeInput || null,
+                        files: Object.keys(files).length > 0 ? files : null
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div style="background: #d1fae5; padding: 15px; border-radius: 8px; border-left: 4px solid var(--success);">
+                            <p style="color: var(--success); font-weight: bold;">Submitted successfully! / 提出完了！</p>
+                            <p>Submission ID: ${data.submission_id}</p>
+                            <p>Status: ${data.status}</p>
+                            <p>Your instructor will review and publish your grade. / 講師が確認後、成績を公開します。</p>
+                        </div>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">Error: ${data.detail || 'Submission failed'}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Cannot connect to server. Please try again later.<br>サーバーに接続できません。後でもう一度お試しください。</p>`;
+            }
+        }
+
+        async function viewGrades() {
+            const studentId = document.getElementById('grade-student-id').value.trim();
+            const gradesDiv = document.getElementById('grades-display');
+
+            if (!studentId) {
+                gradesDiv.innerHTML = '<p style="color: red;">Please enter your Student ID. / 学生番号を入力してください。</p>';
+                return;
+            }
+
+            try {
+                const apiUrl = await getApiUrl();
+                const response = await fetch(`${apiUrl}/submissions/grades/${studentId}`, {
+                    headers: { 'ngrok-skip-browser-warning': 'true' }
+                });
+                const data = await response.json();
+
+                if (data.grades && data.grades.length > 0) {
+                    let html = '<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
+                    html += '<tr style="background: var(--bg-light);"><th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Assignment</th><th style="padding: 10px; text-align: center; border-bottom: 2px solid var(--border-color);">Score</th><th style="padding: 10px; text-align: left; border-bottom: 2px solid var(--border-color);">Feedback</th></tr>';
+                    data.grades.forEach(g => {
+                        html += `<tr><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">Assignment ${g.assignment_id}</td><td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border-color);"><strong>${g.score}</strong></td><td style="padding: 10px; border-bottom: 1px solid var(--border-color);">${g.feedback}</td></tr>`;
+                    });
+                    html += '</table>';
+                    gradesDiv.innerHTML = html;
+                } else {
+                    gradesDiv.innerHTML = '<p style="color: var(--text-light);">No published grades yet. / まだ公開された成績はありません。</p>';
+                }
+            } catch (error) {
+                gradesDiv.innerHTML = '<p style="color: red;">Cannot connect to server. / サーバーに接続できません。</p>';
+            }
+        }
+    </script>
 </body>
 </html>
