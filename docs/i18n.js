@@ -596,6 +596,22 @@ const TRANSLATIONS = {
         es: "&copy; 2026 Universidad Kwansei Gakuin - Facultad de Estudios de Políticas. Todos los derechos reservados."
     },
 
+    // ========== AUTH / LOGIN ==========
+    "auth-login-title": {
+        en: "Student Login",
+        ja: "学生ログイン",
+        zh: "学生登录",
+        ko: "학생 로그인",
+        es: "Inicio de Sesión"
+    },
+    "auth-login-desc": {
+        en: "Enter your university handle to receive a verification code.",
+        ja: "大学のハンドルを入力して認証コードを受信してください。",
+        zh: "输入你的大学账号以接收验证码。",
+        ko: "대학교 핸들을 입력하여 인증 코드를 받으세요.",
+        es: "Ingresa tu identificador universitario para recibir un código de verificación."
+    },
+
     // ========== LANGUAGE NAMES (for selector) ==========
     "lang-en": { en: "English", ja: "English", zh: "English", ko: "English", es: "English" },
     "lang-ja": { en: "日本語", ja: "日本語", zh: "日本語", ko: "日本語", es: "日本語" },

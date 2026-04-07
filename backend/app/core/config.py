@@ -26,6 +26,17 @@ class Settings(BaseSettings):
     INSTRUCTOR_PASSWORD: str = "CHANGE_THIS_TO_A_SECURE_PASSWORD"
     JWT_SECRET: str = "CHANGE_THIS_TO_A_RANDOM_SECRET"
 
+    # Cloudflare Email Workers (preferred for OTP)
+    CLOUDFLARE_EMAIL_WORKER_URL: str = ""
+    CLOUDFLARE_EMAIL_API_KEY: str = ""
+
+    # SMTP (fallback for OTP if Cloudflare not configured)
+    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+
     # Logging
     LOG_LEVEL: str = "INFO"
     LOG_FILE: str = "./logs/app.log"

@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from app.api import chat, submissions, instructor
+from app.api import chat, submissions, instructor, auth
 from app.core.config import settings
 
 # Logging
@@ -40,6 +40,7 @@ app.add_middleware(
 
 # Routers
 app.include_router(chat.router, prefix="/api", tags=["Chat"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(submissions.router, prefix="/api/submissions", tags=["Submissions"])
 app.include_router(instructor.router, prefix="/api/instructor", tags=["Instructor"])
 
