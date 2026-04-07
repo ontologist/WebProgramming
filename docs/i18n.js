@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+ * 著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
  * Unauthorized copying, modification, or distribution of this file is prohibited.
+ * 本ファイルの無断複製、改変、配布を禁じます。
  */
 // WP-200 Internationalization (i18n) System
 // Supported languages: English, Japanese, Chinese, Korean, Spanish
