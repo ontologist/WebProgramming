@@ -113,28 +113,39 @@ async def logout(body: ValidateSessionBody):
 
 # ========== Instructor: Student Management ==========
 
-@router.post("/students/upload-csv")
-async def upload_student_csv(
+@router.post("/students/upload")
+async def upload_student_list(
     file: UploadFile = File(...),
     _auth: bool = Depends(verify_instructor),
 ):
-    """Upload CSV file with student registry.
-    Columns: Student ID, Handle, Kanji Last, Kanji First, Romaji Last, Romaji First
+    """Upload student registry file (.xlsx or .csv).
+    - Excel (.xlsx): Kwansei Gakuin enrollment list format (auto-detected columns)
+    - CSV: Student ID, Handle, Kanji Last, Kanji First, Romaji Last, Romaji First
     """
-    content = await file.read()
-    text = content.decode("utf-8-sig")
-
-    # Save to temp file and load
     import tempfile
     import os
 
-    tmp = tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False, encoding="utf-8")
-    tmp.write(text)
+    content = await file.read()
+    filename = file.filename or ""
+    is_excel = filename.lower().endswith((".xlsx", ".xls"))
+
+    suffix = ".xlsx" if is_excel else ".csv"
+    mode = "wb" if is_excel else "w"
+
+    tmp = tempfile.NamedTemporaryFile(mode=mode, suffix=suffix, delete=False,
+                                      **({"encoding": "utf-8"} if not is_excel else {}))
+    if is_excel:
+        tmp.write(content)
+    else:
+        tmp.write(content.decode("utf-8-sig"))
     tmp.close()
 
     try:
-        count = auth_service.load_students_from_csv(tmp.name)
-        return {"message": f"Loaded {count} students", "count": count}
+        if is_excel:
+            count = auth_service.load_students_from_excel(tmp.name)
+        else:
+            count = auth_service.load_students_from_csv(tmp.name)
+        return {"message": f"Loaded {count} students from {filename}", "count": count}
     finally:
         os.unlink(tmp.name)
 

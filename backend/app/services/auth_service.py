@@ -59,6 +59,51 @@ def load_students_from_csv(csv_path: str) -> int:
     return count
 
 
+def load_students_from_excel(file_path: str) -> int:
+    """Load students from university enrollment Excel file (.xlsx).
+    Parses the Kwansei Gakuin enrollment list format:
+    - Row 4: Header row
+    - Row 5+: Student data
+    - Col C (idx 2): Student ID
+    - Col D (idx 3): User ID (handle)
+    - Col E (idx 4): Japanese name (kanji)
+    - Col G (idx 6): Romaji name
+    """
+    import openpyxl
+
+    wb = openpyxl.load_workbook(file_path, read_only=True)
+    ws = wb.active
+    count = 0
+
+    for i, row in enumerate(ws.iter_rows(values_only=True)):
+        if i < 4:
+            continue
+
+        if not row or len(row) < 7:
+            continue
+
+        student_id = str(row[2] or "").strip()
+        handle = str(row[3] or "").strip().lower()
+        kanji_name = str(row[4] or "").strip().replace("\u3000", " ")
+        romaji_name = str(row[6] or "").strip()
+
+        if not student_id or not handle:
+            continue
+
+        db_service.upsert_student(
+            handle=handle,
+            student_id=student_id,
+            email=f"{handle}@{EMAIL_DOMAIN}",
+            kanji_name=kanji_name,
+            romaji_name=romaji_name,
+        )
+        count += 1
+
+    wb.close()
+    logger.info(f"Loaded {count} students from Excel enrollment list")
+    return count
+
+
 def get_student(handle: str) -> dict:
     return db_service.get_student(handle.strip().lower())
 
