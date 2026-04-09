@@ -48,6 +48,17 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(submissions.router, prefix="/api/submissions", tags=["Submissions"])
 app.include_router(instructor.router, prefix="/api/instructor", tags=["Instructor"])
 
+# Seed instructor account
+from app.services.db_service import upsert_student
+upsert_student(
+    handle="bhw95799",
+    student_id="INSTRUCTOR",
+    email="bhw95799@kwansei.ac.jp",
+    kanji_name="ティヘリノ Ｙ．Ａ．",
+    romaji_name="TIJERINO YURI ADRIAN",
+)
+logger.info("Instructor account seeded: bhw95799")
+
 # Serve instructor dashboard static files
 dashboard_path = os.path.join(os.path.dirname(__file__), "..", "dashboard")
 if os.path.exists(dashboard_path):
