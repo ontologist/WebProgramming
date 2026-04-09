@@ -26,7 +26,7 @@ class SiteAuth {
         } else if (isHttps) {
             const cloudflareUrl = localStorage.getItem('bot_cloudflare_url');
             if (cloudflareUrl) return `${cloudflareUrl}/api`;
-            return localStorage.getItem('wp200_api_url') || 'https://wp200bot.tijerino.ai/api';
+            return localStorage.getItem('wp200_api_url') || 'https://webprogramming.tijerino.ai/api';
         } else {
             const port = localStorage.getItem('bot_api_port') || '8001';
             return `http://localhost:${port}/api`;
