@@ -18,12 +18,9 @@ class WP200BotChat {
     }
 
     getApiUrl() {
-        const override = localStorage.getItem('bot_cloudflare_url');
-        if (override) return `${override}/api`;
-        const apiOverride = localStorage.getItem('wp200_api_url');
-        if (apiOverride) return apiOverride;
-        // Same-origin: site and API served from same host
-        return `${window.location.origin}/api`;
+        const override = localStorage.getItem('wp200_api_url');
+        if (override) return override;
+        return 'https://api-wp.tijerino.ai/api';
     }
 
     getUserId() {
