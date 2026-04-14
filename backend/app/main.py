@@ -66,17 +66,31 @@ if os.path.exists(dashboard_path):
 
 # Serve course site from docs/ folder as the root site
 # This must be mounted LAST because it catches all unmatched routes
-docs_path = os.path.join(os.path.dirname(__file__), "..", "..", "docs")
-if os.path.exists(docs_path):
+# Try multiple possible locations for docs/
+_possible_docs_paths = [
+    settings.COURSE_SITE_PATH,  # Explicit override from .env
+    os.path.join(os.path.dirname(__file__), "..", "..", "docs"),  # backend/app/../../docs
+    os.path.join(os.getcwd(), "..", "docs"),  # cwd/../docs (when running from backend/)
+    os.path.join(os.getcwd(), "docs"),  # cwd/docs (when running from project root)
+]
+
+docs_path = None
+for p in _possible_docs_paths:
+    if p and os.path.exists(p) and os.path.isdir(p):
+        docs_path = os.path.abspath(p)
+        break
+
+if docs_path:
     app.mount("/", StaticFiles(directory=docs_path, html=True), name="course-site")
     logger.info(f"Serving course site from {docs_path}")
 else:
-    # Fallback: if docs/ not found relative to backend, try COURSE_SITE_PATH from config
+    logger.warning(f"docs/ folder not found. Tried: {[os.path.abspath(p) for p in _possible_docs_paths if p]}")
+
     @app.get("/")
     async def root():
         return {
             "course": settings.COURSE_NAME,
-            "course_site": "docs/ not found - set COURSE_SITE_PATH in .env",
+            "note": "docs/ folder not found - set COURSE_SITE_PATH in .env",
             "api_docs": "/docs",
             "dashboard": "/dashboard",
         }
