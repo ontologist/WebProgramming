@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 1: Create Your Personal MySite | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Assignment-specific styles */
+        .assignment-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .assignment-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .assignment-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .assignment-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .assignment-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .assignment-content ul, .assignment-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .assignment-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .assignment-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        /* Info box (blue) */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Warning box (yellow) */
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Success box (green) */
+        .success-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .success-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Checklist styling */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 15px;
+            padding-left: 40px;
+            position: relative;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 12px;
+            font-size: 1.3em;
+            color: #7c3aed;
+        }
+
+        /* Download button */
+        .download-section {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #eff6ff 0%, #ede9fe 100%);
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px dashed #7c3aed;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .download-btn::before {
+            content: "\2B07 ";
+        }
+
+        /* Step cards */
+        .step-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 5px solid #2563eb;
+        }
+
+        .step-card h4 {
+            font-size: 1.1rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            margin-bottom: 5px;
+        }
+
+        /* Technique grid */
+        .technique-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .technique-item {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .technique-item:hover {
+            transform: translateY(-2px);
+            border-color: #7c3aed;
+            background-color: #ede9fe;
+        }
+
+        /* Grading table */
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .grading-table thead th {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .grading-table tbody td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .grading-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .grading-table tbody tr:last-child {
+            background-color: #eff6ff;
+            font-weight: 700;
+        }
+
+        .grading-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Folder tree */
+        .folder-tree {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 15px 0 25px 0;
+        }
+
+        /* Mistakes list */
+        .mistakes-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mistakes-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #991b1b;
+        }
+
+        .mistakes-list li::before {
+            content: "\2718";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #dc2626;
+        }
+
+        /* Tips list */
+        .tips-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #065f46;
+        }
+
+        .tips-list li::before {
+            content: "\2714";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .assignment-content {
+                padding: 20px;
+            }
+
+            .assignment-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .download-btn {
+                font-size: 1.1rem;
+                padding: 14px 30px;
+            }
+
+            .technique-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Assignment 1: Create Your Personal MySite</h1>
+            <p class="subtitle">課題1：パーソナルMySiteの作成</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+            <a href="lecture.html">Lecture / 講義</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="assignment-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. ASSIGNMENT OVERVIEW -->
+            <!-- ============================================================ -->
+            <h2>1. Assignment Overview / 課題概要</h2>
+
+            <p>Welcome to your first creative project! In this assignment, you will take a skeleton MySite template and transform it into <strong>your own personal website</strong>. This is your chance to show your personality and creativity through web design.<br>
+            <span class="bilingual">最初のクリエイティブプロジェクトへようこそ！ この課題では、MySiteのスケルトンテンプレートを受け取り、それを自分だけのパーソナルウェブサイトに変身させます。ウェブデザインを通じて、あなたの個性と創造性を発揮するチャンスです。</span></p>
+
+            <p>The template includes <strong>4 pages</strong>:<br>
+            <span class="bilingual">テンプレートには4つのページが含まれています：</span></p>
+
+            <ul>
+                <li><code>aboutme.htm</code> &mdash; Your self-introduction / 自己紹介</li>
+                <li><code>hobbies.htm</code> &mdash; Your hobbies and interests / 趣味と興味</li>
+                <li><code>job.htm</code> &mdash; Your dream job or career goals / 夢の仕事・キャリア目標</li>
+                <li><code>game.htm</code> &mdash; A game page (leave as-is for now) / ゲームページ（今はそのまま）</li>
+            </ul>
+
+            <p>The template has a basic structure with a header, navigation, section with articles, and a footer. All the placeholder content <strong>must be replaced</strong> with your own personal information. Then, make your site truly unique by self-learning advanced HTML and CSS techniques from W3Schools!<br>
+            <span class="bilingual">テンプレートには、ヘッダー、ナビゲーション、記事セクション、フッターの基本構造があります。プレースホルダーのコンテンツは、すべて自分の情報に置き換える必要があります。そして、W3Schoolsから高度なHTMLとCSSのテクニックを自学し、サイトを本当にユニークなものにしてください！</span></p>
+
+            <div class="info-box">
+                <p><strong>Goal:</strong> Make it YOUR own! Your site should look completely different from the original template and from every other student's site.</p>
+                <p class="bilingual"><strong>目標：</strong> 自分だけのサイトにしましょう！ テンプレートとも、他の学生のサイトとも全く異なる見た目にしてください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. DOWNLOAD TEMPLATE -->
+            <!-- ============================================================ -->
+            <h2>2. Download Template / テンプレートのダウンロード</h2>
+
+            <p>Download the MySite template to get started. The ZIP file contains all four HTML pages with placeholder content that you will personalize.<br>
+            <span class="bilingual">MySiteテンプレートをダウンロードして始めましょう。ZIPファイルには、あなたがパーソナライズするプレースホルダーコンテンツを含む4つのHTMLページが入っています。</span></p>
+
+            <div class="download-section">
+                <a href="../../assignments/MySite-template.zip" class="download-btn">Download MySite Template / テンプレートをダウンロード</a>
+                <p style="margin-top: 15px; color: #6b7280; font-size: 0.9rem;">MySite-template.zip &mdash; Contains: aboutme.htm, hobbies.htm, job.htm, game.htm</p>
+            </div>
+
+            <p>You can also browse the individual template files directly at: <a href="../../assignments/MySite-template/" style="color: #2563eb;">assignments/MySite-template/</a><br>
+            <span class="bilingual">個別のテンプレートファイルはこちらで直接閲覧できます。</span></p>
+
+            <h3>Template File Structure / テンプレートのファイル構成</h3>
+
+            <div class="folder-tree">
+MySite-template/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;aboutme.htm &nbsp;&nbsp;&nbsp;&larr; Your self-introduction page<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hobbies.htm &nbsp;&nbsp;&larr; Your hobbies page<br>
+&nbsp;&nbsp;&nbsp;&nbsp;job.htm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; Your dream job page<br>
+&nbsp;&nbsp;&nbsp;&nbsp;game.htm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; Game page (keep as-is)
+            </div>
+
+            <div class="warning-box">
+                <p><strong>Important:</strong> The template contains placeholder text from the instructor. You <strong>must</strong> replace ALL of this content with your own personal information. Submitting the template without changes will receive a very low score.</p>
+                <p class="bilingual"><strong>重要：</strong> テンプレートには講師のプレースホルダーテキストが含まれています。このコンテンツをすべて自分の個人情報に置き換える必要があります。変更なしでテンプレートを提出すると、非常に低い点数になります。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. WHAT YOU NEED TO DO -->
+            <!-- ============================================================ -->
+            <h2>3. What You Need To Do / やるべきこと</h2>
+
+            <p>Follow these steps to complete the assignment:<br>
+            <span class="bilingual">以下のステップに従って課題を完成させてください：</span></p>
+
+            <div class="step-card">
+                <h4>Step 1: Download and Extract / ダウンロードと展開</h4>
+                <p>Download the MySite template ZIP file from the link above. Extract (unzip) the files to a folder on your computer.<br>
+                <span class="bilingual">上記のリンクからMySiteテンプレートZIPファイルをダウンロードし、コンピュータのフォルダに展開（解凍）してください。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 2: Open in VS Code / VS Codeで開く</h4>
+                <p>Open the extracted folder in VS Code. You should see all four <code>.htm</code> files in the file explorer panel.<br>
+                <span class="bilingual">展開したフォルダをVS Codeで開きます。ファイルエクスプローラーパネルに4つの.htmファイルが表示されるはずです。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 3: Replace ALL Placeholder Content / プレースホルダーの置き換え</h4>
+                <p>Go through every page and replace <strong>all</strong> the template text with your own personal information. Do not leave any of the original placeholder content!<br>
+                <span class="bilingual">すべてのページを確認し、テンプレートテキストをすべて自分の個人情報に置き換えてください。元のプレースホルダーコンテンツを残さないでください！</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 4: aboutme.htm &mdash; About Me / 自己紹介</h4>
+                <p>Write about yourself: your name, background, interests, and personality. Add at least one photo of yourself or something that represents you.<br>
+                <span class="bilingual">自分について書きましょう：名前、背景、興味、性格など。自分の写真または自分を表すものの写真を少なくとも1枚追加してください。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 5: hobbies.htm &mdash; Your Hobbies / あなたの趣味</h4>
+                <p>Describe your real hobbies and interests. Include images related to your hobbies. Show what you are passionate about!<br>
+                <span class="bilingual">自分の本当の趣味や興味を記述してください。趣味に関連する画像を含めましょう。あなたが情熱を注いでいることを見せてください！</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 6: job.htm &mdash; Dream Job / 夢の仕事</h4>
+                <p>Describe your dream job or career goals. What do you want to do after graduation? What skills are you building?<br>
+                <span class="bilingual">夢の仕事やキャリア目標を記述してください。卒業後に何をしたいですか？どんなスキルを磨いていますか？</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 7: game.htm &mdash; Leave As-Is / そのまま残す</h4>
+                <p>Do not modify <code>game.htm</code> for now. We will build an interactive game on this page later in the course!<br>
+                <span class="bilingual">今のところgame.htmは変更しないでください。この授業の後半で、このページにインタラクティブなゲームを作ります！</span></p>
+            </div>
+
+            <div class="step-card" style="border-left-color: #7c3aed;">
+                <h4 style="color: #7c3aed;">Step 8: Make It UNIQUE! / ユニークにしよう！</h4>
+                <p>This is the most important step. Visit W3Schools and self-learn advanced HTML and CSS techniques. Apply what you learn to make your site stand out. Be creative and show your personality!<br>
+                <span class="bilingual">これが最も重要なステップです。W3Schoolsを訪問して、高度なHTMLとCSSのテクニックを自学してください。学んだことを適用して、あなたのサイトを際立たせましょう。創造性を発揮して、あなたの個性を見せてください！</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. SELF-LEARNING REQUIREMENT -->
+            <!-- ============================================================ -->
+            <h2>4. Self-Learning Requirement / 自学の要件</h2>
+
+            <p>A key goal of this assignment is to develop your <strong>self-learning ability</strong>. Web development is a field where you must constantly learn new techniques on your own. Start building that habit now!<br>
+            <span class="bilingual">この課題の重要な目標は、自学する力を養うことです。Web開発は、常に自分で新しい技術を学ばなければならない分野です。今からその習慣を身につけましょう！</span></p>
+
+            <div class="info-box">
+                <p><strong>Visit these W3Schools tutorials:</strong></p>
+                <ul style="margin-top: 10px; margin-bottom: 5px;">
+                    <li><a href="https://www.w3schools.com/html/" target="_blank" style="color: #2563eb; font-weight: 600;">W3Schools HTML Tutorial</a> &mdash; HTML要素・属性のリファレンス</li>
+                    <li><a href="https://www.w3schools.com/css/" target="_blank" style="color: #2563eb; font-weight: 600;">W3Schools CSS Tutorial</a> &mdash; CSSスタイリングのリファレンス</li>
+                </ul>
+            </div>
+
+            <p>Explore techniques <strong>beyond</strong> what was covered in class. Apply <strong>at least 5 advanced techniques</strong> from the list below to your MySite. The goal is to demonstrate <strong>creativity</strong> and <strong>self-learning ability</strong>.<br>
+            <span class="bilingual">授業で扱った内容を超えたテクニックを探求してください。以下のリストから少なくとも5つの高度なテクニックをMySiteに適用してください。目標は創造性と自学能力を示すことです。</span></p>
+
+            <h3>Techniques to Explore / 探求すべきテクニック</h3>
+
+            <div class="technique-grid">
+                <div class="technique-item">CSS Colors, Backgrounds &amp; Gradients<br><span class="bilingual">色・背景・グラデーション</span></div>
+                <div class="technique-item">CSS Fonts (Google Fonts)<br><span class="bilingual">フォント（Google Fonts）</span></div>
+                <div class="technique-item">CSS Borders &amp; Rounded Corners<br><span class="bilingual">ボーダーと角丸</span></div>
+                <div class="technique-item">CSS Shadows (box-shadow, text-shadow)<br><span class="bilingual">シャドウ効果</span></div>
+                <div class="technique-item">CSS Transitions &amp; Animations<br><span class="bilingual">トランジションとアニメーション</span></div>
+                <div class="technique-item">CSS Grid Layout<br><span class="bilingual">グリッドレイアウト</span></div>
+                <div class="technique-item">CSS Flexbox Advanced Usage<br><span class="bilingual">Flexboxの高度な使用法</span></div>
+                <div class="technique-item">HTML Tables for Structured Data<br><span class="bilingual">構造化データ用テーブル</span></div>
+                <div class="technique-item">HTML Forms (Contact Form)<br><span class="bilingual">フォーム（コンタクトフォーム）</span></div>
+                <div class="technique-item">HTML Video / Audio Embedding<br><span class="bilingual">動画・音声の埋め込み</span></div>
+                <div class="technique-item">CSS Hover Effects<br><span class="bilingual">ホバーエフェクト</span></div>
+                <div class="technique-item">CSS Media Queries (Responsive)<br><span class="bilingual">メディアクエリ（レスポンシブ）</span></div>
+                <div class="technique-item">CSS Variables (Custom Properties)<br><span class="bilingual">CSS変数（カスタムプロパティ）</span></div>
+                <div class="technique-item">Background Images<br><span class="bilingual">背景画像</span></div>
+                <div class="technique-item">Navigation Bar Styling<br><span class="bilingual">ナビゲーションバーのスタイリング</span></div>
+                <div class="technique-item">Image Galleries<br><span class="bilingual">画像ギャラリー</span></div>
+            </div>
+
+            <div class="success-box">
+                <p><strong>Tip:</strong> Try many W3Schools examples in your browser first. Use the "Try it Yourself" buttons to experiment. Once you understand how a technique works, apply it to your MySite!</p>
+                <p class="bilingual"><strong>ヒント：</strong> まずブラウザでW3Schoolsの例をたくさん試してみてください。「Try it Yourself」ボタンを使って実験しましょう。テクニックの仕組みを理解したら、MySiteに適用してください！</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. REQUIREMENTS CHECKLIST -->
+            <!-- ============================================================ -->
+            <h2>5. Requirements Checklist / 要件チェックリスト</h2>
+
+            <p>Before submitting, make sure you can check off every item:<br>
+            <span class="bilingual">提出前に、すべての項目をチェックできることを確認してください：</span></p>
+
+            <ul class="checklist">
+                <li>All placeholder content replaced with YOUR personal content<br>
+                    <span class="bilingual">すべてのプレースホルダーが自分のコンテンツに置き換えられている</span></li>
+                <li><code>aboutme.htm</code> has your self-introduction and at least one photo<br>
+                    <span class="bilingual">aboutme.htmに自己紹介と少なくとも1枚の写真がある</span></li>
+                <li><code>hobbies.htm</code> describes YOUR hobbies with images<br>
+                    <span class="bilingual">hobbies.htmにあなたの趣味が画像付きで記述されている</span></li>
+                <li><code>job.htm</code> describes YOUR career goals<br>
+                    <span class="bilingual">job.htmにあなたのキャリア目標が記述されている</span></li>
+                <li>Navigation works between all pages<br>
+                    <span class="bilingual">すべてのページ間でナビゲーションが機能する</span></li>
+                <li>At least 5 advanced HTML/CSS techniques from W3Schools applied<br>
+                    <span class="bilingual">W3Schoolsから少なくとも5つの高度なHTML/CSSテクニックが適用されている</span></li>
+                <li>Site has a unique, personalized visual design (not the plain template)<br>
+                    <span class="bilingual">サイトがユニークでパーソナライズされたビジュアルデザインになっている</span></li>
+                <li>All pages are consistent in style<br>
+                    <span class="bilingual">すべてのページのスタイルが統一されている</span></li>
+                <li>HTML is valid and well-structured<br>
+                    <span class="bilingual">HTMLが正しく、良い構造になっている</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. GRADING CRITERIA -->
+            <!-- ============================================================ -->
+            <h2>6. Grading Criteria / 評価基準</h2>
+
+            <p>Your assignment will be graded on the following criteria:<br>
+            <span class="bilingual">課題は以下の基準で評価されます：</span></p>
+
+            <table class="grading-table">
+                <thead>
+                    <tr>
+                        <th>Criteria / 評価項目</th>
+                        <th>Points / 配点</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Personal content quality &amp; completeness<br><span class="bilingual">個人コンテンツの質と完全性</span></td>
+                        <td>30</td>
+                    </tr>
+                    <tr>
+                        <td>Advanced HTML/CSS techniques (min 5 from W3Schools)<br><span class="bilingual">高度なHTML/CSSテクニック（最低5つ）</span></td>
+                        <td>30</td>
+                    </tr>
+                    <tr>
+                        <td>Visual design creativity &amp; uniqueness<br><span class="bilingual">ビジュアルデザインの創造性と独自性</span></td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>Code quality &amp; structure<br><span class="bilingual">コードの品質と構造</span></td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Navigation &amp; consistency<br><span class="bilingual">ナビゲーションと統一性</span></td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total / 合計</strong></td>
+                        <td><strong>100</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <p><strong>Note:</strong> The largest portion of your grade (60 points) comes from personal content and advanced techniques. Simply changing the text without adding any CSS styling will not earn a good score.</p>
+                <p class="bilingual"><strong>注意：</strong> 成績の最大部分（60点）は個人コンテンツと高度なテクニックによるものです。CSSスタイリングを追加せずにテキストを変更するだけでは、良い点数は得られません。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. SUBMISSION -->
+            <!-- ============================================================ -->
+            <h2>7. Submission / 提出方法</h2>
+
+            <p>Submit your completed MySite through the course website:<br>
+            <span class="bilingual">完成したMySiteをコースウェブサイトから提出してください：</span></p>
+
+            <ol>
+                <li>Go to the course website's <strong>Submissions</strong> section<br>
+                    <span class="bilingual">コースウェブサイトの「提出」セクションに移動する</span></li>
+                <li>Upload all your <code>.htm</code> files (aboutme.htm, hobbies.htm, job.htm)<br>
+                    <span class="bilingual">すべての.htmファイルをアップロードする</span></li>
+                <li>Or paste your code in the text field provided<br>
+                    <span class="bilingual">またはテキストフィールドにコードを貼り付ける</span></li>
+            </ol>
+
+            <div class="info-box">
+                <p><strong>Remember:</strong> You do not need to submit <code>game.htm</code> since it should remain unchanged.</p>
+                <p class="bilingual"><strong>注意：</strong> game.htmは変更しないため、提出する必要はありません。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. TIPS FOR SUCCESS -->
+            <!-- ============================================================ -->
+            <h2>8. Tips for Success / 成功のためのヒント</h2>
+
+            <ul class="tips-list">
+                <li>Start with the content first, then focus on styling. Get your personal text and images in place before making it look beautiful.<br>
+                    <span class="bilingual">まずコンテンツから始めて、それからスタイリングに集中しましょう。美しくする前に、テキストと画像を配置してください。</span></li>
+                <li>Try many W3Schools examples in your browser before applying them to your site. Use the "Try it Yourself" editor to experiment freely.<br>
+                    <span class="bilingual">サイトに適用する前に、ブラウザでW3Schoolsの例をたくさん試してみましょう。「Try it Yourself」エディタで自由に実験してください。</span></li>
+                <li>Use browser developer tools (press F12) to experiment with CSS in real-time. You can change colors, sizes, and more instantly!<br>
+                    <span class="bilingual">ブラウザの開発者ツール（F12キー）を使って、CSSをリアルタイムで実験しましょう。色やサイズなどを即座に変更できます！</span></li>
+                <li>Be creative! This is YOUR personal site. Show your personality, your interests, and your style. Make it something you are proud of.<br>
+                    <span class="bilingual">創造的に！ これはあなた個人のサイトです。あなたの個性、興味、スタイルを見せてください。誇りに思えるものを作りましょう。</span></li>
+                <li>Do not copy other students' designs. Your site should reflect YOU, not someone else.<br>
+                    <span class="bilingual">他の学生のデザインをコピーしないでください。あなたのサイトは他の誰かではなく、あなた自身を反映するべきです。</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. COMMON MISTAKES TO AVOID -->
+            <!-- ============================================================ -->
+            <h2>9. Common Mistakes to Avoid / よくある間違い</h2>
+
+            <ul class="mistakes-list">
+                <li>Leaving placeholder or template text unchanged &mdash; Every piece of content must be yours!<br>
+                    <span class="bilingual">プレースホルダーやテンプレートテキストをそのまま残す — すべてのコンテンツがあなたのものでなければなりません！</span></li>
+                <li>Only changing text without adding any CSS styling &mdash; The visual design matters just as much as the content.<br>
+                    <span class="bilingual">CSSスタイリングを追加せずにテキストだけ変更する — ビジュアルデザインはコンテンツと同じくらい重要です。</span></li>
+                <li>Broken images (wrong file paths) &mdash; Test all your pages in the browser to make sure images load correctly.<br>
+                    <span class="bilingual">壊れた画像（間違ったファイルパス） — すべてのページをブラウザでテストして、画像が正しく読み込まれることを確認してください。</span></li>
+                <li>Inconsistent navigation between pages &mdash; Every page should link to every other page, and all links should work.<br>
+                    <span class="bilingual">ページ間のナビゲーションの不一致 — すべてのページが他のすべてのページにリンクし、すべてのリンクが機能する必要があります。</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 10. RESOURCES -->
+            <!-- ============================================================ -->
+            <h2>10. Resources / 参考資料</h2>
+
+            <p>Use these resources to learn new techniques and make your site stand out:<br>
+            <span class="bilingual">これらのリソースを使って新しいテクニックを学び、サイトを際立たせましょう：</span></p>
+
+            <ul>
+                <li><a href="https://www.w3schools.com/html/" target="_blank" style="color: #2563eb;">W3Schools HTML Tutorial</a> &mdash; Complete HTML reference and tutorials<br>
+                    <span class="bilingual">HTML完全リファレンスとチュートリアル</span></li>
+                <li><a href="https://www.w3schools.com/css/" target="_blank" style="color: #2563eb;">W3Schools CSS Tutorial</a> &mdash; Complete CSS reference and tutorials<br>
+                    <span class="bilingual">CSS完全リファレンスとチュートリアル</span></li>
+                <li><a href="https://fonts.google.com/" target="_blank" style="color: #2563eb;">Google Fonts</a> &mdash; Free fonts to use in your website<br>
+                    <span class="bilingual">ウェブサイトで使える無料フォント</span></li>
+                <li><a href="https://www.w3schools.com/colors/colors_picker.asp" target="_blank" style="color: #2563eb;">W3Schools Color Picker</a> &mdash; Find the perfect colors for your design<br>
+                    <span class="bilingual">デザインに最適な色を見つける</span></li>
+            </ul>
+
+            <div class="success-box">
+                <p><strong>You can do this!</strong> This assignment is designed to be fun and creative. There is no single "right" answer &mdash; every student's site should look different. Explore, experiment, and enjoy building your personal website!</p>
+                <p class="bilingual"><strong>あなたならできます！</strong> この課題は楽しくクリエイティブに取り組めるよう設計されています。唯一の「正解」はありません — すべての学生のサイトが異なって見えるべきです。探求し、実験し、パーソナルウェブサイトの作成を楽しんでください！</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>
