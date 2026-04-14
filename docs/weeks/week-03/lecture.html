@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 3: CSS3 Fundamentals &amp; Styling | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Lecture-specific styles */
+        .lecture-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .lecture-content h2 {
+            font-size: 1.8rem;
+            color: #2563eb;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7c3aed;
+        }
+
+        .lecture-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .lecture-content h3 {
+            font-size: 1.3rem;
+            color: #7c3aed;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+
+        .lecture-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #1f2937;
+        }
+
+        .lecture-content ul,
+        .lecture-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .lecture-content li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .note-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .note-box p {
+            margin-bottom: 5px;
+        }
+
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        .tip-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        code {
+            background-color: #f3f4f6;
+            color: #dc2626;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #e5e7eb;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #eff6ff;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
+            border: 2px solid #7c3aed;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .analogy-box p {
+            margin-bottom: 8px;
+        }
+
+        .box-model-diagram {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 20px 0;
+            text-align: center;
+            white-space: pre;
+        }
+
+        .step-number {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .assignment-box {
+            background-color: #faf5ff;
+            border: 2px solid #7c3aed;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .assignment-box h3 {
+            color: #7c3aed;
+            margin-top: 0;
+        }
+
+        .takeaway-list li {
+            background-color: #f0fdf4;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            list-style: none;
+            border-left: 4px solid #10b981;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, #2563eb, #7c3aed, #2563eb);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .lecture-content {
+                padding: 20px;
+            }
+
+            .lecture-content h2 {
+                font-size: 1.4rem;
+            }
+
+            pre {
+                font-size: 0.8rem;
+                padding: 12px;
+            }
+
+            .box-model-diagram {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Session 3: CSS3 Fundamentals &amp; Styling</h1>
+            <p class="subtitle">CSS3基礎とスタイリング</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="lecture-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. Learning Objectives -->
+            <!-- ============================================================ -->
+            <h2>1. Learning Objectives / 学習目標</h2>
+
+            <p>By the end of this session, you will be able to:</p>
+            <p class="bilingual">このセッション終了時に、以下のことができるようになります：</p>
+
+            <ul>
+                <li>
+                    Explain what CSS is and why it exists separately from HTML
+                    <br><span class="bilingual">CSSとは何か、なぜHTMLとは別に存在するのかを説明できる</span>
+                </li>
+                <li>
+                    Use all three methods of adding CSS to a webpage (inline, internal, external)
+                    <br><span class="bilingual">CSSをウェブページに追加する3つの方法（インライン、内部、外部）をすべて使える</span>
+                </li>
+                <li>
+                    Write CSS rules using element, class, and ID selectors
+                    <br><span class="bilingual">要素、クラス、IDセレクターを使ってCSSルールを記述できる</span>
+                </li>
+                <li>
+                    Apply colors, typography, and spacing to HTML elements
+                    <br><span class="bilingual">HTML要素に色、フォント、余白を適用できる</span>
+                </li>
+                <li>
+                    Understand and use the CSS Box Model (content, padding, border, margin)
+                    <br><span class="bilingual">CSSボックスモデル（コンテンツ、パディング、ボーダー、マージン）を理解して使える</span>
+                </li>
+                <li>
+                    Use Flexbox for layout (especially navigation bars)
+                    <br><span class="bilingual">Flexboxをレイアウトに使える（特にナビゲーションバー）</span>
+                </li>
+                <li>
+                    Create and link an external stylesheet to your MySite project
+                    <br><span class="bilingual">外部スタイルシートを作成し、MySiteプロジェクトにリンクできる</span>
+                </li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. Review of Session 2 -->
+            <!-- ============================================================ -->
+            <h2>2. Review of Session 2 / 前回の復習</h2>
+
+            <p>
+                In Session 2, we learned about <strong>semantic HTML5</strong> and built the structure of your MySite project.
+                Let's quickly recall what we covered:
+            </p>
+            <p class="bilingual">
+                セッション2では、<strong>セマンティックHTML5</strong>について学び、MySiteプロジェクトの構造を作りました。
+                前回の内容を簡単に振り返りましょう：
+            </p>
+
+            <ul>
+                <li>
+                    <strong>Semantic tags</strong>: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>,
+                    <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;footer&gt;</code> --
+                    these give <em>meaning</em> to your page structure.
+                    <br><span class="bilingual">セマンティックタグはページ構造に「意味」を与えます。</span>
+                </li>
+                <li>
+                    <strong>MySite structure</strong>: You created 3 HTML pages (<code>index.html</code>,
+                    <code>about.html</code>, <code>hobbies.html</code>) with navigation linking them together.
+                    <br><span class="bilingual">MySiteの構造：3つのHTMLページをナビゲーションでリンクして作成しました。</span>
+                </li>
+                <li>
+                    <strong>The problem</strong>: Your pages work, but they look plain -- just black text on a white background.
+                    <br><span class="bilingual">問題点：ページは動きますが、見た目が地味です -- 白い背景に黒いテキストだけ。</span>
+                </li>
+            </ul>
+
+            <div class="note-box">
+                <p><strong>Today's mission / 今日のミッション:</strong></p>
+                <p>
+                    We will learn CSS to transform your plain HTML pages into beautiful, styled websites!
+                    <br><span class="bilingual">CSSを学んで、地味なHTMLページを美しいスタイル付きウェブサイトに変えましょう！</span>
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. What is CSS? -->
+            <!-- ============================================================ -->
+            <h2>3. What is CSS? / CSSとは何か？</h2>
+
+            <h3>The Full Name / 正式名称</h3>
+            <p>
+                <strong>CSS</strong> stands for <strong>Cascading Style Sheets</strong>.
+                <br><span class="bilingual">CSSは <strong>Cascading Style Sheets</strong>（カスケーディング・スタイル・シート）の略です。</span>
+            </p>
+            <ul>
+                <li><strong>Cascading</strong> = styles flow downward like a waterfall, with later/more-specific rules overriding earlier ones.
+                    <br><span class="bilingual">カスケーディング = スタイルは滝のように上から下へ流れ、後のルールが前のルールを上書きします。</span>
+                </li>
+                <li><strong>Style</strong> = the visual appearance (colors, fonts, spacing, layout).
+                    <br><span class="bilingual">スタイル = 視覚的な外観（色、フォント、余白、レイアウト）。</span>
+                </li>
+                <li><strong>Sheets</strong> = files (documents) that contain style rules.
+                    <br><span class="bilingual">シート = スタイルルールを含むファイル（文書）。</span>
+                </li>
+            </ul>
+
+            <h3>A Brief History / 簡単な歴史</h3>
+            <p>
+                CSS was first proposed in <strong>1994</strong> by Hakon Wium Lie and was officially released as
+                <strong>CSS1 in December 1996</strong>. Before CSS, developers had to mix appearance instructions
+                directly into their HTML using tags like <code>&lt;font&gt;</code> and <code>&lt;center&gt;</code>.
+                This made code messy and hard to maintain. CSS solved this by <strong>separating content (HTML)
+                from presentation (CSS)</strong>.
+            </p>
+            <p class="bilingual">
+                CSSは1994年にHakon Wium Lieによって提案され、1996年12月にCSS1として正式にリリースされました。
+                CSS以前は、開発者は<code>&lt;font&gt;</code>や<code>&lt;center&gt;</code>タグを使って
+                HTML内に直接見た目の指示を書く必要がありました。
+                CSSは「コンテンツ（HTML）とプレゼンテーション（CSS）の分離」によってこの問題を解決しました。
+            </p>
+
+            <h3>The Human Body Analogy / 人体のアナロジー</h3>
+            <div class="analogy-box">
+                <p>Think of a website like a human body:</p>
+                <p class="bilingual">ウェブサイトを人体に例えて考えてみましょう：</p>
+                <ul>
+                    <li><strong>HTML = Skeleton (骨格)</strong> -- The structure and bones. It holds everything in place.
+                        <br><span class="bilingual">HTML = 骨格 -- 構造と骨。すべてを所定の位置に保持します。</span>
+                    </li>
+                    <li><strong>CSS = Skin &amp; Clothes (肌と服)</strong> -- The visual appearance. It determines what
+                        you <em>see</em>: colors, shapes, sizes, position.
+                        <br><span class="bilingual">CSS = 肌と服 -- 視覚的な外観。目に見えるもの（色、形、サイズ、位置）を決定します。</span>
+                    </li>
+                    <li><strong>JavaScript = Muscles &amp; Brain (筋肉と脳)</strong> -- The behavior. It makes things
+                        move and respond. (We'll learn this starting Session 5!)
+                        <br><span class="bilingual">JavaScript = 筋肉と脳 -- 動作。物事を動かし、反応させます。（セッション5から学びます！）</span>
+                    </li>
+                </ul>
+            </div>
+
+            <h3>Same HTML, Different CSS / 同じHTML、異なるCSS</h3>
+            <p>
+                One of the most powerful ideas in web design: the <strong>same HTML content</strong> can look
+                completely different just by changing the CSS file. This is why separation matters.
+            </p>
+            <p class="bilingual">
+                ウェブデザインで最も強力なアイデアの一つ：<strong>同じHTMLコンテンツ</strong>でもCSSファイルを変えるだけで
+                全く異なる見た目にできます。これが分離の重要性です。
+            </p>
+
+            <p>Imagine this simple HTML:</p>
+<pre><code>&lt;h1&gt;Welcome to My Site&lt;/h1&gt;
+&lt;p&gt;This is my homepage.&lt;/p&gt;</code></pre>
+
+            <p>
+                <strong>With no CSS</strong>: plain black text, Times New Roman, white background.
+                <br><strong>With CSS A</strong>: blue heading, sans-serif font, light gray background.
+                <br><strong>With CSS B</strong>: red heading, handwriting font, dark background with white text.
+            </p>
+            <p class="bilingual">
+                <strong>CSSなし</strong>：地味な黒いテキスト、Times New Roman、白い背景。
+                <br><strong>CSS A</strong>：青い見出し、サンセリフフォント、薄いグレーの背景。
+                <br><strong>CSS B</strong>：赤い見出し、手書きフォント、暗い背景に白いテキスト。
+            </p>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. Three Ways to Add CSS -->
+            <!-- ============================================================ -->
+            <h2>4. Three Ways to Add CSS / CSSを追加する3つの方法</h2>
+
+            <p>
+                There are exactly three ways to add CSS to an HTML page. Each has its place,
+                but one is clearly the best for real projects.
+            </p>
+            <p class="bilingual">
+                HTMLページにCSSを追加する方法は正確に3つあります。それぞれに用途がありますが、
+                実際のプロジェクトには1つが明らかに最適です。
+            </p>
+
+            <!-- 4a. Inline -->
+            <h3>Method 1: Inline CSS (インラインCSS)</h3>
+            <p>
+                Add the <code>style</code> attribute directly on an HTML element.
+                The CSS rules go inside quotes as the value of <code>style</code>.
+            </p>
+            <p class="bilingual">
+                HTML要素に直接<code>style</code>属性を追加します。CSSルールは<code>style</code>の値として引用符の中に書きます。
+            </p>
+<pre><code>&lt;!-- Inline CSS: style attribute on the element --&gt;
+&lt;h1 style="color: blue; font-size: 36px;"&gt;Hello World&lt;/h1&gt;
+&lt;p style="color: gray; font-family: Arial;"&gt;This is a paragraph.&lt;/p&gt;</code></pre>
+
+            <div class="warning-box">
+                <p><strong>Pros / 利点:</strong> Quick and easy for testing one element.</p>
+                <p><strong>Cons / 欠点:</strong> Not reusable! If you have 50 paragraphs, you'd need to add
+                    <code>style="..."</code> to each one. Very difficult to maintain.</p>
+                <p class="bilingual">利点：1つの要素のテスト時に素早く簡単。欠点：再利用不可！50の段落があれば、それぞれにstyle属性が必要。</p>
+            </div>
+
+            <!-- 4b. Internal -->
+            <h3>Method 2: Internal CSS (内部CSS)</h3>
+            <p>
+                Add a <code>&lt;style&gt;</code> tag inside the <code>&lt;head&gt;</code> section of your HTML document.
+                Write your CSS rules inside this tag.
+            </p>
+            <p class="bilingual">
+                HTMLドキュメントの<code>&lt;head&gt;</code>セクション内に<code>&lt;style&gt;</code>タグを追加します。
+                このタグの中にCSSルールを書きます。
+            </p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+
+    &lt;!-- Internal CSS: style tag in the head --&gt;
+    &lt;style&gt;
+        h1 {
+            color: blue;
+            font-size: 36px;
+        }
+        p {
+            color: gray;
+            font-family: Arial, sans-serif;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="note-box">
+                <p><strong>Pros / 利点:</strong> Better than inline -- one rule styles ALL matching elements on that page.</p>
+                <p><strong>Cons / 欠点:</strong> Only works on the single page where the <code>&lt;style&gt;</code> tag is.
+                    If you have 3 pages, you need to copy the same CSS into all 3 files.</p>
+                <p class="bilingual">利点：インラインよりも良い -- 1つのルールでページ内の全一致要素をスタイル。欠点：styleタグがあるページだけ有効。</p>
+            </div>
+
+            <!-- 4c. External -->
+            <h3>Method 3: External CSS (外部CSS) -- THE BEST METHOD</h3>
+            <p>
+                Create a separate <code>.css</code> file, then link it in the <code>&lt;head&gt;</code> of your HTML
+                using a <code>&lt;link&gt;</code> tag. This is the method used by all professional websites.
+            </p>
+            <p class="bilingual">
+                別の<code>.css</code>ファイルを作成し、<code>&lt;link&gt;</code>タグを使ってHTMLの<code>&lt;head&gt;</code>にリンクします。
+                これがすべてのプロフェッショナルなウェブサイトで使われる方法です。
+            </p>
+
+            <p><strong>Step 1:</strong> Create a file called <code>style.css</code>:</p>
+<pre><code>/* style.css -- External Stylesheet */
+h1 {
+    color: blue;
+    font-size: 36px;
+}
+p {
+    color: gray;
+    font-family: Arial, sans-serif;
+}</code></pre>
+
+            <p><strong>Step 2:</strong> Link it in your HTML file's <code>&lt;head&gt;</code>:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+
+    &lt;!-- External CSS: link to a separate file --&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello World&lt;/h1&gt;
+    &lt;p&gt;This is a paragraph.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Why External CSS Wins / 外部CSSが最も優れている理由:</strong></p>
+                <ul>
+                    <li>ONE file styles ALL your pages. Change once, update everywhere.
+                        <br><span class="bilingual">1つのファイルで全ページをスタイル。一度変更すれば、すべてが更新。</span>
+                    </li>
+                    <li>Your HTML stays clean and focused on content only.
+                        <br><span class="bilingual">HTMLはきれいに保たれ、コンテンツのみに集中。</span>
+                    </li>
+                    <li>The browser can cache (save) the CSS file, making pages load faster.
+                        <br><span class="bilingual">ブラウザがCSSファイルをキャッシュ（保存）でき、ページの読み込みが速くなる。</span>
+                    </li>
+                    <li>Easier for teams -- designer works on CSS, developer works on HTML.
+                        <br><span class="bilingual">チーム作業が容易 -- デザイナーはCSS、開発者はHTMLを担当。</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Comparison Table -->
+            <h3>Comparison Summary / 比較まとめ</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Method / 方法</th>
+                        <th>Where? / 場所</th>
+                        <th>Reusable? / 再利用可能？</th>
+                        <th>Best For / 最適な用途</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Inline</strong></td>
+                        <td><code>style="..."</code> on element</td>
+                        <td>No</td>
+                        <td>Quick testing only</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Internal</strong></td>
+                        <td><code>&lt;style&gt;</code> in <code>&lt;head&gt;</code></td>
+                        <td>Same page only</td>
+                        <td>Single-page projects</td>
+                    </tr>
+                    <tr>
+                        <td><strong>External</strong></td>
+                        <td><code>&lt;link&gt;</code> to <code>.css</code> file</td>
+                        <td>YES -- all pages</td>
+                        <td>ALL real projects</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. CSS Syntax Deep Dive -->
+            <!-- ============================================================ -->
+            <h2>5. CSS Syntax Deep Dive / CSS構文の詳細</h2>
+
+            <h3>The Basic Rule Structure / 基本ルール構造</h3>
+            <p>
+                Every CSS rule has the same structure:
+            </p>
+            <p class="bilingual">すべてのCSSルールは同じ構造を持っています：</p>
+<pre><code>selector {
+    property: value;
+    property: value;
+    property: value;
+}
+
+/*
+  selector  = WHAT to style (which HTML element)
+  property  = WHICH aspect to change (color, size, etc.)
+  value     = HOW to change it (blue, 20px, etc.)
+
+  セレクター = 何をスタイルするか（どのHTML要素）
+  プロパティ = どの側面を変えるか（色、サイズなど）
+  値        = どう変えるか（青、20pxなど）
+*/</code></pre>
+
+            <h3>Annotated Example / 注釈付きの例</h3>
+<pre><code>/* This rule styles ALL h1 elements on the page */
+/* このルールはページ内の全てのh1要素をスタイルします */
+h1 {
+    color: blue;            /* text color = blue / 文字色 = 青 */
+    font-size: 36px;        /* text size = 36 pixels / 文字サイズ = 36ピクセル */
+    font-family: Arial;     /* font = Arial / フォント = Arial */
+    text-align: center;     /* center the text / テキストを中央揃え */
+    margin-bottom: 20px;    /* space below = 20px / 下の余白 = 20px */
+}</code></pre>
+
+            <h3>Key Syntax Rules / 構文の重要ルール</h3>
+            <ul>
+                <li>
+                    <strong>Curly braces <code>{ }</code></strong> wrap all properties for one selector.
+                    <br><span class="bilingual">中括弧<code>{ }</code>は1つのセレクターの全プロパティを囲みます。</span>
+                </li>
+                <li>
+                    <strong>Colon <code>:</code></strong> separates the property name from its value.
+                    <br><span class="bilingual">コロン<code>:</code>はプロパティ名と値を区切ります。</span>
+                </li>
+                <li>
+                    <strong>Semicolon <code>;</code></strong> ends EVERY property-value pair. Do not forget this!
+                    <br><span class="bilingual">セミコロン<code>;</code>は全てのプロパティと値のペアの末尾に付けます。忘れないでください！</span>
+                </li>
+                <li>
+                    <strong>Comments</strong>: Use <code>/* comment here */</code> to add notes. The browser ignores these.
+                    <br><span class="bilingual">コメント：<code>/* コメント */</code>でメモを追加。ブラウザはこれを無視します。</span>
+                </li>
+                <li>
+                    <strong>Case sensitivity</strong>: CSS property names and most values are case-insensitive,
+                    but class and ID names ARE case-sensitive (<code>.MyClass</code> is different from <code>.myclass</code>).
+                    <br><span class="bilingual">大文字小文字：CSSプロパティ名とほとんどの値は大文字小文字を区別しませんが、
+                    クラスとID名は区別します（<code>.MyClass</code>と<code>.myclass</code>は別物）。</span>
+                </li>
+            </ul>
+
+            <h3>Multiple Properties Example / 複数プロパティの例</h3>
+<pre><code>/* Style a paragraph with many properties at once */
+/* 段落を複数のプロパティで一度にスタイル */
+p {
+    color: #333333;                     /* dark gray text / 濃いグレーのテキスト */
+    font-family: Arial, sans-serif;     /* font with fallback / フォント（代替あり） */
+    font-size: 16px;                    /* text size / 文字サイズ */
+    line-height: 1.6;                   /* line spacing / 行間 */
+    margin-bottom: 15px;                /* space below / 下の余白 */
+    text-align: left;                   /* align left / 左揃え */
+}</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. Selectors - Complete Guide -->
+            <!-- ============================================================ -->
+            <h2>6. Selectors -- Complete Guide / セレクター完全ガイド</h2>
+
+            <p>
+                Selectors are how you tell CSS <strong>which</strong> HTML elements to style.
+                This is one of the most important concepts in CSS.
+            </p>
+            <p class="bilingual">
+                セレクターは、CSSに<strong>どの</strong>HTML要素をスタイルするかを指示する方法です。
+                これはCSSの最も重要な概念の1つです。
+            </p>
+
+            <!-- 6a. Element Selector -->
+            <h3>6a. Element Selector / 要素セレクター</h3>
+            <p>
+                Selects ALL elements of that type on the page. Just write the tag name.
+            </p>
+            <p class="bilingual">ページ上のそのタイプの全要素を選択します。タグ名をそのまま書きます。</p>
+<pre><code>/* Style ALL h1 elements / 全てのh1要素をスタイル */
+h1 {
+    color: navy;
+    font-size: 2rem;
+}
+
+/* Style ALL paragraphs / 全ての段落をスタイル */
+p {
+    color: #444;
+    line-height: 1.6;
+}
+
+/* Style ALL list items / 全てのリスト項目をスタイル */
+li {
+    margin-bottom: 5px;
+}</code></pre>
+
+            <!-- 6b. Class Selector -->
+            <h3>6b. Class Selector / クラスセレクター</h3>
+            <p>
+                Selects elements with a specific <code>class</code> attribute.
+                Uses a <strong>dot <code>.</code></strong> before the class name.
+                Classes are <strong>reusable</strong> -- you can apply the same class to many elements.
+                <strong>This is the most commonly used selector type.</strong>
+            </p>
+            <p class="bilingual">
+                特定の<code>class</code>属性を持つ要素を選択します。クラス名の前に<strong>ドット<code>.</code></strong>を付けます。
+                クラスは<strong>再利用可能</strong>で、同じクラスを多くの要素に適用できます。
+                <strong>最もよく使われるセレクタータイプです。</strong>
+            </p>
+
+            <p><strong>In your CSS file:</strong></p>
+<pre><code>/* Class selector: dot + class name */
+/* クラスセレクター：ドット + クラス名 */
+.highlight {
+    background-color: yellow;
+    padding: 5px;
+}
+
+.important-text {
+    color: red;
+    font-weight: bold;
+}
+
+.center-text {
+    text-align: center;
+}</code></pre>
+
+            <p><strong>In your HTML file:</strong></p>
+<pre><code>&lt;!-- Add class to an element with class="name" --&gt;
+&lt;!-- class="名前" で要素にクラスを追加 --&gt;
+&lt;p class="highlight"&gt;This text has a yellow background.&lt;/p&gt;
+&lt;p class="important-text"&gt;This text is red and bold.&lt;/p&gt;
+&lt;p class="center-text"&gt;This text is centered.&lt;/p&gt;
+
+&lt;!-- You can use the same class on multiple elements! --&gt;
+&lt;!-- 同じクラスを複数の要素に使えます！ --&gt;
+&lt;h2 class="center-text"&gt;This heading is also centered.&lt;/h2&gt;</code></pre>
+
+            <!-- 6c. ID Selector -->
+            <h3>6c. ID Selector / IDセレクター</h3>
+            <p>
+                Selects ONE specific element with a unique <code>id</code> attribute.
+                Uses a <strong>hash <code>#</code></strong> before the ID name.
+                Each ID must be <strong>unique on the page</strong> -- only one element can have that ID.
+            </p>
+            <p class="bilingual">
+                一意の<code>id</code>属性を持つ1つの特定要素を選択します。ID名の前に<strong>ハッシュ<code>#</code></strong>を付けます。
+                各IDはページ上で<strong>一意</strong>でなければなりません。
+            </p>
+
+            <p><strong>In your CSS file:</strong></p>
+<pre><code>/* ID selector: hash + id name */
+/* IDセレクター：ハッシュ + ID名 */
+#main-title {
+    font-size: 3rem;
+    color: darkblue;
+    text-align: center;
+}
+
+#footer-text {
+    font-size: 0.8rem;
+    color: gray;
+}</code></pre>
+
+            <p><strong>In your HTML file:</strong></p>
+<pre><code>&lt;!-- Add id to an element with id="name" --&gt;
+&lt;!-- id="名前" で要素にIDを追加 --&gt;
+&lt;h1 id="main-title"&gt;Welcome to My Website&lt;/h1&gt;
+
+&lt;!-- This id can ONLY be used once per page! --&gt;
+&lt;!-- このIDはページごとに1回しか使えません！ --&gt;
+&lt;p id="footer-text"&gt;Copyright 2026&lt;/p&gt;</code></pre>
+
+            <!-- 6d. Multiple Selectors -->
+            <h3>6d. Grouping Multiple Selectors / 複数セレクターのグループ化</h3>
+            <p>
+                If you want the same styles for multiple selectors, separate them with commas.
+            </p>
+            <p class="bilingual">複数のセレクターに同じスタイルを適用したい場合、カンマで区切ります。</p>
+<pre><code>/* Apply the same style to h1, h2, and h3 */
+/* h1、h2、h3に同じスタイルを適用 */
+h1, h2, h3 {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #1a1a2e;
+}
+
+/* Style both paragraphs and list items */
+/* 段落とリスト項目の両方をスタイル */
+p, li {
+    line-height: 1.6;
+    color: #333;
+}</code></pre>
+
+            <!-- 6e. Descendant Selector -->
+            <h3>6e. Descendant Selector / 子孫セレクター</h3>
+            <p>
+                Select elements that are <strong>inside</strong> another element. Use a <strong>space</strong>
+                between selectors.
+            </p>
+            <p class="bilingual">
+                別の要素の<strong>中にある</strong>要素を選択します。セレクター間に<strong>スペース</strong>を使います。
+            </p>
+<pre><code>/* Style only links that are INSIDE a nav element */
+/* nav要素の中にあるリンクだけをスタイル */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+/* Style only list items inside the footer */
+/* footer内のリスト項目だけをスタイル */
+footer li {
+    display: inline;
+    margin-right: 15px;
+}</code></pre>
+
+            <p><strong>In HTML:</strong></p>
+<pre><code>&lt;nav&gt;
+    &lt;a href="index.html"&gt;Home&lt;/a&gt;     &lt;!-- This link IS styled by "nav a" --&gt;
+    &lt;a href="about.html"&gt;About&lt;/a&gt;    &lt;!-- This link IS styled by "nav a" --&gt;
+&lt;/nav&gt;
+
+&lt;main&gt;
+    &lt;a href="page.html"&gt;Click me&lt;/a&gt;  &lt;!-- This link is NOT styled by "nav a" --&gt;
+&lt;/main&gt;</code></pre>
+
+            <!-- 6f. Summary -->
+            <h3>Selector Summary / セレクターまとめ</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Selector Type</th>
+                        <th>Syntax</th>
+                        <th>Example</th>
+                        <th>Selects</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Element</td>
+                        <td><code>tagname</code></td>
+                        <td><code>p { }</code></td>
+                        <td>All <code>&lt;p&gt;</code> elements</td>
+                    </tr>
+                    <tr>
+                        <td>Class</td>
+                        <td><code>.classname</code></td>
+                        <td><code>.intro { }</code></td>
+                        <td>All elements with <code>class="intro"</code></td>
+                    </tr>
+                    <tr>
+                        <td>ID</td>
+                        <td><code>#idname</code></td>
+                        <td><code>#hero { }</code></td>
+                        <td>The ONE element with <code>id="hero"</code></td>
+                    </tr>
+                    <tr>
+                        <td>Grouping</td>
+                        <td><code>a, b, c</code></td>
+                        <td><code>h1, h2 { }</code></td>
+                        <td>All <code>&lt;h1&gt;</code> and <code>&lt;h2&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td>Descendant</td>
+                        <td><code>parent child</code></td>
+                        <td><code>nav a { }</code></td>
+                        <td>All <code>&lt;a&gt;</code> inside <code>&lt;nav&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. Colors and Typography -->
+            <!-- ============================================================ -->
+            <h2>7. Colors and Typography / 色とタイポグラフィ</h2>
+
+            <p>
+                Colors and fonts are the first things you'll want to customize. CSS gives you
+                many properties to control how text looks.
+            </p>
+            <p class="bilingual">
+                色とフォントは最初にカスタマイズしたいものです。CSSにはテキストの見た目を制御する多くのプロパティがあります。
+            </p>
+
+            <!-- color -->
+            <h3><code>color</code> -- Text Color / テキストの色</h3>
+            <p>Sets the color of the text inside an element. There are three ways to specify colors:</p>
+            <p class="bilingual">要素内のテキストの色を設定します。色の指定方法は3つあります：</p>
+<pre><code>/* Named colors (about 140 available) / 色名（約140種類） */
+h1 { color: red; }
+h2 { color: tomato; }
+h3 { color: steelblue; }
+
+/* Hex codes: # + 6 digits (most common) / 16進コード：# + 6桁（最も一般的） */
+p { color: #ff0000; }     /* red / 赤 */
+p { color: #333333; }     /* dark gray / 濃いグレー */
+p { color: #2563eb; }     /* blue / 青 */
+
+/* RGB function: red, green, blue (0-255) / RGB関数 */
+p { color: rgb(255, 0, 0); }     /* red / 赤 */
+p { color: rgb(51, 51, 51); }    /* dark gray / 濃いグレー */</code></pre>
+
+            <!-- background-color -->
+            <h3><code>background-color</code> -- Background Color / 背景色</h3>
+<pre><code>body {
+    background-color: #f9fafb;      /* light gray / 薄いグレー */
+}
+
+header {
+    background-color: #2563eb;      /* blue / 青 */
+    color: white;                   /* white text on blue background */
+                                    /* 青い背景に白いテキスト */
+}
+
+.highlight {
+    background-color: #fef3c7;      /* light yellow / 薄い黄色 */
+}</code></pre>
+
+            <!-- font-family -->
+            <h3><code>font-family</code> -- Font Choice / フォントの選択</h3>
+            <p>
+                Choose which font to display text in. Always provide a <strong>font stack</strong> --
+                a list of fonts separated by commas. The browser tries the first font; if it's not
+                available, it tries the next one.
+            </p>
+            <p class="bilingual">
+                テキストを表示するフォントを選択します。常に<strong>フォントスタック</strong>（カンマで区切ったフォントリスト）を
+                提供しましょう。ブラウザは最初のフォントを試し、利用できなければ次を試します。
+            </p>
+<pre><code>/* Font stack -- list of fallback fonts / フォントスタック -- 代替フォントのリスト */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Common web-safe font stacks / よく使われるウェブセーフフォントスタック */
+h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+code {
+    font-family: 'Courier New', Consolas, monospace;
+}
+
+/* If font name has spaces, use quotes / フォント名にスペースがある場合は引用符を使用 */
+p {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}</code></pre>
+
+            <!-- font-size -->
+            <h3><code>font-size</code> -- Text Size / テキストサイズ</h3>
+<pre><code>/* px = pixels (absolute, exact size) / ピクセル（絶対的、正確なサイズ） */
+h1 { font-size: 36px; }
+p  { font-size: 16px; }
+
+/* em = relative to parent element's font size */
+/* em = 親要素のフォントサイズに対する相対値 */
+h2 { font-size: 1.5em; }   /* 1.5 times parent size / 親サイズの1.5倍 */
+
+/* rem = relative to root (html) element's font size (RECOMMENDED) */
+/* rem = ルート（html）要素のフォントサイズに対する相対値（推奨） */
+h1 { font-size: 2.5rem; }  /* 2.5 times root size (usually 40px) */
+p  { font-size: 1rem; }    /* same as root size (usually 16px) */</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Tip / ヒント:</strong> Use <code>rem</code> for font sizes in your projects.
+                    It is consistent and scales well.
+                    <br><span class="bilingual">プロジェクトではフォントサイズに<code>rem</code>を使いましょう。一貫性があり、スケールも良好です。</span>
+                </p>
+            </div>
+
+            <!-- font-weight -->
+            <h3><code>font-weight</code> -- Bold / 太さ</h3>
+<pre><code>/* Keyword values / キーワード値 */
+p { font-weight: normal; }     /* regular weight (400) / 通常の太さ */
+strong { font-weight: bold; }  /* bold weight (700) / 太字 */
+
+/* Numeric values: 100 to 900 / 数値：100から900 */
+h1 { font-weight: 900; }  /* extra bold / 極太 */
+h2 { font-weight: 700; }  /* bold / 太字 */
+h3 { font-weight: 500; }  /* medium / ミディアム */
+p  { font-weight: 300; }  /* light / 細字 */</code></pre>
+
+            <!-- text-align -->
+            <h3><code>text-align</code> -- Horizontal Alignment / 水平揃え</h3>
+<pre><code>h1 { text-align: center; }   /* centered / 中央揃え */
+p  { text-align: left; }     /* left-aligned (default) / 左揃え（デフォルト） */
+.price { text-align: right; } /* right-aligned / 右揃え */</code></pre>
+
+            <!-- text-decoration -->
+            <h3><code>text-decoration</code> -- Underline, etc. / 下線など</h3>
+<pre><code>/* Remove underline from links (very common!) */
+/* リンクから下線を削除（非常によく使う！） */
+a {
+    text-decoration: none;
+}
+
+/* Add underline on hover / ホバー時に下線を追加 */
+a:hover {
+    text-decoration: underline;
+}
+
+/* Other values / その他の値 */
+.strikethrough { text-decoration: line-through; }  /* 取り消し線 */
+.underlined    { text-decoration: underline; }     /* 下線 */</code></pre>
+
+            <!-- line-height -->
+            <h3><code>line-height</code> -- Line Spacing / 行間</h3>
+<pre><code>/* Unitless number = multiplier of font-size (RECOMMENDED) */
+/* 単位なしの数値 = フォントサイズの倍数（推奨） */
+p {
+    font-size: 16px;
+    line-height: 1.6;   /* 16px * 1.6 = 25.6px between lines / 行間25.6px */
+}
+
+body {
+    line-height: 1.6;   /* Good default for readability / 読みやすさの良いデフォルト */
+}</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. The Box Model - In Depth -->
+            <!-- ============================================================ -->
+            <h2>8. The Box Model -- In Depth / ボックスモデル詳細</h2>
+
+            <h3>Every Element is a Box / すべての要素はボックス</h3>
+            <p>
+                This is one of the most fundamental concepts in CSS: <strong>every HTML element is a
+                rectangular box</strong>, even if it doesn't look like one. Understanding the Box Model
+                is essential for controlling spacing and layout.
+            </p>
+            <p class="bilingual">
+                CSSの最も基本的な概念の1つ：<strong>すべてのHTML要素は長方形のボックス</strong>です。
+                ボックスモデルの理解は、余白とレイアウトの制御に不可欠です。
+            </p>
+
+            <h3>The Four Layers / 4つの層</h3>
+            <p>Every box has <strong>four layers</strong>, from inside to outside:</p>
+            <p class="bilingual">すべてのボックスには、内側から外側へ<strong>4つの層</strong>があります：</p>
+
+            <div class="box-model-diagram">
++--------------------------------------------------+
+|                   MARGIN (外側余白)                 |
+|   (transparent space outside the border)          |
+|                                                    |
+|   +--------------------------------------------+  |
+|   |              BORDER (枠線)                   |  |
+|   |   (visible line around the element)         |  |
+|   |                                              |  |
+|   |   +--------------------------------------+  |  |
+|   |   |           PADDING (内側余白)           |  |  |
+|   |   |   (space inside the border)          |  |  |
+|   |   |                                      |  |  |
+|   |   |   +------------------------------+  |  |  |
+|   |   |   |        CONTENT (コンテンツ)     |  |  |  |
+|   |   |   |   (your text, images, etc.)  |  |  |  |
+|   |   |   |   width and height apply     |  |  |  |
+|   |   |   |   here by default            |  |  |  |
+|   |   |   +------------------------------+  |  |  |
+|   |   |                                      |  |  |
+|   |   +--------------------------------------+  |  |
+|   |                                              |  |
+|   +--------------------------------------------+  |
+|                                                    |
++--------------------------------------------------+</div>
+
+            <h3>Layer by Layer / 各層の詳細</h3>
+
+            <p><strong>1. Content (コンテンツ):</strong></p>
+            <p>
+                The actual text, images, or other elements inside. The <code>width</code> and <code>height</code>
+                properties set the size of this area (by default).
+            </p>
+<pre><code>.box {
+    width: 300px;     /* content area is 300px wide / コンテンツ領域の幅300px */
+    height: 200px;    /* content area is 200px tall / コンテンツ領域の高さ200px */
+}</code></pre>
+
+            <p><strong>2. Padding (パディング / 内側余白):</strong></p>
+            <p>
+                Space <strong>between the content and the border</strong>. Padding pushes the content
+                inward, creating breathing room inside the element. Padding has the element's background color.
+            </p>
+            <p class="bilingual">
+                コンテンツとボーダーの<strong>間のスペース</strong>。パディングはコンテンツを内側に押し、
+                要素内に余裕を作ります。パディングには要素の背景色が適用されます。
+            </p>
+<pre><code>.box {
+    padding: 20px;                    /* 20px on ALL four sides / 全4辺に20px */
+    padding: 10px 20px;               /* 10px top/bottom, 20px left/right */
+                                      /* 上下10px、左右20px */
+    padding: 10px 20px 30px 40px;     /* top right bottom left (clockwise) */
+                                      /* 上 右 下 左（時計回り） */
+}
+
+/* You can also set individual sides / 個別の辺も設定可能 */
+.box {
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 30px;
+    padding-left: 40px;
+}</code></pre>
+
+            <p><strong>3. Border (ボーダー / 枠線):</strong></p>
+            <p>
+                A visible line around the padding. You specify width, style, and color.
+            </p>
+            <p class="bilingual">パディングの周りに見える線。幅、スタイル、色を指定します。</p>
+<pre><code>.box {
+    border: 1px solid black;         /* thin solid black line / 細い実線の黒い枠 */
+    border: 2px dashed #2563eb;      /* dashed blue line / 青い破線 */
+    border: 3px dotted red;          /* dotted red line / 赤い点線 */
+}
+
+/* Border on specific sides / 特定の辺のボーダー */
+.box {
+    border-bottom: 2px solid #2563eb;  /* only bottom border / 下のボーダーのみ */
+    border-left: 4px solid #7c3aed;    /* only left border / 左のボーダーのみ */
+}
+
+/* Rounded corners / 角丸 */
+.box {
+    border-radius: 10px;              /* rounded corners / 角丸 */
+    border-radius: 50%;               /* makes a circle (if square) / 正方形なら円になる */
+}</code></pre>
+
+            <p><strong>4. Margin (マージン / 外側余白):</strong></p>
+            <p>
+                Space <strong>outside the border</strong>. Margin creates distance between this element
+                and neighboring elements. Margin is always transparent.
+            </p>
+            <p class="bilingual">
+                ボーダーの<strong>外側のスペース</strong>。マージンはこの要素と隣接する要素の間に距離を作ります。
+                マージンは常に透明です。
+            </p>
+<pre><code>.box {
+    margin: 20px;                     /* 20px on ALL sides / 全辺に20px */
+    margin: 10px 20px;                /* 10px top/bottom, 20px left/right */
+    margin: 10px 20px 30px 40px;      /* top right bottom left (clockwise) */
+}
+
+/* Center an element horizontally! / 要素を水平方向に中央揃え！ */
+.centered-box {
+    width: 600px;
+    margin: 0 auto;    /* 0 top/bottom, auto left/right = centered! */
+                       /* 上下0、左右auto = 中央揃え！ */
+}</code></pre>
+
+            <h3>The Problem: Default Box Sizing / デフォルトのボックスサイズの問題</h3>
+            <p>
+                By default, <code>width</code> and <code>height</code> only set the <strong>content area</strong>.
+                Padding and border are <em>added</em> to the total size. This is confusing:
+            </p>
+            <p class="bilingual">
+                デフォルトでは、<code>width</code>と<code>height</code>は<strong>コンテンツ領域</strong>のみを設定します。
+                パディングとボーダーは合計サイズに<em>追加</em>されます。これは紛らわしいです：
+            </p>
+<pre><code>/* Without border-box / border-boxなし */
+.box {
+    width: 300px;
+    padding: 20px;
+    border: 5px solid black;
+}
+/* Total width = 300 + 20 + 20 + 5 + 5 = 350px!  Surprising! */
+/* 合計幅 = 300 + 20 + 20 + 5 + 5 = 350px！ 驚き！ */</code></pre>
+
+            <h3>The Solution: <code>box-sizing: border-box</code></h3>
+            <p>
+                This magical property makes <code>width</code> include padding AND border.
+                The content area shrinks to fit. This is much more intuitive.
+            </p>
+            <p class="bilingual">
+                この魔法のプロパティにより、<code>width</code>にパディングとボーダーが含まれます。
+                コンテンツ領域はフィットするように縮小されます。これはずっと直感的です。
+            </p>
+<pre><code>/* Apply to ALL elements (best practice) / 全要素に適用（ベストプラクティス） */
+* {
+    box-sizing: border-box;
+}
+
+/* Now width = TOTAL width including padding and border */
+/* これでwidth = パディングとボーダーを含む合計幅 */
+.box {
+    width: 300px;
+    padding: 20px;
+    border: 5px solid black;
+}
+/* Total width = 300px exactly! Content area adjusts automatically. */
+/* 合計幅 = 正確に300px！コンテンツ領域が自動的に調整。 */</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Best Practice / ベストプラクティス:</strong> Always add
+                    <code>* { box-sizing: border-box; }</code> at the top of your CSS file. Most professional
+                    websites do this.
+                    <br><span class="bilingual">CSSファイルの先頭に必ず<code>* { box-sizing: border-box; }</code>を追加しましょう。</span>
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. Introduction to Flexbox -->
+            <!-- ============================================================ -->
+            <h2>9. Introduction to Flexbox / Flexbox入門</h2>
+
+            <h3>The Problem / 問題</h3>
+            <p>
+                By default, HTML block elements stack <strong>vertically</strong> -- each element appears
+                below the previous one. But what if you want elements side by side, like a navigation bar?
+                Before Flexbox, this was surprisingly difficult.
+            </p>
+            <p class="bilingual">
+                デフォルトでは、HTMLのブロック要素は<strong>垂直方向</strong>に積み重なります。
+                ナビゲーションバーのように要素を横並びにしたい場合はどうするか？Flexbox以前は驚くほど困難でした。
+            </p>
+
+            <h3>The Solution: <code>display: flex</code></h3>
+            <p>
+                Add <code>display: flex</code> to a <strong>parent container</strong> and its
+                <strong>child elements</strong> will automatically line up in a row.
+            </p>
+            <p class="bilingual">
+                <strong>親コンテナ</strong>に<code>display: flex</code>を追加すると、<strong>子要素</strong>が自動的に横一列に並びます。
+            </p>
+<pre><code>/* The container becomes a flex container / コンテナがフレックスコンテナになる */
+.flex-container {
+    display: flex;   /* This one line changes everything! */
+                     /* この1行ですべてが変わる！ */
+}</code></pre>
+
+            <p><strong>HTML:</strong></p>
+<pre><code>&lt;div class="flex-container"&gt;
+    &lt;div&gt;Item 1&lt;/div&gt;
+    &lt;div&gt;Item 2&lt;/div&gt;
+    &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!-- Without flex: items stack vertically (top to bottom) --&gt;
+&lt;!-- With flex: items line up horizontally (left to right) --&gt;</code></pre>
+
+            <h3><code>flex-direction</code> -- Direction / 方向</h3>
+<pre><code>.container {
+    display: flex;
+    flex-direction: row;      /* left to right (DEFAULT) / 左から右（デフォルト） */
+    flex-direction: column;   /* top to bottom (like normal) / 上から下（通常通り） */
+}</code></pre>
+
+            <h3><code>justify-content</code> -- Horizontal Alignment / 水平方向の配置</h3>
+            <p>Controls how items are positioned along the <strong>main axis</strong> (horizontal by default).</p>
+            <p class="bilingual"><strong>主軸</strong>（デフォルトでは水平方向）に沿ったアイテムの配置を制御します。</p>
+<pre><code>.container {
+    display: flex;
+    justify-content: flex-start;      /* pack items to the left (default) */
+                                      /* アイテムを左に詰める（デフォルト） */
+    justify-content: center;          /* center items horizontally */
+                                      /* アイテムを水平方向に中央揃え */
+    justify-content: flex-end;        /* pack items to the right */
+                                      /* アイテムを右に詰める */
+    justify-content: space-between;   /* equal space BETWEEN items */
+                                      /* アイテム間に均等なスペース */
+    justify-content: space-around;    /* equal space AROUND each item */
+                                      /* 各アイテムの周りに均等なスペース */
+}</code></pre>
+
+            <h3><code>align-items</code> -- Vertical Alignment / 垂直方向の配置</h3>
+            <p>Controls how items are positioned along the <strong>cross axis</strong> (vertical by default).</p>
+            <p class="bilingual"><strong>交差軸</strong>（デフォルトでは垂直方向）に沿ったアイテムの配置を制御します。</p>
+<pre><code>.container {
+    display: flex;
+    align-items: stretch;     /* items stretch to fill height (default) */
+                              /* アイテムが高さいっぱいに伸びる（デフォルト） */
+    align-items: center;      /* center items vertically */
+                              /* アイテムを垂直方向に中央揃え */
+    align-items: flex-start;  /* align items to the top */
+                              /* アイテムを上に揃える */
+    align-items: flex-end;    /* align items to the bottom */
+                              /* アイテムを下に揃える */
+}</code></pre>
+
+            <h3><code>gap</code> -- Spacing Between Items / アイテム間の間隔</h3>
+<pre><code>.container {
+    display: flex;
+    gap: 20px;     /* 20px space between each item / 各アイテム間に20pxのスペース */
+}</code></pre>
+
+            <h3>Practical Example: Navigation Bar / 実践例：ナビゲーションバー</h3>
+            <p>
+                Let's build a horizontal navigation bar using Flexbox -- one of the most common uses.
+            </p>
+            <p class="bilingual">Flexboxを使って水平ナビゲーションバーを作りましょう -- 最も一般的な使い方の1つです。</p>
+
+            <p><strong>HTML:</strong></p>
+<pre><code>&lt;nav class="navbar"&gt;
+    &lt;a href="index.html"&gt;Home&lt;/a&gt;
+    &lt;a href="about.html"&gt;About&lt;/a&gt;
+    &lt;a href="hobbies.html"&gt;Hobbies&lt;/a&gt;
+&lt;/nav&gt;</code></pre>
+
+            <p><strong>CSS:</strong></p>
+<pre><code>.navbar {
+    display: flex;              /* make children horizontal / 子要素を横並びに */
+    gap: 20px;                  /* space between links / リンク間のスペース */
+    background-color: #1f2937;  /* dark background / 暗い背景 */
+    padding: 15px 20px;         /* inner spacing / 内側の余白 */
+}
+
+.navbar a {
+    color: white;               /* white text / 白いテキスト */
+    text-decoration: none;      /* remove underline / 下線を削除 */
+    padding: 8px 16px;          /* clickable area / クリック可能な領域 */
+    border-radius: 5px;         /* rounded corners / 角丸 */
+}
+
+.navbar a:hover {
+    background-color: #2563eb;  /* blue on hover / ホバー時に青 */
+}</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 10. Creating and Linking External Stylesheets -->
+            <!-- ============================================================ -->
+            <h2>10. Creating and Linking External Stylesheets / 外部スタイルシートの作成とリンク</h2>
+
+            <h3>Step-by-Step / 手順</h3>
+
+            <p><span class="step-number">1</span><strong>Create <code>style.css</code></strong> in your MySite project folder (the same folder as your HTML files).</p>
+            <p class="bilingual"><span class="step-number">1</span>MySiteプロジェクトフォルダ（HTMLファイルと同じフォルダ）に<code>style.css</code>を作成します。</p>
+
+            <p><span class="step-number">2</span><strong>Add the <code>&lt;link&gt;</code> tag</strong> inside the <code>&lt;head&gt;</code> section of <strong>EVERY</strong> HTML page:</p>
+            <p class="bilingual"><span class="step-number">2</span><strong>すべての</strong>HTMLページの<code>&lt;head&gt;</code>セクション内に<code>&lt;link&gt;</code>タグを追加します：</p>
+<pre><code>&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Site&lt;/title&gt;
+
+    &lt;!-- Link to your external stylesheet --&gt;
+    &lt;!-- 外部スタイルシートへのリンク --&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;</code></pre>
+
+            <div class="warning-box">
+                <p><strong>Important / 重要:</strong> You must add this <code>&lt;link&gt;</code> tag to
+                    <strong>ALL</strong> of your HTML files (<code>index.html</code>, <code>about.html</code>,
+                    <code>hobbies.html</code>). If you forget one page, that page won't have any styles!
+                </p>
+                <p class="bilingual">
+                    この<code>&lt;link&gt;</code>タグは<strong>すべての</strong>HTMLファイルに追加する必要があります。
+                    1ページでも忘れると、そのページにスタイルが適用されません！
+                </p>
+            </div>
+
+            <h3>The Cascade -- How Styles Override / カスケード -- スタイルの上書き</h3>
+            <p>
+                When multiple styles apply to the same element, CSS follows a priority order (lowest to highest):
+            </p>
+            <p class="bilingual">
+                同じ要素に複数のスタイルが適用される場合、CSSは優先順位に従います（低から高）：
+            </p>
+
+            <ol>
+                <li><strong>Browser defaults</strong> -- the browser's built-in styles (e.g., blue underlined links)
+                    <br><span class="bilingual">ブラウザのデフォルト -- ブラウザの組み込みスタイル（例：青い下線付きリンク）</span>
+                </li>
+                <li><strong>External CSS</strong> -- your <code>.css</code> file
+                    <br><span class="bilingual">外部CSS -- あなたの<code>.css</code>ファイル</span>
+                </li>
+                <li><strong>Internal CSS</strong> -- <code>&lt;style&gt;</code> tag in the page
+                    <br><span class="bilingual">内部CSS -- ページ内の<code>&lt;style&gt;</code>タグ</span>
+                </li>
+                <li><strong>Inline CSS</strong> -- <code>style="..."</code> attribute (highest priority!)
+                    <br><span class="bilingual">インラインCSS -- <code>style="..."</code>属性（最高優先度！）</span>
+                </li>
+            </ol>
+
+            <h3>Specificity -- Which Selector Wins? / 詳細度 -- どのセレクターが勝つか？</h3>
+            <p>
+                When two CSS rules target the same element, the more <strong>specific</strong> selector wins:
+            </p>
+            <p class="bilingual">
+                2つのCSSルールが同じ要素を対象とする場合、より<strong>具体的な</strong>セレクターが勝ちます：
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Selector Type</th>
+                        <th>Specificity</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Element</td>
+                        <td>Lowest (lowest priority)</td>
+                        <td><code>p { color: black; }</code></td>
+                    </tr>
+                    <tr>
+                        <td>Class</td>
+                        <td>Medium</td>
+                        <td><code>.intro { color: blue; }</code></td>
+                    </tr>
+                    <tr>
+                        <td>ID</td>
+                        <td>High</td>
+                        <td><code>#main { color: red; }</code></td>
+                    </tr>
+                    <tr>
+                        <td>Inline</td>
+                        <td>Highest (wins over everything)</td>
+                        <td><code>style="color: green;"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+<pre><code>/* If an element has class="intro" and id="main": */
+/* 要素が class="intro" と id="main" を持つ場合: */
+
+p     { color: black; }    /* specificity: LOW    -- overridden */
+.intro { color: blue; }    /* specificity: MEDIUM -- overridden */
+#main  { color: red; }     /* specificity: HIGH   -- THIS WINS! */
+
+/* The text will be RED because #id beats .class beats element */
+/* テキストは赤になる。#idが.classに勝ち、.classが要素に勝つから */</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 11. Practical: Styling Your MySite -->
+            <!-- ============================================================ -->
+            <h2>11. Practical: Styling Your MySite / 実践：MySiteのスタイリング</h2>
+
+            <p>
+                Now let's put everything together and create a real stylesheet for your MySite project!
+                Follow these steps carefully.
+            </p>
+            <p class="bilingual">
+                それでは、すべてをまとめてMySiteプロジェクト用の実際のスタイルシートを作成しましょう！
+                以下の手順に従ってください。
+            </p>
+
+            <h3><span class="step-number">1</span> Create <code>style.css</code></h3>
+            <p>
+                In VS Code, create a new file called <code>style.css</code> in your MySite folder.
+                This file will be empty at first -- we will add rules step by step.
+            </p>
+            <p class="bilingual">
+                VS Codeで、MySiteフォルダに<code>style.css</code>という新しいファイルを作成します。
+                最初は空のファイルです -- ルールを1つずつ追加していきます。
+            </p>
+
+            <h3><span class="step-number">2</span> Style the Body</h3>
+<pre><code>/* ===== RESET & BASE STYLES ===== */
+/* ===== リセット＆基本スタイル ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}</code></pre>
+
+            <h3><span class="step-number">3</span> Style the Header</h3>
+<pre><code>/* ===== HEADER ===== */
+/* ===== ヘッダー ===== */
+header {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}</code></pre>
+
+            <h3><span class="step-number">4</span> Style the Navigation with Flexbox</h3>
+<pre><code>/* ===== NAVIGATION ===== */
+/* ===== ナビゲーション ===== */
+nav {
+    background-color: #1f2937;
+    padding: 0;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;          /* horizontal layout! / 横並び！ */
+    gap: 5px;
+    padding: 10px 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;   /* smooth hover effect */
+                                          /* スムーズなホバー効果 */
+}
+
+nav a:hover {
+    background-color: #2563eb;
+}</code></pre>
+
+            <h3><span class="step-number">5</span> Style the Main Content</h3>
+<pre><code>/* ===== MAIN CONTENT ===== */
+/* ===== メインコンテンツ ===== */
+main {
+    max-width: 800px;
+    margin: 30px auto;       /* centered on page / ページ中央 */
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+main h2 {
+    color: #2563eb;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #7c3aed;
+    padding-bottom: 8px;
+}
+
+main p {
+    margin-bottom: 15px;
+}
+
+main ul, main ol {
+    padding-left: 25px;
+    margin-bottom: 15px;
+}
+
+main li {
+    margin-bottom: 8px;
+}
+
+main img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 15px 0;
+}</code></pre>
+
+            <h3><span class="step-number">6</span> Style the Footer</h3>
+<pre><code>/* ===== FOOTER ===== */
+/* ===== フッター ===== */
+footer {
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+footer p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}</code></pre>
+
+            <h3>Complete <code>style.css</code> -- All Together / 完全なstyle.css -- すべて統合</h3>
+            <div class="note-box">
+                <p>
+                    Here is the complete stylesheet combining all the steps above.
+                    Copy this into your <code>style.css</code> file, then modify colors and sizes to make it your own!
+                </p>
+                <p class="bilingual">
+                    以下は上記のすべてのステップを統合した完全なスタイルシートです。
+                    <code>style.css</code>ファイルにコピーして、色やサイズを変更してオリジナルにしましょう！
+                </p>
+            </div>
+
+<pre><code>/* ======================================= */
+/*  MySite Stylesheet                      */
+/*  Created: Session 3 - CSS Fundamentals  */
+/* ======================================= */
+
+/* --- Reset & Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+/* --- Header --- */
+header {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* --- Navigation --- */
+nav {
+    background-color: #1f2937;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 5px;
+    padding: 10px 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #2563eb;
+}
+
+/* --- Main Content --- */
+main {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+main h2 {
+    color: #2563eb;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #7c3aed;
+    padding-bottom: 8px;
+}
+
+main p {
+    margin-bottom: 15px;
+}
+
+main ul, main ol {
+    padding-left: 25px;
+    margin-bottom: 15px;
+}
+
+main li {
+    margin-bottom: 8px;
+}
+
+main img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+/* --- Footer --- */
+footer {
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+footer p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 12. Assignment 2 Details -->
+            <!-- ============================================================ -->
+            <h2>12. Assignment 2 Details / 課題2の詳細</h2>
+
+            <div class="assignment-box">
+                <h3>Assignment 2: Style Your MySite / 課題2：MySiteのスタイリング</h3>
+
+                <p><strong>Objective / 目的:</strong></p>
+                <p>
+                    Create an external CSS stylesheet and link it to all your MySite pages to give
+                    your website a consistent, polished design.
+                </p>
+                <p class="bilingual">
+                    外部CSSスタイルシートを作成し、MySiteのすべてのページにリンクして、
+                    一貫性のある洗練されたデザインを作りましょう。
+                </p>
+
+                <p><strong>Requirements / 要件:</strong></p>
+                <ol>
+                    <li>
+                        <strong>Create <code>style.css</code></strong> -- an external stylesheet in your MySite folder.
+                        <br><span class="bilingual">MySiteフォルダに外部スタイルシート<code>style.css</code>を作成する。</span>
+                    </li>
+                    <li>
+                        <strong>Link to ALL 3 pages</strong> -- <code>index.html</code>, <code>about.html</code>,
+                        <code>hobbies.html</code> must all use the same stylesheet.
+                        <br><span class="bilingual">3つのページ全てにリンクする -- 全ページが同じスタイルシートを使用すること。</span>
+                    </li>
+                    <li>
+                        <strong>Use at least 3 selector types</strong> -- element selectors, class selectors,
+                        and at least one ID selector.
+                        <br><span class="bilingual">少なくとも3つのセレクタータイプを使用する -- 要素、クラス、ID。</span>
+                    </li>
+                    <li>
+                        <strong>Apply Box Model properties</strong> -- use <code>margin</code>, <code>padding</code>,
+                        and <code>border</code> somewhere in your design.
+                        <br><span class="bilingual">ボックスモデルのプロパティを適用する -- <code>margin</code>、<code>padding</code>、<code>border</code>をデザインに使用。</span>
+                    </li>
+                    <li>
+                        <strong>Consistent design</strong> -- all 3 pages should look like they belong to the same website.
+                        Same colors, same fonts, same navigation style.
+                        <br><span class="bilingual">一貫したデザイン -- 3ページすべてが同じウェブサイトに見えること。同じ色、フォント、ナビゲーションスタイル。</span>
+                    </li>
+                </ol>
+
+                <p><strong>Self-Study / 自習:</strong></p>
+                <p>
+                    Complete the CSS tutorial on W3Schools:
+                    <a href="https://www.w3schools.com/css/" target="_blank" rel="noopener noreferrer"
+                       style="color: #2563eb; text-decoration: underline;">
+                        https://www.w3schools.com/css/
+                    </a>
+                    <br>Focus on sections: CSS Introduction through CSS Box Model.
+                </p>
+                <p class="bilingual">
+                    W3SchoolsのCSSチュートリアルを完了してください。CSS紹介からCSSボックスモデルまでのセクションに重点を置いてください。
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 13. Common CSS Mistakes -->
+            <!-- ============================================================ -->
+            <h2>13. Common CSS Mistakes / よくあるCSSミス</h2>
+
+            <p>
+                Even experienced developers make these mistakes. Watch out for them!
+            </p>
+            <p class="bilingual">
+                経験豊富な開発者でもこれらの間違いをします。注意しましょう！
+            </p>
+
+            <h3>Mistake 1: Missing Semicolons / セミコロンの欠落</h3>
+<pre><code>/* WRONG -- missing semicolon after "blue" / 間違い -- "blue"の後にセミコロンがない */
+h1 {
+    color: blue       /* &lt;-- missing ; here! */
+    font-size: 24px;
+}
+/* Result: font-size will NOT work because the browser is confused */
+/* 結果: ブラウザが混乱し、font-sizeが機能しない */
+
+/* CORRECT / 正解 */
+h1 {
+    color: blue;      /* &lt;-- semicolon present! */
+    font-size: 24px;
+}</code></pre>
+
+            <h3>Mistake 2: Misspelling Property Names / プロパティ名のスペルミス</h3>
+<pre><code>/* WRONG / 間違い */
+p {
+    colour: red;          /* it's "color" not "colour" (American English) */
+    font-colour: blue;    /* this property does not exist at all */
+    backgroud-color: red; /* typo: "backgroud" instead of "background" */
+}
+
+/* CORRECT / 正解 */
+p {
+    color: red;
+    background-color: blue;
+}</code></pre>
+
+            <h3>Mistake 3: Forgetting to Link the CSS File / CSSファイルのリンク忘れ</h3>
+<pre><code>&lt;!-- WRONG -- no link tag! Your CSS file will be ignored. --&gt;
+&lt;!-- 間違い -- linkタグがない！CSSファイルが無視されます。 --&gt;
+&lt;head&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;!-- CORRECT -- link tag present --&gt;
+&lt;!-- 正解 -- linkタグあり --&gt;
+&lt;head&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;</code></pre>
+
+            <h3>Mistake 4: Class Names with Spaces / スペースのあるクラス名</h3>
+<pre><code>&lt;!-- WRONG -- this creates TWO classes: "my" and "class" --&gt;
+&lt;!-- 間違い -- これは2つのクラスを作成："my" と "class" --&gt;
+&lt;p class="my class"&gt;Text&lt;/p&gt;
+
+&lt;!-- CORRECT -- use a hyphen or camelCase for multi-word class names --&gt;
+&lt;!-- 正解 -- 複数語のクラス名にはハイフンまたはキャメルケースを使用 --&gt;
+&lt;p class="my-class"&gt;Text&lt;/p&gt;
+&lt;p class="myClass"&gt;Text&lt;/p&gt;
+
+&lt;!-- If you WANT two classes, that is valid, but intentional: --&gt;
+&lt;!-- 2つのクラスを意図的に使いたい場合は有効： --&gt;
+&lt;p class="bold red"&gt;This has BOTH the "bold" and "red" classes.&lt;/p&gt;</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Debugging Tip / デバッグのヒント:</strong> Use your browser's Developer Tools
+                    (press <code>F12</code> or right-click and choose "Inspect") to see which CSS rules
+                    are being applied and which are being overridden!
+                </p>
+                <p class="bilingual">
+                    ブラウザの開発者ツール（<code>F12</code>を押すか、右クリックで「検証」を選択）を使って、
+                    どのCSSルールが適用され、どれが上書きされているかを確認しましょう！
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 14. Key Takeaways -->
+            <!-- ============================================================ -->
+            <h2>14. Key Takeaways / 重要ポイント</h2>
+
+            <ul class="takeaway-list">
+                <li>
+                    <strong>CSS separates style from content</strong> -- HTML defines structure,
+                    CSS defines appearance.
+                    <br><span class="bilingual">CSSはスタイルをコンテンツから分離する -- HTMLは構造、CSSは外観を定義。</span>
+                </li>
+                <li>
+                    <strong>Always use external CSS</strong> (<code>&lt;link&gt;</code> to a <code>.css</code> file)
+                    for real projects. One file, all pages.
+                    <br><span class="bilingual">実プロジェクトでは常に外部CSSを使用。1つのファイルで全ページ。</span>
+                </li>
+                <li>
+                    <strong>Selectors target elements</strong>: element (<code>p</code>), class (<code>.name</code>),
+                    ID (<code>#name</code>), descendants (<code>nav a</code>).
+                    <br><span class="bilingual">セレクターは要素を特定：要素、クラス、ID、子孫。</span>
+                </li>
+                <li>
+                    <strong>The Box Model has 4 layers</strong>: content, padding, border, margin.
+                    Always use <code>box-sizing: border-box</code>.
+                    <br><span class="bilingual">ボックスモデルは4層：コンテンツ、パディング、ボーダー、マージン。常にborder-boxを使用。</span>
+                </li>
+                <li>
+                    <strong>Flexbox makes horizontal layout easy</strong>: <code>display: flex</code> on the parent,
+                    use <code>gap</code>, <code>justify-content</code>, and <code>align-items</code>.
+                    <br><span class="bilingual">Flexboxは横並びレイアウトを簡単に：親にdisplay: flex、gap、justify-content、align-itemsを使用。</span>
+                </li>
+                <li>
+                    <strong>Specificity determines which style wins</strong>:
+                    element &lt; class &lt; ID &lt; inline.
+                    <br><span class="bilingual">詳細度がどのスタイルが勝つかを決定：要素 &lt; クラス &lt; ID &lt; インライン。</span>
+                </li>
+                <li>
+                    <strong>Use Developer Tools</strong> (F12) to inspect and debug your CSS.
+                    <br><span class="bilingual">開発者ツール（F12）を使ってCSSを検証・デバッグ。</span>
+                </li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 15. Next Session Preview -->
+            <!-- ============================================================ -->
+            <h2>15. Next Session Preview / 次回のセッション予告</h2>
+
+            <div class="analogy-box">
+                <h3 style="margin-top: 0;">Session 4: JavaScript &amp; Canvas -- Starting the Breakout Game!</h3>
+                <h3 style="margin-top: 5px;">セッション4：JavaScript &amp; Canvas -- ブレイクアウトゲーム開始！</h3>
+
+                <p>
+                    Now that your pages look great with CSS, it's time to make them <strong>interactive</strong>.
+                    In the next session, we will:
+                </p>
+                <p class="bilingual">
+                    CSSでページの見た目が良くなったので、次はページを<strong>インタラクティブ</strong>にする番です。
+                    次のセッションでは：
+                </p>
+
+                <ul>
+                    <li>Learn the basics of <strong>JavaScript</strong> -- the programming language of the web
+                        <br><span class="bilingual"><strong>JavaScript</strong>の基礎を学ぶ -- ウェブのプログラミング言語</span>
+                    </li>
+                    <li>Understand <strong>variables, functions, and events</strong>
+                        <br><span class="bilingual"><strong>変数、関数、イベント</strong>を理解する</span>
+                    </li>
+                    <li>Introduction to the <strong>HTML Canvas</strong> element for drawing graphics
+                        <br><span class="bilingual">グラフィック描画のための<strong>HTML Canvas</strong>要素の紹介</span>
+                    </li>
+                    <li>Start building the <strong>Breakout Game</strong> -- draw shapes, animate a ball!
+                        <br><span class="bilingual"><strong>ブレイクアウトゲーム</strong>の構築開始 -- 図形を描き、ボールをアニメーション！</span>
+                    </li>
+                </ul>
+
+                <p style="margin-top: 15px;">
+                    <strong>Prepare / 準備:</strong> Make sure your MySite CSS assignment is complete before next class.
+                    <br><span class="bilingual">次の授業までにMySiteのCSS課題を完了してください。</span>
+                </p>
+            </div>
+
+        </div><!-- end .lecture-content -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>WP-200: Web Programming | Kwansei Gakuin University</p>
+            <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+        </div>
+    </footer>
+
+</body>
+</html>

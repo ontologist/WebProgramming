@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 2: Semantic HTML5 & Multi-page Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 80px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 3em;
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            color: #7c3aed;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #2563eb;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .slide h4 {
+            font-size: 1.4em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .slide ul, .slide ol {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+        }
+
+        .content-section {
+            margin: 20px 0;
+        }
+
+        .japanese-content {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #7c3aed;
+            border-radius: 8px;
+        }
+
+        .japanese-heading {
+            color: #7c3aed;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: #fef3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-box {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            color: #2563eb;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 2em;
+            color: #7c3aed;
+            margin-bottom: 40px;
+        }
+
+        .title-slide .info {
+            font-size: 1.3em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .column-section {
+            margin: 20px 0;
+        }
+
+        .column-item {
+            margin-bottom: 30px;
+        }
+
+        .column-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 1024px) {
+            .slide {
+                padding: 40px 50px;
+            }
+
+            .slide h1 {
+                font-size: 2.5em;
+            }
+
+            .slide h2 {
+                font-size: 2em;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .slide-container {
+                padding: 0;
+            }
+
+            .slide {
+                width: 100vw;
+                height: auto;
+                min-height: 100vh;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .slide h1 {
+                font-size: 2em;
+            }
+
+            .slide h2 {
+                font-size: 1.6em;
+            }
+
+            .slide h3 {
+                font-size: 1.5em;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+
+            .title-slide .subtitle {
+                font-size: 1.4em;
+            }
+
+            .navigation {
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="slide-number" id="slideNumber">Slide 1 / 14</div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Session 2</h1>
+            <p class="subtitle">Semantic HTML5 & Multi-page Website<br>セマンティックHTML5と複数ページサイト</p>
+            <p class="info"><strong>Course:</strong> WP-200 Web Programming</p>
+            <p class="info"><strong>Topic:</strong> Core Week 1 - Semantic Structure & MySite Project</p>
+            <p class="info"><strong>Instructor:</strong> Yuri Tijerino</p>
+        </div>
+
+        <!-- Slide 2: Review -->
+        <div class="slide">
+            <h2>Review: What We Learned / 前回の復習</h2>
+            <div class="content-section">
+                <h3>Session 1 Recap:</h3>
+                <ul>
+                    <li><strong>&lt;!DOCTYPE html&gt;</strong> - Tells the browser this is an HTML5 document</li>
+                    <li><strong>&lt;html&gt;, &lt;head&gt;, &lt;body&gt;</strong> - The three essential parts of every page</li>
+                    <li><strong>&lt;h1&gt; - &lt;h6&gt;</strong> - Headings (big to small)</li>
+                    <li><strong>&lt;p&gt;</strong> - Paragraphs of text</li>
+                    <li><strong>&lt;img&gt;</strong> - Images</li>
+                    <li><strong>&lt;a&gt;</strong> - Links to other pages</li>
+                    <li><strong>&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</strong> - Lists</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">セッション1の振り返り：</h3>
+                    <ul>
+                        <li><strong>&lt;!DOCTYPE html&gt;</strong> - HTML5文書であることをブラウザに伝える</li>
+                        <li><strong>&lt;html&gt;, &lt;head&gt;, &lt;body&gt;</strong> - すべてのページの3つの必須部分</li>
+                        <li><strong>&lt;h1&gt; - &lt;h6&gt;</strong> - 見出し（大から小）</li>
+                        <li><strong>&lt;p&gt;</strong> - テキストの段落</li>
+                        <li><strong>&lt;img&gt;</strong> - 画像</li>
+                        <li><strong>&lt;a&gt;</strong> - 他のページへのリンク</li>
+                        <li><strong>&lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;</strong> - リスト</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: What is Semantic HTML? -->
+        <div class="slide">
+            <h2>What is Semantic HTML? / セマンティックHTMLとは？</h2>
+            <div class="highlight-box">
+                <h3>Semantic = Meaningful / セマンティック = 意味のある</h3>
+                <p>Semantic HTML uses tags that describe the <strong>meaning</strong> of the content, not just how it looks.</p>
+                <p>セマンティックHTMLは、見た目だけでなくコンテンツの<strong>意味</strong>を説明するタグを使います。</p>
+            </div>
+            <div class="content-section">
+                <h4>Before HTML5 / HTML5以前:</h4>
+                <div class="code-box">&lt;div id="header"&gt;...&lt;/div&gt;
+&lt;div id="navigation"&gt;...&lt;/div&gt;
+&lt;div id="main-content"&gt;...&lt;/div&gt;
+&lt;div id="footer"&gt;...&lt;/div&gt;</div>
+                <h4>With HTML5 Semantic Tags / HTML5セマンティックタグ:</h4>
+                <div class="code-box">&lt;header&gt;...&lt;/header&gt;
+&lt;nav&gt;...&lt;/nav&gt;
+&lt;main&gt;...&lt;/main&gt;
+&lt;footer&gt;...&lt;/footer&gt;</div>
+                <p><strong>Why does this matter?</strong> Accessibility (screen readers), SEO (search engines), and readability (easier for developers to understand).</p>
+
+                <div class="japanese-content">
+                    <p class="japanese-heading"><strong>なぜ重要？</strong> アクセシビリティ（スクリーンリーダー）、SEO（検索エンジン）、可読性（開発者が理解しやすい）。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: The header Element -->
+        <div class="slide">
+            <h2>The &lt;header&gt; Element / &lt;header&gt;要素</h2>
+            <div class="content-section">
+                <p>The <strong>&lt;header&gt;</strong> element represents the introductory content at the top of your page - typically a logo, site title, or banner.</p>
+
+                <div class="code-box">&lt;header&gt;
+    &lt;h1&gt;My Personal Website&lt;/h1&gt;
+    &lt;p&gt;Welcome to my page!&lt;/p&gt;
+&lt;/header&gt;</div>
+
+                <div class="highlight-box">
+                    <h4>Important! / 重要！</h4>
+                    <p><strong>&lt;header&gt;</strong> is NOT the same as <strong>&lt;head&gt;</strong>!</p>
+                    <ul>
+                        <li><strong>&lt;head&gt;</strong> = metadata (title, charset, CSS links) - invisible to users</li>
+                        <li><strong>&lt;header&gt;</strong> = visible page header (logo, site title) - users see this!</li>
+                    </ul>
+                </div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">&lt;header&gt;要素について：</h4>
+                    <p>ページ上部の導入コンテンツ（ロゴ、サイトタイトル、バナーなど）を表します。</p>
+                    <p><strong>&lt;head&gt;</strong>（メタデータ、非表示）と<strong>&lt;header&gt;</strong>（ページヘッダー、表示される）は別物です！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: The nav Element -->
+        <div class="slide">
+            <h2>The &lt;nav&gt; Element / &lt;nav&gt;要素</h2>
+            <div class="content-section">
+                <p>The <strong>&lt;nav&gt;</strong> element contains navigation links - the menu that lets users move between pages.</p>
+
+                <div class="code-box">&lt;nav&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="job.htm"&gt;Future Job&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;</div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">&lt;nav&gt;要素について：</h4>
+                    <p>ナビゲーションリンクを含みます。ユーザーがページ間を移動するためのメニューです。</p>
+                    <ul>
+                        <li><strong>&lt;ul&gt;</strong>と<strong>&lt;li&gt;</strong>を使ってリンクをリストにまとめます</li>
+                        <li><strong>&lt;a href="..."&gt;</strong>でリンク先のファイル名を指定します</li>
+                        <li>相対パス（同じフォルダ内のファイル名）を使います</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: main, section, article -->
+        <div class="slide">
+            <h2>The &lt;main&gt;, &lt;section&gt;, &lt;article&gt; Elements</h2>
+            <div class="content-section">
+                <div class="column-section">
+                    <div class="column-item">
+                        <h4>&lt;main&gt; - Primary Content / メインコンテンツ</h4>
+                        <p>The main content of the page. Only one per page!</p>
+                    </div>
+                    <div class="column-item">
+                        <h4>&lt;section&gt; - Thematic Grouping / テーマ別グループ</h4>
+                        <p>Groups related content together by theme or topic.</p>
+                    </div>
+                    <div class="column-item">
+                        <h4>&lt;article&gt; - Self-contained Content / 独立コンテンツ</h4>
+                        <p>Content that makes sense on its own (blog post, news article).</p>
+                    </div>
+                </div>
+
+                <div class="code-box">&lt;main&gt;
+    &lt;section&gt;
+        &lt;h2&gt;About Me&lt;/h2&gt;
+        &lt;article&gt;
+            &lt;p&gt;Hello! I am a student...&lt;/p&gt;
+        &lt;/article&gt;
+    &lt;/section&gt;
+    &lt;section&gt;
+        &lt;h2&gt;My Skills&lt;/h2&gt;
+        &lt;p&gt;HTML, CSS, and more!&lt;/p&gt;
+    &lt;/section&gt;
+&lt;/main&gt;</div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">3つの要素の違い：</h4>
+                    <ul>
+                        <li><strong>&lt;main&gt;</strong> = ページの主要コンテンツ（1ページに1つだけ）</li>
+                        <li><strong>&lt;section&gt;</strong> = テーマ別にコンテンツをグループ化</li>
+                        <li><strong>&lt;article&gt;</strong> = それだけで意味が通じる独立したコンテンツ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: The footer Element -->
+        <div class="slide">
+            <h2>The &lt;footer&gt; Element / &lt;footer&gt;要素</h2>
+            <div class="content-section">
+                <p>The <strong>&lt;footer&gt;</strong> element contains information at the bottom of the page - copyright, contact info, or additional links.</p>
+
+                <div class="code-box">&lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Your Name. All rights reserved.&lt;/p&gt;
+    &lt;p&gt;Contact: yourname@example.com&lt;/p&gt;
+&lt;/footer&gt;</div>
+
+                <div class="highlight-box">
+                    <h4>Tip / ヒント:</h4>
+                    <p><strong>&amp;copy;</strong> creates the copyright symbol: &copy;</p>
+                    <p><strong>&amp;copy;</strong> は著作権記号 &copy; を表示します。</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">&lt;footer&gt;要素について：</h4>
+                    <p>ページの下部に表示される情報（著作権、連絡先、追加リンクなど）を含みます。</p>
+                    <p>すべてのページに一貫したフッターを入れましょう。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Putting It All Together -->
+        <div class="slide">
+            <h2>Putting It All Together / すべてをまとめる</h2>
+            <div class="content-section">
+                <p>Here is a complete semantic HTML5 page structure:</p>
+
+                <div class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Website&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;My Website&lt;/h1&gt;
+    &lt;/header&gt;
+    &lt;nav&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="aboutme.htm"&gt;About&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="job.htm"&gt;Job&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+    &lt;main&gt;
+        &lt;section&gt;
+            &lt;h2&gt;Welcome!&lt;/h2&gt;
+            &lt;p&gt;This is my personal site.&lt;/p&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;
+        &lt;p&gt;&amp;copy; 2026 My Name&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <div class="japanese-content">
+                    <p class="japanese-heading">セマンティックHTML5の完全なページ構造です。<strong>header</strong>、<strong>nav</strong>、<strong>main</strong>、<strong>footer</strong>が順番に並んでいます。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Multi-page Websites -->
+        <div class="slide">
+            <h2>Multi-page Websites / 複数ページのウェブサイト</h2>
+            <div class="content-section">
+                <h3>How It Works:</h3>
+                <p>A multi-page website is simply <strong>multiple .html files in one folder</strong>, linked together with <strong>&lt;a&gt;</strong> tags.</p>
+
+                <div class="highlight-box">
+                    <h4>Your Project Folder / プロジェクトフォルダ:</h4>
+                    <div class="code-box">mysite/
+    aboutme.htm
+    hobbies.htm
+    job.htm
+    photo.jpg</div>
+                </div>
+
+                <h4>Linking Between Pages / ページ間のリンク:</h4>
+                <div class="code-box">&lt;!-- On aboutme.htm --&gt;
+&lt;a href="hobbies.htm"&gt;My Hobbies&lt;/a&gt;
+&lt;a href="job.htm"&gt;My Future Job&lt;/a&gt;
+
+&lt;!-- On hobbies.htm --&gt;
+&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;
+&lt;a href="job.htm"&gt;My Future Job&lt;/a&gt;</div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">相対パスでリンク：</h4>
+                    <p>同じフォルダ内のファイルは、ファイル名だけでリンクできます（例：<strong>href="hobbies.htm"</strong>）。</p>
+                    <p>すべてのページに同じナビゲーションを入れて、一貫性を保ちましょう。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: MySite Project Introduction -->
+        <div class="slide">
+            <h2>MySite Project Introduction / MySiteプロジェクト紹介</h2>
+            <div class="highlight-box">
+                <h3>Assignment 1: Create Your Personal Website!</h3>
+                <h3>課題1：あなたの個人ウェブサイトを作ろう！</h3>
+            </div>
+            <div class="content-section">
+                <h4>Requirements / 要件:</h4>
+                <ul>
+                    <li><strong>3 pages / 3ページ:</strong>
+                        <ul>
+                            <li><strong>aboutme.htm</strong> - Self-introduction / 自己紹介</li>
+                            <li><strong>hobbies.htm</strong> - Your hobbies / あなたの趣味</li>
+                            <li><strong>job.htm</strong> - Your dream job / あなたの将来の仕事</li>
+                        </ul>
+                    </li>
+                    <li>Use <strong>semantic HTML5</strong> tags on every page</li>
+                    <li><strong>Navigation</strong> linking all 3 pages on every page</li>
+                    <li>At least <strong>one image</strong> per page</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <p class="japanese-heading">すべてのページでセマンティックHTML5タグを使い、全ページにナビゲーションを配置し、各ページに最低1つの画像を入れてください。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: MySite aboutme.htm -->
+        <div class="slide">
+            <h2>MySite: aboutme.htm / 自己紹介ページ</h2>
+            <div class="content-section">
+                <p>Example structure for your About Me page:</p>
+
+                <div class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;About Me&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;Taro Yamada&lt;/h1&gt;
+    &lt;/header&gt;
+    &lt;nav&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="job.htm"&gt;Future Job&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+    &lt;main&gt;
+        &lt;section&gt;
+            &lt;h2&gt;About Me&lt;/h2&gt;
+            &lt;img src="myphoto.jpg" alt="My photo"&gt;
+            &lt;p&gt;Hello! I am a university student...&lt;/p&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;
+        &lt;p&gt;&amp;copy; 2026 Taro Yamada&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <div class="japanese-content">
+                    <p class="japanese-heading">header（名前）、nav（3ページへのリンク）、main（自己紹介と写真）、footer（著作権）の構造を使いましょう。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: MySite hobbies.htm & job.htm -->
+        <div class="slide">
+            <h2>MySite: hobbies.htm & job.htm</h2>
+            <div class="content-section">
+                <h3>Same Structure, Different Content! / 同じ構造、違うコンテンツ！</h3>
+                <p>Every page uses the same semantic structure and the <strong>same navigation menu</strong>.</p>
+
+                <div class="column-section">
+                    <div class="column-item">
+                        <h4>hobbies.htm - Key Differences:</h4>
+                        <div class="code-box">&lt;main&gt;
+    &lt;section&gt;
+        &lt;h2&gt;My Hobbies&lt;/h2&gt;
+        &lt;article&gt;
+            &lt;h3&gt;Soccer&lt;/h3&gt;
+            &lt;img src="soccer.jpg" alt="Soccer"&gt;
+            &lt;p&gt;I have played soccer since...&lt;/p&gt;
+        &lt;/article&gt;
+    &lt;/section&gt;
+&lt;/main&gt;</div>
+                    </div>
+                    <div class="column-item">
+                        <h4>job.htm - Key Differences:</h4>
+                        <div class="code-box">&lt;main&gt;
+    &lt;section&gt;
+        &lt;h2&gt;My Future Job&lt;/h2&gt;
+        &lt;img src="engineer.jpg" alt="Engineer"&gt;
+        &lt;p&gt;I want to become a software
+        engineer because...&lt;/p&gt;
+    &lt;/section&gt;
+&lt;/main&gt;</div>
+                    </div>
+                </div>
+
+                <div class="japanese-content">
+                    <p class="japanese-heading">ナビゲーションは全ページ共通にしましょう。ユーザーがどのページからでも他のページに移動できるようにします。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Key Takeaways -->
+        <div class="slide">
+            <h2>Key Takeaways / 重要なポイント</h2>
+            <div class="content-section">
+                <ul>
+                    <li><strong>Semantic HTML = meaningful structure</strong> - Tags describe what the content IS, not how it looks</li>
+                    <li><strong>6 key semantic elements:</strong> &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;section&gt;, &lt;article&gt;, &lt;footer&gt;</li>
+                    <li><strong>Linking pages</strong> with &lt;a href="filename.htm"&gt; using relative paths</li>
+                    <li><strong>Consistent navigation</strong> on every page for good user experience</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">まとめ：</h3>
+                    <ul>
+                        <li><strong>セマンティックHTML = 意味のある構造</strong> - タグがコンテンツの意味を表す</li>
+                        <li><strong>6つの主要セマンティック要素：</strong> header, nav, main, section, article, footer</li>
+                        <li><strong>ページ間リンク：</strong> 相対パスで &lt;a href="ファイル名.htm"&gt; を使う</li>
+                        <li><strong>一貫したナビゲーション：</strong> すべてのページに同じメニューを配置</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Self-study resource / 自習リソース:</strong> <a href="https://www.w3schools.com/html/" target="_blank">https://www.w3schools.com/html/</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Assignment -->
+        <div class="slide">
+            <h2>Assignment 1 / 課題1</h2>
+            <div class="highlight-box">
+                <h3>Create MySite with 3 Pages / 3ページのMySiteを作成</h3>
+            </div>
+            <div class="content-section">
+                <h4>Requirements / 要件:</h4>
+                <ol>
+                    <li>Create <strong>3 HTML files:</strong> aboutme.htm, hobbies.htm, job.htm</li>
+                    <li>Use <strong>semantic HTML5 tags</strong> on every page: &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;footer&gt;</li>
+                    <li>Add <strong>navigation</strong> linking all 3 pages on every page</li>
+                    <li>Include at least <strong>one image</strong> per page</li>
+                    <li>Write <strong>meaningful content</strong> about yourself</li>
+                </ol>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">課題の詳細：</h3>
+                    <ol>
+                        <li><strong>3つのHTMLファイル</strong>を作成：aboutme.htm, hobbies.htm, job.htm</li>
+                        <li>すべてのページで<strong>セマンティックHTML5タグ</strong>を使用</li>
+                        <li>すべてのページに<strong>3ページへのナビゲーション</strong>を追加</li>
+                        <li>各ページに最低<strong>1つの画像</strong>を含める</li>
+                        <li>自分自身について<strong>意味のあるコンテンツ</strong>を書く</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <p><strong>Due / 提出期限:</strong> Before Session 3 / セッション3の前まで</p>
+                    <p><strong>Self-study / 自習:</strong> <a href="https://www.w3schools.com/html/" target="_blank">w3schools.com/html</a></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#9664; Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &#9654;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                showSlide(0);
+            } else if (event.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

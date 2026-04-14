@@ -1,0 +1,797 @@
+<!-- Copyright (c) 2026 Yuri Tijerino. All rights reserved. / 著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 1: Course Overview & HTML Basics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 80px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 3em;
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            color: #7c3aed;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #2563eb;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .slide h4 {
+            font-size: 1.4em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .slide ul, .slide ol {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+        }
+
+        .content-section {
+            margin: 20px 0;
+        }
+
+        .japanese-content {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #7c3aed;
+            border-radius: 8px;
+        }
+
+        .japanese-heading {
+            color: #7c3aed;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: #fef3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-box {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            color: #2563eb;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 2em;
+            color: #7c3aed;
+            margin-bottom: 40px;
+        }
+
+        .title-slide .info {
+            font-size: 1.3em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .column-section {
+            margin: 20px 0;
+        }
+
+        .column-item {
+            margin-bottom: 30px;
+        }
+
+        .column-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 1024px) {
+            .slide {
+                padding: 40px 50px;
+            }
+
+            .slide h1 {
+                font-size: 2.5em;
+            }
+
+            .slide h2 {
+                font-size: 2em;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .slide-container {
+                padding: 0;
+            }
+
+            .slide {
+                width: 100vw;
+                height: auto;
+                min-height: 100vh;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .slide h1 {
+                font-size: 2em;
+            }
+
+            .slide h2 {
+                font-size: 1.6em;
+            }
+
+            .slide h3 {
+                font-size: 1.5em;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+
+            .title-slide .subtitle {
+                font-size: 1.4em;
+            }
+
+            .navigation {
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="slide-number" id="slideNumber">Slide 1 / 14</div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Session 1</h1>
+            <p class="subtitle">Course Overview &amp; HTML Basics<br>コース概要とHTML基礎</p>
+            <p class="info"><strong>Course:</strong> WP-200 Web Programming</p>
+            <p class="info"><strong>Topic:</strong> Startup Week</p>
+        </div>
+
+        <!-- Slide 2: Welcome & Course Goals -->
+        <div class="slide">
+            <h2>Welcome! / ようこそ！</h2>
+            <div class="content-section">
+                <h3>What We'll Build This Semester:</h3>
+                <p>By the end of this course, you will build a <strong>Breakout game</strong> -- a real, playable game that runs in your web browser!</p>
+
+                <h4>What You'll Learn:</h4>
+                <ul>
+                    <li><strong>HTML</strong> -- the structure of web pages (like the skeleton of a building)</li>
+                    <li><strong>CSS</strong> -- the style and design (like paint and decoration)</li>
+                    <li><strong>JavaScript</strong> -- the behavior and interactivity (like electricity and plumbing)</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>No experience needed!</strong> This course assumes you have never written a single line of code before.</p>
+                    <p><strong>経験は不要です！</strong> このコースは、コードを一行も書いたことがないことを前提としています。</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">今学期作るもの：</h3>
+                    <p>このコースの終わりまでに、ブラウザで動く本物の<strong>ブロック崩しゲーム</strong>を作ります！</p>
+                    <h4 class="japanese-heading">学ぶこと：</h4>
+                    <ul>
+                        <li><strong>HTML</strong> -- ウェブページの構造（建物の骨組みのようなもの）</li>
+                        <li><strong>CSS</strong> -- スタイルとデザイン（ペンキや装飾のようなもの）</li>
+                        <li><strong>JavaScript</strong> -- 動作とインタラクティブ性（電気や配管のようなもの）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Course Structure Overview -->
+        <div class="slide">
+            <h2>Course Structure / コースの構成</h2>
+            <div class="content-section">
+                <h3>4 Phases:</h3>
+                <ul>
+                    <li><strong>Phase 1: HTML &amp; CSS (Weeks 1-3)</strong> -- Build and style web pages</li>
+                    <li><strong>Phase 2: Procedural JavaScript (Weeks 4-9)</strong> -- Add logic and interactivity</li>
+                    <li><strong>Phase 3: Object-Oriented JavaScript (Weeks 10-13)</strong> -- Build the Breakout game</li>
+                    <li><strong>Phase 4: Presentations (Weeks 14-15)</strong> -- Show off your work!</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Grading:</strong> 9 assignments throughout the semester. No final exam!</p>
+                    <p><strong>成績：</strong> 学期を通して9つの課題。期末試験なし！</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">4つのフェーズ：</h3>
+                    <ul>
+                        <li><strong>フェーズ1：HTML と CSS（第1-3週）</strong> -- ウェブページを作成しスタイルを設定</li>
+                        <li><strong>フェーズ2：手続き型JavaScript（第4-9週）</strong> -- ロジックとインタラクティブ性を追加</li>
+                        <li><strong>フェーズ3：オブジェクト指向JavaScript（第10-13週）</strong> -- ブロック崩しゲームを構築</li>
+                        <li><strong>フェーズ4：プレゼンテーション（第14-15週）</strong> -- 成果を発表！</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: What is the Web? -->
+        <div class="slide">
+            <h2>What is the Web? / ウェブとは？</h2>
+            <div class="content-section">
+                <h3>How a Web Page Reaches You:</h3>
+                <ol>
+                    <li><strong>You type a URL</strong> (like www.google.com) into your browser</li>
+                    <li><strong>Your browser sends a request</strong> across the internet to a server</li>
+                    <li><strong>The server sends back HTML</strong> (and CSS, JavaScript, images...)</li>
+                    <li><strong>Your browser reads the HTML</strong> and draws the page on your screen</li>
+                </ol>
+
+                <div class="highlight-box">
+                    <h4>Client-Server Model / クライアント・サーバーモデル</h4>
+                    <p><strong>Client</strong> = your browser (Chrome, Firefox, Safari). It asks for pages.</p>
+                    <p><strong>Server</strong> = a computer somewhere in the world. It sends pages back.</p>
+                    <p><strong>クライアント</strong> = あなたのブラウザ（Chrome、Firefox、Safari）。ページを要求します。</p>
+                    <p><strong>サーバー</strong> = 世界のどこかにあるコンピュータ。ページを送り返します。</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">ウェブページがあなたに届くまで：</h3>
+                    <ol>
+                        <li><strong>URLを入力する</strong>（www.google.com のように）</li>
+                        <li><strong>ブラウザがリクエストを送る</strong>（インターネットを通じてサーバーへ）</li>
+                        <li><strong>サーバーがHTMLを返す</strong>（CSS、JavaScript、画像なども）</li>
+                        <li><strong>ブラウザがHTMLを読んで</strong>画面にページを表示する</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: What is HTML? -->
+        <div class="slide">
+            <h2>What is HTML? / HTMLとは？</h2>
+            <div class="content-section">
+                <div class="highlight-box">
+                    <h3>HTML = HyperText Markup Language</h3>
+                    <h3 class="japanese-heading">HTML = ハイパーテキスト・マークアップ・ランゲージ</h3>
+                </div>
+
+                <p>HTML is the <strong>skeleton</strong> of every web page. It tells the browser <em>what</em> content to show: headings, paragraphs, images, links, and more.</p>
+
+                <h4>Important: HTML is NOT a programming language!</h4>
+                <p>HTML is a <strong>markup language</strong>. It describes the <em>structure</em> of content. It does not have logic, loops, or conditions -- that is what JavaScript is for (we will learn it later).</p>
+
+                <p>Think of it this way:</p>
+                <ul>
+                    <li><strong>HTML</strong> = the bones and organs (structure)</li>
+                    <li><strong>CSS</strong> = the skin and clothes (appearance)</li>
+                    <li><strong>JavaScript</strong> = the muscles and brain (behavior)</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">HTMLとは？</h3>
+                    <p>HTMLはすべてのウェブページの<strong>骨格</strong>です。ブラウザに<em>何の</em>コンテンツを表示するか指示します：見出し、段落、画像、リンクなど。</p>
+                    <p><strong>重要：HTMLはプログラミング言語ではありません！</strong></p>
+                    <p>HTMLは<strong>マークアップ言語</strong>です。コンテンツの<em>構造</em>を記述します。</p>
+                    <ul>
+                        <li><strong>HTML</strong> = 骨と臓器（構造）</li>
+                        <li><strong>CSS</strong> = 皮膚と服（見た目）</li>
+                        <li><strong>JavaScript</strong> = 筋肉と脳（動作）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: HTML Document Structure -->
+        <div class="slide">
+            <h2>HTML Document Structure / HTML文書の構造</h2>
+            <div class="content-section">
+                <p>Every HTML page follows the same basic structure. Here is the minimal template:</p>
+
+                <div class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My First Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+    &lt;p&gt;This is my first web page.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <h4>What Each Part Does:</h4>
+                <ul>
+                    <li><strong>&lt;!DOCTYPE html&gt;</strong> -- Tells the browser "this is an HTML5 page"</li>
+                    <li><strong>&lt;html&gt;</strong> -- The root element; everything goes inside this</li>
+                    <li><strong>&lt;head&gt;</strong> -- Invisible settings (page title, character encoding)</li>
+                    <li><strong>&lt;body&gt;</strong> -- All the visible content goes here</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">各部分の役割：</h4>
+                    <ul>
+                        <li><strong>&lt;!DOCTYPE html&gt;</strong> -- 「これはHTML5ページです」とブラウザに伝える</li>
+                        <li><strong>&lt;html&gt;</strong> -- ルート要素；すべてがこの中に入る</li>
+                        <li><strong>&lt;head&gt;</strong> -- 見えない設定（ページタイトル、文字エンコーディング）</li>
+                        <li><strong>&lt;body&gt;</strong> -- すべての見えるコンテンツがここに入る</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Basic HTML Tags (Text) -->
+        <div class="slide">
+            <h2>Basic HTML Tags: Text / 基本的なHTMLタグ：テキスト</h2>
+            <div class="content-section">
+                <h3>Headings (h1 to h6):</h3>
+                <p>Headings show titles and section names. <strong>h1</strong> is the biggest, <strong>h6</strong> is the smallest.</p>
+
+                <div class="code-box">&lt;h1&gt;Main Title&lt;/h1&gt;
+&lt;h2&gt;Section Title&lt;/h2&gt;
+&lt;h3&gt;Subsection Title&lt;/h3&gt;</div>
+
+                <h3>Paragraphs:</h3>
+                <p>Use <strong>&lt;p&gt;</strong> to create a block of text.</p>
+
+                <div class="code-box">&lt;p&gt;This is a paragraph of text.&lt;/p&gt;
+&lt;p&gt;This is another paragraph.&lt;/p&gt;</div>
+
+                <h3>Emphasis:</h3>
+                <p>Use <strong>&lt;strong&gt;</strong> for bold and <strong>&lt;em&gt;</strong> for italic.</p>
+
+                <div class="code-box">&lt;p&gt;This word is &lt;strong&gt;bold&lt;/strong&gt; and this is &lt;em&gt;italic&lt;/em&gt;.&lt;/p&gt;</div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">テキスト用のHTMLタグ：</h4>
+                    <ul>
+                        <li><strong>h1~h6</strong> -- 見出し（h1が最大、h6が最小）</li>
+                        <li><strong>p</strong> -- 段落（テキストのブロック）</li>
+                        <li><strong>strong</strong> -- 太字（重要なテキスト）</li>
+                        <li><strong>em</strong> -- 斜体（強調テキスト）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Basic HTML Tags (Lists & Links) -->
+        <div class="slide">
+            <h2>Basic HTML Tags: Lists &amp; Links / リストとリンク</h2>
+            <div class="content-section">
+                <h3>Unordered List (bullet points):</h3>
+                <div class="code-box">&lt;ul&gt;
+  &lt;li&gt;Apples&lt;/li&gt;
+  &lt;li&gt;Bananas&lt;/li&gt;
+  &lt;li&gt;Cherries&lt;/li&gt;
+&lt;/ul&gt;</div>
+
+                <h3>Ordered List (numbered):</h3>
+                <div class="code-box">&lt;ol&gt;
+  &lt;li&gt;First step&lt;/li&gt;
+  &lt;li&gt;Second step&lt;/li&gt;
+  &lt;li&gt;Third step&lt;/li&gt;
+&lt;/ol&gt;</div>
+
+                <h3>Links:</h3>
+                <p>The <strong>&lt;a&gt;</strong> tag creates a clickable link. The <strong>href</strong> attribute specifies where to go.</p>
+
+                <div class="code-box">&lt;a href="https://www.google.com"&gt;Go to Google&lt;/a&gt;
+
+&lt;!-- Open in a new tab --&gt;
+&lt;a href="https://www.google.com" target="_blank"&gt;Open Google in new tab&lt;/a&gt;</div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">リストとリンクのタグ：</h4>
+                    <ul>
+                        <li><strong>ul</strong> -- 順序なしリスト（箇条書き）</li>
+                        <li><strong>ol</strong> -- 順序ありリスト（番号付き）</li>
+                        <li><strong>li</strong> -- リスト項目</li>
+                        <li><strong>a href="..."</strong> -- リンク（クリックで別のページへ）</li>
+                        <li><strong>target="_blank"</strong> -- 新しいタブで開く</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Basic HTML Tags (Images) -->
+        <div class="slide">
+            <h2>Basic HTML Tags: Images / 画像</h2>
+            <div class="content-section">
+                <p>The <strong>&lt;img&gt;</strong> tag displays an image. It does <em>not</em> have a closing tag!</p>
+
+                <div class="code-box">&lt;img src="photo.jpg" alt="A beautiful sunset"&gt;</div>
+
+                <h4>Important Attributes:</h4>
+                <ul>
+                    <li><strong>src</strong> -- the file path or URL of the image</li>
+                    <li><strong>alt</strong> -- a text description (shown if the image fails to load; also helps accessibility)</li>
+                </ul>
+
+                <h4>Relative vs. Absolute Paths:</h4>
+                <div class="code-box">&lt;!-- Relative path: the image is in the same folder --&gt;
+&lt;img src="photo.jpg" alt="My photo"&gt;
+
+&lt;!-- Relative path: the image is in a subfolder --&gt;
+&lt;img src="images/photo.jpg" alt="My photo"&gt;
+
+&lt;!-- Absolute path: full URL from the internet --&gt;
+&lt;img src="https://example.com/photo.jpg" alt="My photo"&gt;</div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">画像タグ：</h4>
+                    <ul>
+                        <li><strong>img</strong> -- 画像を表示する（閉じタグなし！）</li>
+                        <li><strong>src</strong> -- 画像のファイルパスまたはURL</li>
+                        <li><strong>alt</strong> -- テキスト説明（画像が読み込めない場合に表示される）</li>
+                    </ul>
+                    <p>相対パス：同じフォルダにあるファイル（例："photo.jpg"）</p>
+                    <p>絶対パス：インターネット上の完全なURL（例："https://..."）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Your First HTML Page -->
+        <div class="slide">
+            <h2>Your First HTML Page / 初めてのHTMLページ</h2>
+            <div class="content-section">
+                <h3>Let's Build One Together!</h3>
+                <p>Follow along with me step by step:</p>
+
+                <h4>Step 1: Open VS Code and create a new file</h4>
+                <h4>Step 2: Save it as <strong>index.html</strong></h4>
+                <h4>Step 3: Type this code:</h4>
+
+                <div class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My First Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello! My name is [Your Name]&lt;/h1&gt;
+    &lt;p&gt;Welcome to my first web page!&lt;/p&gt;
+
+    &lt;h2&gt;My Hobbies&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Reading&lt;/li&gt;
+      &lt;li&gt;Gaming&lt;/li&gt;
+      &lt;li&gt;Cooking&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;img src="https://picsum.photos/300/200" alt="A random photo"&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <h4>Step 4: Open the file in your browser (double-click the .html file)</h4>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">一緒に作りましょう！</h3>
+                    <p>手順1：VS Codeを開いて新しいファイルを作成</p>
+                    <p>手順2：<strong>index.html</strong> として保存</p>
+                    <p>手順3：上のコードを入力</p>
+                    <p>手順4：ブラウザでファイルを開く（.htmlファイルをダブルクリック）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Tools Setup -->
+        <div class="slide">
+            <h2>Tools Setup / ツールのセットアップ</h2>
+            <div class="content-section">
+                <h3>1. VS Code (Text Editor):</h3>
+                <p>Download from: <strong>https://code.visualstudio.com</strong></p>
+                <p>VS Code is a free text editor where you will write all your code.</p>
+
+                <h3>2. Recommended Extension: Live Server</h3>
+                <p>This extension automatically refreshes your browser when you save a file. Very useful!</p>
+                <ul>
+                    <li>Open VS Code</li>
+                    <li>Click the Extensions icon on the left sidebar (or press Ctrl+Shift+X)</li>
+                    <li>Search for "Live Server" by Ritwick Dey</li>
+                    <li>Click Install</li>
+                </ul>
+
+                <h3>3. File Naming Rules:</h3>
+                <ul>
+                    <li>Always use the <strong>.html</strong> extension for HTML files</li>
+                    <li>Use lowercase letters: <strong>index.html</strong> (not Index.HTML)</li>
+                    <li>No spaces in file names: <strong>my-page.html</strong> (not my page.html)</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">必要なツール：</h3>
+                    <ul>
+                        <li><strong>VS Code</strong> -- 無料のテキストエディタ（code.visualstudio.com）</li>
+                        <li><strong>Live Server拡張機能</strong> -- ファイル保存時にブラウザを自動更新</li>
+                        <li>ファイル名は<strong>小文字</strong>で、<strong>スペースなし</strong>、拡張子は<strong>.html</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Developer Tools -->
+        <div class="slide">
+            <h2>Developer Tools / 開発者ツール</h2>
+            <div class="content-section">
+                <p>Every browser has built-in developer tools. They let you see and even change the HTML of any web page!</p>
+
+                <h3>How to Open Developer Tools:</h3>
+                <ul>
+                    <li>Press <strong>F12</strong> on your keyboard, or</li>
+                    <li>Right-click on any web page and select <strong>"Inspect"</strong></li>
+                </ul>
+
+                <h3>The Elements Tab:</h3>
+                <p>This tab shows you the HTML structure of the page. You can:</p>
+                <ul>
+                    <li>See every HTML tag on the page</li>
+                    <li>Click on an element to highlight it</li>
+                    <li><strong>Try it:</strong> Double-click on any text in the Elements tab and change it! (Don't worry -- it only changes on your screen, not the real website.)</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Try it now!</strong> Open a new tab, go to any website, press F12, and find the Elements tab.</p>
+                    <p><strong>今すぐ試しましょう！</strong> 新しいタブを開き、任意のウェブサイトに行き、F12を押して、Elementsタブを見つけてください。</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">開発者ツールの使い方：</h3>
+                    <ul>
+                        <li><strong>F12</strong>を押す、または右クリックして<strong>「検証」</strong>を選択</li>
+                        <li><strong>Elementsタブ</strong>でHTMLの構造を確認できる</li>
+                        <li>テキストをダブルクリックして変更してみましょう（自分の画面でのみ変更されます）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Key Takeaways -->
+        <div class="slide">
+            <h2>Key Takeaways / 重要なポイント</h2>
+            <div class="content-section">
+                <h3>What We Learned Today:</h3>
+                <ul>
+                    <li><strong>HTML = Structure.</strong> It defines what content appears on a web page.</li>
+                    <li><strong>Tags come in pairs:</strong> most tags have an opening tag and a closing tag (e.g., &lt;p&gt; ... &lt;/p&gt;)</li>
+                    <li><strong>Every page needs:</strong> &lt;!DOCTYPE html&gt;, &lt;html&gt;, &lt;head&gt;, and &lt;body&gt;</li>
+                    <li><strong>Basic tags:</strong> h1-h6, p, strong, em, ul, ol, li, a, img</li>
+                    <li><strong>Tools:</strong> VS Code (to write code) + Browser (to view results)</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Remember / 覚えておこう:</h4>
+                    <p>HTML is like writing a letter -- you are telling the browser what to display and in what order. There is no "wrong answer" at this stage. Just experiment and have fun!</p>
+                    <p>HTMLは手紙を書くようなものです -- ブラウザに何をどんな順番で表示するか伝えています。この段階で「間違い」はありません。実験して楽しみましょう！</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">今日学んだこと：</h3>
+                    <ul>
+                        <li><strong>HTML = 構造。</strong> ウェブページに表示されるコンテンツを定義する</li>
+                        <li><strong>タグはペアになる：</strong> 開始タグと終了タグがある（例：&lt;p&gt; ... &lt;/p&gt;）</li>
+                        <li><strong>すべてのページに必要：</strong> DOCTYPE、html、head、body</li>
+                        <li><strong>基本タグ：</strong> h1-h6、p、strong、em、ul、ol、li、a、img</li>
+                        <li><strong>ツール：</strong> VS Code（コードを書く）+ ブラウザ（結果を見る）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Next Session Preview -->
+        <div class="slide">
+            <h2>Next Session Preview / 次回のプレビュー</h2>
+            <div class="highlight-box">
+                <h3>Session 2: Semantic HTML5 &amp; Building Your MySite</h3>
+                <h3 class="japanese-heading">セッション2：セマンティックHTML5とMySiteの構築</h3>
+            </div>
+            <div class="content-section">
+                <h4>What's Coming:</h4>
+                <ul>
+                    <li><strong>Semantic HTML5 elements:</strong> header, nav, main, section, footer -- tags that describe meaning</li>
+                    <li><strong>Building your personal website (MySite):</strong> a multi-page site about you</li>
+                    <li><strong>Linking multiple pages together</strong> to create a real website</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">次回の内容：</h4>
+                    <ul>
+                        <li><strong>セマンティックHTML5要素：</strong> header、nav、main、section、footer -- 意味を記述するタグ</li>
+                        <li><strong>個人ウェブサイト（MySite）の構築：</strong> 自分についての複数ページのサイト</li>
+                        <li><strong>複数のページをリンクで繋げて</strong>本物のウェブサイトを作る</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#9664; Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &#9654;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                showSlide(0);
+            } else if (event.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

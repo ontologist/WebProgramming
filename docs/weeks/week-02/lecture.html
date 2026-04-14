@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 2: Semantic HTML5 &amp; Multi-page Website | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Lecture-specific styles */
+        .lecture-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .lecture-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .lecture-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .lecture-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .lecture-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .lecture-content ul, .lecture-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .lecture-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .lecture-content pre {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .lecture-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        .lecture-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .note-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .note-box p {
+            margin-bottom: 5px;
+        }
+
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        .tip-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        .element-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .element-card h4 {
+            font-size: 1.15rem;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 6px 0;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+
+        .folder-tree {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 15px 0 25px 0;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .tag-highlight {
+            display: inline-block;
+            background-color: #ede9fe;
+            color: #7c3aed;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .lecture-content {
+                padding: 20px;
+            }
+
+            .lecture-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .lecture-content pre {
+                font-size: 0.8rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Session 2: Semantic HTML5 &amp; Multi-page Website</h1>
+            <p class="subtitle">セマンティックHTML5と複数ページサイト</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="lecture-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. LEARNING OBJECTIVES -->
+            <!-- ============================================================ -->
+            <h2>1. Learning Objectives / 学習目標</h2>
+
+            <p>By the end of this session, you will be able to:<br>
+            <span class="bilingual">このセッション終了時に、以下のことができるようになります：</span></p>
+
+            <ul>
+                <li>Understand the purpose of semantic HTML5 elements<br>
+                    <span class="bilingual">セマンティックHTML5要素の目的を理解する</span></li>
+                <li>Use <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;footer&gt;</code>, and <code>&lt;aside&gt;</code> correctly<br>
+                    <span class="bilingual">各セマンティック要素を正しく使用する</span></li>
+                <li>Create a multi-page website with working navigation links<br>
+                    <span class="bilingual">ナビゲーションリンク付きの複数ページウェブサイトを作成する</span></li>
+                <li>Organize files for a web project<br>
+                    <span class="bilingual">ウェブプロジェクトのファイルを整理する</span></li>
+                <li>Begin building your MySite project<br>
+                    <span class="bilingual">MySiteプロジェクトの構築を開始する</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. REVIEW OF SESSION 1 -->
+            <!-- ============================================================ -->
+            <h2>2. Review of Session 1 / 第1回の復習</h2>
+
+            <p>In Session 1, we covered the foundations of web development. Let's do a quick recap:<br>
+            <span class="bilingual">第1回では、ウェブ開発の基礎を学びました。簡単に振り返りましょう：</span></p>
+
+            <h3>What we learned / 学んだこと</h3>
+            <ul>
+                <li><strong>HTML structure</strong> &mdash; Every HTML page has <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code><br>
+                    <span class="bilingual">HTML構造 &mdash; すべてのHTMLページにはDOCTYPE宣言、html、head、bodyがある</span></li>
+                <li><strong>Basic tags</strong> &mdash; <code>&lt;h1&gt;</code>-<code>&lt;h6&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;img&gt;</code>, <code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code>/<code>&lt;li&gt;</code><br>
+                    <span class="bilingual">基本タグ &mdash; 見出し、段落、リンク、画像、リスト</span></li>
+                <li><strong>VS Code setup</strong> &mdash; How to create and edit HTML files using Visual Studio Code<br>
+                    <span class="bilingual">VS Codeのセットアップ &mdash; Visual Studio Codeを使ってHTMLファイルを作成・編集する方法</span></li>
+                <li><strong>Viewing in browser</strong> &mdash; Opening your <code>.html</code> file in a web browser to see the result<br>
+                    <span class="bilingual">ブラウザでの表示 &mdash; HTMLファイルをブラウザで開いて結果を確認する方法</span></li>
+            </ul>
+
+            <div class="note-box">
+                <p><strong>Quick check:</strong> Can you write a basic HTML page from memory? If not, review your Session 1 notes before continuing.</p>
+                <p class="bilingual">確認：基本的なHTMLページを何も見ずに書けますか？書けない場合は、続ける前に第1回のノートを復習してください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. WHY SEMANTIC HTML MATTERS -->
+            <!-- ============================================================ -->
+            <h2>3. Why Semantic HTML Matters / セマンティックHTMLが重要な理由</h2>
+
+            <h3>The problem with &lt;div&gt; everywhere / &lt;div&gt;だらけの問題</h3>
+
+            <p>Before HTML5, web developers used <code>&lt;div&gt;</code> tags for everything. A typical old webpage looked like this:<br>
+            <span class="bilingual">HTML5以前、ウェブ開発者はすべてに&lt;div&gt;タグを使用していました。典型的な古いウェブページは次のようでした：</span></p>
+
+<pre><code>&lt;div id="header"&gt;
+  &lt;div id="nav"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="main"&gt;
+  &lt;div id="article"&gt;...&lt;/div&gt;
+  &lt;div id="sidebar"&gt;...&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id="footer"&gt;...&lt;/div&gt;</code></pre>
+
+            <p><strong>The problem:</strong> The <code>&lt;div&gt;</code> tag has <em>no meaning</em>. It is just a generic container. The browser, search engines, and screen readers cannot tell what the content actually <em>is</em>.<br>
+            <span class="bilingual">問題点：&lt;div&gt;タグには意味がありません。単なる汎用的なコンテナです。ブラウザ、検索エンジン、スクリーンリーダーは、コンテンツが実際に何であるかを判断できません。</span></p>
+
+            <h3>What does "semantic" mean? / 「セマンティック」とは？</h3>
+
+            <p><strong>Semantic</strong> means "relating to meaning." A semantic HTML element clearly describes its meaning to both the browser and the developer.<br>
+            <span class="bilingual">セマンティックとは「意味に関する」という意味です。セマンティックHTML要素は、ブラウザと開発者の両方にその意味を明確に伝えます。</span></p>
+
+            <ul>
+                <li><code>&lt;div&gt;</code> = "I am a box" (no meaning)<br>
+                    <span class="bilingual">「私はボックスです」（意味なし）</span></li>
+                <li><code>&lt;nav&gt;</code> = "I contain navigation links" (clear meaning!)<br>
+                    <span class="bilingual">「私はナビゲーションリンクを含んでいます」（明確な意味！）</span></li>
+                <li><code>&lt;article&gt;</code> = "I am a self-contained piece of content" (clear meaning!)<br>
+                    <span class="bilingual">「私は独立したコンテンツです」（明確な意味！）</span></li>
+            </ul>
+
+            <h3>Benefits of Semantic HTML / セマンティックHTMLの利点</h3>
+
+            <ol>
+                <li><strong>Accessibility (アクセシビリティ)</strong> &mdash; Screen readers can navigate your page more effectively. Visually impaired users depend on semantic elements to understand page structure.<br>
+                    <span class="bilingual">スクリーンリーダーがページをより効果的にナビゲートできます。視覚障がいのあるユーザーはページ構造を理解するためにセマンティック要素に依存しています。</span></li>
+                <li><strong>SEO (検索エンジン最適化)</strong> &mdash; Search engines like Google understand your content better, which helps your site rank higher in search results.<br>
+                    <span class="bilingual">Googleなどの検索エンジンがコンテンツをよりよく理解し、検索結果での上位表示に役立ちます。</span></li>
+                <li><strong>Readability (可読性)</strong> &mdash; Other developers (and future you!) can read and understand your code more easily.<br>
+                    <span class="bilingual">他の開発者（そして将来のあなた自身！）がコードをより簡単に読み理解できます。</span></li>
+                <li><strong>Maintainability (保守性)</strong> &mdash; Semantic code is easier to update and fix because each section has a clear purpose.<br>
+                    <span class="bilingual">各セクションに明確な目的があるため、セマンティックなコードは更新や修正が容易です。</span></li>
+            </ol>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. SEMANTIC HTML5 ELEMENTS - DETAILED REFERENCE -->
+            <!-- ============================================================ -->
+            <h2>4. Semantic HTML5 Elements &mdash; Detailed Reference / セマンティックHTML5要素 &mdash; 詳細リファレンス</h2>
+
+            <p>Let's look at each semantic element in detail. For each one, you will see what it means, when to use it, and a code example.<br>
+            <span class="bilingual">各セマンティック要素を詳しく見ていきましょう。それぞれの意味、使用するタイミング、コード例を紹介します。</span></p>
+
+            <!-- <header> -->
+            <div class="element-card">
+                <h4>&lt;header&gt; &mdash; Introductory Content / ヘッダー &mdash; 導入コンテンツ</h4>
+
+                <p>The <code>&lt;header&gt;</code> element represents introductory content at the top of a page or section. It typically contains the site name, logo, or main heading.<br>
+                <span class="bilingual">&lt;header&gt;要素は、ページまたはセクションの上部にある導入コンテンツを表します。通常、サイト名、ロゴ、またはメインの見出しを含みます。</span></p>
+
+                <div class="warning-box">
+                    <p><strong>Important:</strong> <code>&lt;header&gt;</code> is <strong>NOT</strong> the same as <code>&lt;head&gt;</code>!</p>
+                    <ul>
+                        <li><code>&lt;head&gt;</code> = invisible metadata (title, CSS links, etc.) &mdash; goes before <code>&lt;body&gt;</code></li>
+                        <li><code>&lt;header&gt;</code> = visible content at the top of your page &mdash; goes inside <code>&lt;body&gt;</code></li>
+                    </ul>
+                    <p class="bilingual">&lt;header&gt;と&lt;head&gt;は異なります！&lt;head&gt;は非表示のメタデータで、&lt;header&gt;はページ上部の表示コンテンツです。</p>
+                </div>
+
+<pre><code>&lt;header&gt;
+  &lt;h1&gt;My Personal Website&lt;/h1&gt;
+  &lt;p&gt;Welcome to my page!&lt;/p&gt;
+&lt;/header&gt;</code></pre>
+            </div>
+
+            <!-- <nav> -->
+            <div class="element-card">
+                <h4>&lt;nav&gt; &mdash; Navigation Links / ナビゲーションリンク</h4>
+
+                <p>The <code>&lt;nav&gt;</code> element contains your main navigation links. It usually holds a list of links (<code>&lt;ul&gt;</code> + <code>&lt;li&gt;</code> + <code>&lt;a&gt;</code>) that let visitors move between pages.<br>
+                <span class="bilingual">&lt;nav&gt;要素には、メインのナビゲーションリンクが含まれます。通常、訪問者がページ間を移動するためのリンクのリスト（ul + li + a）を保持します。</span></p>
+
+<pre><code>&lt;nav&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="job.htm"&gt;Future Job&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+
+                <div class="tip-box">
+                    <p><strong>Tip:</strong> Screen readers look for <code>&lt;nav&gt;</code> to help users jump directly to navigation. Using <code>&lt;div&gt;</code> instead would make this impossible.</p>
+                    <p class="bilingual">ヒント：スクリーンリーダーは&lt;nav&gt;を探して、ユーザーがナビゲーションに直接ジャンプできるようにします。</p>
+                </div>
+            </div>
+
+            <!-- <main> -->
+            <div class="element-card">
+                <h4>&lt;main&gt; &mdash; Dominant Content / メインコンテンツ</h4>
+
+                <p>The <code>&lt;main&gt;</code> element wraps the primary content of your page &mdash; the content that is unique to this specific page. There should be only <strong>ONE</strong> <code>&lt;main&gt;</code> element per page.<br>
+                <span class="bilingual">&lt;main&gt;要素は、ページの主要コンテンツ（そのページに固有のコンテンツ）を囲みます。1ページにつき&lt;main&gt;要素は1つだけにしてください。</span></p>
+
+<pre><code>&lt;main&gt;
+  &lt;h2&gt;About Me&lt;/h2&gt;
+  &lt;p&gt;Hello! My name is Tanaka Yuki. I am a university student
+     studying policy studies.&lt;/p&gt;
+  &lt;img src="myphoto.jpg" alt="Photo of Tanaka Yuki"&gt;
+&lt;/main&gt;</code></pre>
+
+                <div class="warning-box">
+                    <p><strong>Rule:</strong> Only <strong>ONE</strong> <code>&lt;main&gt;</code> per page! Do not put your header, nav, or footer inside <code>&lt;main&gt;</code>.</p>
+                    <p class="bilingual">ルール：&lt;main&gt;は1ページに1つだけ！ヘッダー、ナビ、フッターを&lt;main&gt;の中に入れないでください。</p>
+                </div>
+            </div>
+
+            <!-- <section> -->
+            <div class="element-card">
+                <h4>&lt;section&gt; &mdash; Thematic Grouping / セクション &mdash; テーマ別グループ</h4>
+
+                <p>The <code>&lt;section&gt;</code> element groups related content together under a common theme. Each section typically has its own heading.<br>
+                <span class="bilingual">&lt;section&gt;要素は、共通のテーマの下に関連するコンテンツをグループ化します。各セクションには通常、独自の見出しがあります。</span></p>
+
+<pre><code>&lt;main&gt;
+  &lt;section&gt;
+    &lt;h2&gt;My Education&lt;/h2&gt;
+    &lt;p&gt;I graduated from Tokyo High School in 2024.&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;section&gt;
+    &lt;h2&gt;My Skills&lt;/h2&gt;
+    &lt;ul&gt;
+      &lt;li&gt;HTML&lt;/li&gt;
+      &lt;li&gt;Microsoft Office&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/section&gt;
+&lt;/main&gt;</code></pre>
+            </div>
+
+            <!-- <article> -->
+            <div class="element-card">
+                <h4>&lt;article&gt; &mdash; Self-contained Content / 記事 &mdash; 独立したコンテンツ</h4>
+
+                <p>The <code>&lt;article&gt;</code> element represents content that is self-contained and could be independently distributed or reused &mdash; like a blog post, a news article, or a product card.<br>
+                <span class="bilingual">&lt;article&gt;要素は、独立して配布または再利用できる自己完結型のコンテンツを表します。ブログ記事、ニュース記事、製品カードなどです。</span></p>
+
+<pre><code>&lt;article&gt;
+  &lt;h2&gt;My Favorite Book&lt;/h2&gt;
+  &lt;p&gt;I love reading "Norwegian Wood" by Haruki Murakami.
+     It is a beautiful story about growing up.&lt;/p&gt;
+  &lt;p&gt;Published: April 2026&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+
+                <div class="tip-box">
+                    <p><strong>How to decide:</strong> Ask yourself: "Does this content make sense on its own, outside of this page?" If yes, use <code>&lt;article&gt;</code>. If it is just a group of related content within the page, use <code>&lt;section&gt;</code>.</p>
+                    <p class="bilingual">判断方法：「このコンテンツは、このページの外で単独で意味がありますか？」と自問してください。はいなら&lt;article&gt;、ページ内の関連コンテンツのグループなら&lt;section&gt;を使います。</p>
+                </div>
+            </div>
+
+            <!-- <footer> -->
+            <div class="element-card">
+                <h4>&lt;footer&gt; &mdash; Footer Information / フッター情報</h4>
+
+                <p>The <code>&lt;footer&gt;</code> element contains footer information such as copyright notices, contact details, or links to related pages. It appears at the bottom of your page.<br>
+                <span class="bilingual">&lt;footer&gt;要素には、著作権表示、連絡先、関連ページへのリンクなどのフッター情報が含まれます。ページの下部に表示されます。</span></p>
+
+<pre><code>&lt;footer&gt;
+  &lt;p&gt;&amp;copy; 2026 Tanaka Yuki. All rights reserved.&lt;/p&gt;
+  &lt;p&gt;Contact: yuki@example.com&lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+
+                <div class="note-box">
+                    <p><strong>Note:</strong> The <code>&amp;copy;</code> code creates the &copy; symbol. This is called an <em>HTML entity</em>.</p>
+                    <p class="bilingual">注意：&amp;copy;コードは&copy;記号を作成します。これはHTMLエンティティと呼ばれます。</p>
+                </div>
+            </div>
+
+            <!-- <aside> -->
+            <div class="element-card">
+                <h4>&lt;aside&gt; &mdash; Sidebar / Tangential Content / サイドバー / 補足コンテンツ</h4>
+
+                <p>The <code>&lt;aside&gt;</code> element contains content that is tangentially related to the main content &mdash; like a sidebar, pull-quote, or additional information.<br>
+                <span class="bilingual">&lt;aside&gt;要素には、メインコンテンツに間接的に関連するコンテンツが含まれます。サイドバー、引用、追加情報などです。</span></p>
+
+<pre><code>&lt;aside&gt;
+  &lt;h3&gt;Fun Fact&lt;/h3&gt;
+  &lt;p&gt;The first website was created by Tim Berners-Lee
+     in 1991 at CERN, Switzerland.&lt;/p&gt;
+&lt;/aside&gt;</code></pre>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. PAGE LAYOUT WITH SEMANTIC ELEMENTS -->
+            <!-- ============================================================ -->
+            <h2>5. Page Layout with Semantic Elements / セマンティック要素によるページレイアウト</h2>
+
+            <p>Now let's see how all these semantic elements work together in a complete page. Study this annotated example carefully:<br>
+            <span class="bilingual">次に、これらすべてのセマンティック要素が完全なページでどのように連携するかを見てみましょう。この注釈付きの例を注意深く学習してください：</span></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;My Website&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;!-- HEADER: Site branding and title --&gt;
+  &lt;header&gt;
+    &lt;h1&gt;Tanaka Yuki's Website&lt;/h1&gt;
+    &lt;p&gt;Welcome to my personal site!&lt;/p&gt;
+  &lt;/header&gt;
+
+  &lt;!-- NAV: Navigation links to other pages --&gt;
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="job.htm"&gt;Future Job&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;!-- MAIN: The unique content of THIS page (only ONE per page!) --&gt;
+  &lt;main&gt;
+
+    &lt;!-- SECTION: A thematic group within the main content --&gt;
+    &lt;section&gt;
+      &lt;h2&gt;About Me&lt;/h2&gt;
+      &lt;p&gt;I am a first-year student studying policy studies.&lt;/p&gt;
+      &lt;img src="myphoto.jpg" alt="Photo of me"&gt;
+    &lt;/section&gt;
+
+    &lt;section&gt;
+      &lt;h2&gt;My Goals&lt;/h2&gt;
+      &lt;p&gt;I want to become a web developer.&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;!-- ASIDE: Extra info, not the main focus --&gt;
+    &lt;aside&gt;
+      &lt;h3&gt;Did you know?&lt;/h3&gt;
+      &lt;p&gt;Over 1.9 billion websites exist on the internet!&lt;/p&gt;
+    &lt;/aside&gt;
+
+  &lt;/main&gt;
+
+  &lt;!-- FOOTER: Copyright and contact info --&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Tanaka Yuki&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="note-box">
+                <p><strong>Visual structure / 視覚的な構造:</strong></p>
+                <p>Think of the page like a newspaper:</p>
+                <ul>
+                    <li><code>&lt;header&gt;</code> = the newspaper's masthead (name at the top)</li>
+                    <li><code>&lt;nav&gt;</code> = the table of contents</li>
+                    <li><code>&lt;main&gt;</code> = the main stories</li>
+                    <li><code>&lt;section&gt;</code> = different sections (sports, weather, etc.)</li>
+                    <li><code>&lt;article&gt;</code> = an individual news article</li>
+                    <li><code>&lt;aside&gt;</code> = the sidebar with ads or fun facts</li>
+                    <li><code>&lt;footer&gt;</code> = the small print at the bottom</li>
+                </ul>
+                <p class="bilingual">ページを新聞のように考えてください：headerは新聞の題字、navは目次、mainはメイン記事、sectionは各セクション、articleは個々の記事、asideはサイドバー、footerは下部の小さな文字です。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. CREATING MULTI-PAGE WEBSITES -->
+            <!-- ============================================================ -->
+            <h2>6. Creating Multi-page Websites / 複数ページウェブサイトの作成</h2>
+
+            <p>A real website usually has multiple pages. Let's learn how to create and link them together.<br>
+            <span class="bilingual">実際のウェブサイトには通常、複数のページがあります。それらを作成してリンクする方法を学びましょう。</span></p>
+
+            <h3>File Organization / ファイルの整理</h3>
+
+            <p>Keep all your <code>.htm</code> files in <strong>one folder</strong>. This makes linking between pages easy. Here is an example folder structure:<br>
+            <span class="bilingual">すべての.htmファイルを1つのフォルダに保管してください。これにより、ページ間のリンクが簡単になります。フォルダ構造の例：</span></p>
+
+            <div class="folder-tree">
+                MySite/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;aboutme.htm<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;hobbies.htm<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;job.htm<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;myphoto.jpg<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;hobby1.jpg<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;hobby2.jpg
+            </div>
+
+            <h3>Relative Links / 相対リンク</h3>
+
+            <p>When all your files are in the same folder, you link to them using just the filename:<br>
+            <span class="bilingual">すべてのファイルが同じフォルダにある場合、ファイル名だけでリンクできます：</span></p>
+
+<pre><code>&lt;!-- Link to another page in the SAME folder --&gt;
+&lt;a href="hobbies.htm"&gt;My Hobbies&lt;/a&gt;
+
+&lt;!-- Link to an image in the SAME folder --&gt;
+&lt;img src="myphoto.jpg" alt="My photo"&gt;</code></pre>
+
+            <div class="note-box">
+                <p><strong>Important:</strong> Do <strong>not</strong> use full file paths like <code>C:\Users\Yuki\Desktop\MySite\hobbies.htm</code>. This will only work on your computer! Always use <strong>relative paths</strong> (just the filename).</p>
+                <p class="bilingual">重要：C:\Users\...のような完全なファイルパスを使わないでください。それはあなたのコンピューターでしか動作しません！常に相対パス（ファイル名のみ）を使用してください。</p>
+            </div>
+
+            <h3>Why .htm vs .html? / .htmと.htmlの違い</h3>
+
+            <p>Both <code>.htm</code> and <code>.html</code> file extensions work exactly the same way. Browsers treat them identically. In this course, we use <code>.htm</code> simply for brevity &mdash; it's slightly shorter to type. You can use either one, but <strong>be consistent</strong>: if you name a file <code>hobbies.htm</code>, make sure your links also say <code>hobbies.htm</code>, not <code>hobbies.html</code>.<br>
+            <span class="bilingual">.htmも.htmlも全く同じように動作します。ブラウザはどちらも同じに扱います。このコースでは、簡潔さのために.htmを使用します。どちらを使用しても構いませんが、一貫性を保ってください。</span></p>
+
+            <h3>Navigation Consistency / ナビゲーションの一貫性</h3>
+
+            <p>Every page in your site should have the <strong>same navigation menu</strong>. This lets visitors move between pages easily, no matter which page they are currently on.<br>
+            <span class="bilingual">サイトのすべてのページに同じナビゲーションメニューを配置してください。これにより、訪問者は現在どのページにいても簡単にページ間を移動できます。</span></p>
+
+<pre><code>&lt;!-- Put this SAME nav on EVERY page --&gt;
+&lt;nav&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="job.htm"&gt;Future Job&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Tip:</strong> Copy and paste the <code>&lt;nav&gt;</code> section from your first page to every other page. This ensures all links are exactly the same.</p>
+                <p class="bilingual">ヒント：最初のページから&lt;nav&gt;セクションをコピーして他のすべてのページに貼り付けてください。これにより、すべてのリンクが完全に同じになります。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. MYSITE PROJECT - STEP BY STEP GUIDE -->
+            <!-- ============================================================ -->
+            <h2>7. MySite Project &mdash; Step by Step Guide / MySiteプロジェクト &mdash; ステップバイステップガイド</h2>
+
+            <p>Let's build your first multi-page website! Follow these steps carefully.<br>
+            <span class="bilingual">初めての複数ページウェブサイトを構築しましょう！以下のステップに注意深く従ってください。</span></p>
+
+            <h3>Step 1: Create a folder called "MySite" / ステップ1：「MySite」フォルダを作成</h3>
+            <p>On your Desktop (or Documents), create a new folder named <strong>MySite</strong>. All your project files will go inside this folder.<br>
+            <span class="bilingual">デスクトップ（またはドキュメント）に「MySite」という新しいフォルダを作成してください。すべてのプロジェクトファイルをこのフォルダに入れます。</span></p>
+
+            <h3>Step 2: Create aboutme.htm / ステップ2：aboutme.htmを作成</h3>
+            <p>Open VS Code, create a new file, and save it as <code>aboutme.htm</code> inside the MySite folder. Use the full semantic HTML5 structure:<br>
+            <span class="bilingual">VS Codeを開き、新しいファイルを作成して、MySiteフォルダ内にaboutme.htmとして保存します。完全なセマンティックHTML5構造を使用してください：</span></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;About Me - MySite&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;header&gt;
+    &lt;h1&gt;Tanaka Yuki's Website&lt;/h1&gt;
+  &lt;/header&gt;
+
+  &lt;nav&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="aboutme.htm"&gt;About Me&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href="job.htm"&gt;Future Job&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt;
+    &lt;section&gt;
+      &lt;h2&gt;About Me&lt;/h2&gt;
+      &lt;img src="myphoto.jpg" alt="Photo of Tanaka Yuki"&gt;
+      &lt;p&gt;Hello! My name is Tanaka Yuki.&lt;/p&gt;
+      &lt;p&gt;I am a first-year student at the School of Policy
+         Studies. I am from Osaka, Japan.&lt;/p&gt;
+    &lt;/section&gt;
+
+    &lt;section&gt;
+      &lt;h2&gt;My Interests&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Web Development&lt;/li&gt;
+        &lt;li&gt;Photography&lt;/li&gt;
+        &lt;li&gt;Traveling&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;p&gt;&amp;copy; 2026 Tanaka Yuki. All rights reserved.&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>Step 3: Add your name, photo, and self-introduction / ステップ3：名前、写真、自己紹介を追加</h3>
+            <p>Replace "Tanaka Yuki" with <strong>your own name</strong>. Add a photo of yourself (save the image in the MySite folder). Write a short self-introduction.<br>
+            <span class="bilingual">「Tanaka Yuki」を自分の名前に変更してください。自分の写真を追加し（MySiteフォルダに画像を保存）、短い自己紹介を書いてください。</span></p>
+
+            <h3>Step 4: Create hobbies.htm / ステップ4：hobbies.htmを作成</h3>
+            <p>Create a new file called <code>hobbies.htm</code>. Use the same layout structure (header, nav, main, footer). In the <code>&lt;main&gt;</code> section, write about your hobbies with images.<br>
+            <span class="bilingual">hobbies.htmという新しいファイルを作成してください。同じレイアウト構造（header、nav、main、footer）を使用します。mainセクションに趣味について画像付きで書いてください。</span></p>
+
+            <h3>Step 5: Create job.htm / ステップ5：job.htmを作成</h3>
+            <p>Create <code>job.htm</code>. Again, use the same structure. Write about your dream job or future career plans.<br>
+            <span class="bilingual">job.htmを作成してください。同じ構造を使用し、夢の仕事や将来のキャリアプランについて書いてください。</span></p>
+
+            <h3>Step 6: Test all navigation links / ステップ6：すべてのナビゲーションリンクをテスト</h3>
+            <p>Open <code>aboutme.htm</code> in your browser. Click every link in the navigation. Make sure you can move between all three pages without errors.<br>
+            <span class="bilingual">aboutme.htmをブラウザで開いてください。ナビゲーションのすべてのリンクをクリックし、エラーなく3つのページ間を移動できることを確認してください。</span></p>
+
+            <div class="warning-box">
+                <p><strong>Common problem:</strong> If a link does not work, check the filename carefully. <code>Hobbies.htm</code> is <strong>not</strong> the same as <code>hobbies.htm</code> on some systems! Use lowercase filenames to be safe.</p>
+                <p class="bilingual">よくある問題：リンクが動作しない場合、ファイル名を注意深く確認してください。一部のシステムではHobbies.htmとhobbies.htmは異なります！安全のために小文字のファイル名を使用してください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. ASSIGNMENT 1 DETAILS -->
+            <!-- ============================================================ -->
+            <h2>8. Assignment 1 Details / 課題1の詳細</h2>
+
+            <p>Your first assignment is to complete the MySite project. Here are the requirements:<br>
+            <span class="bilingual">最初の課題はMySiteプロジェクトを完成させることです。要件は以下の通りです：</span></p>
+
+            <h3>Requirements Checklist / 要件チェックリスト</h3>
+
+            <ul class="checklist">
+                <li>Create a folder named <strong>MySite</strong><br>
+                    <span class="bilingual">「MySite」という名前のフォルダを作成する</span></li>
+                <li>Create <strong>aboutme.htm</strong> &mdash; self-introduction page with your photo<br>
+                    <span class="bilingual">aboutme.htm を作成する &mdash; 写真付きの自己紹介ページ</span></li>
+                <li>Create <strong>hobbies.htm</strong> &mdash; a page about your hobbies with at least 2 images<br>
+                    <span class="bilingual">hobbies.htm を作成する &mdash; 少なくとも2枚の画像付きの趣味のページ</span></li>
+                <li>Create <strong>job.htm</strong> &mdash; a page about your future job or career goal<br>
+                    <span class="bilingual">job.htm を作成する &mdash; 将来の仕事やキャリア目標のページ</span></li>
+                <li>Use semantic HTML5 elements: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;footer&gt;</code><br>
+                    <span class="bilingual">セマンティックHTML5要素を使用する</span></li>
+                <li>All pages have the <strong>same navigation menu</strong> with working links<br>
+                    <span class="bilingual">すべてのページに動作するリンク付きの同じナビゲーションメニューがある</span></li>
+                <li>All images have <code>alt</code> attributes<br>
+                    <span class="bilingual">すべての画像にalt属性がある</span></li>
+                <li>Code is properly indented and readable<br>
+                    <span class="bilingual">コードが適切にインデントされ、読みやすい</span></li>
+            </ul>
+
+            <h3>Example File Structure / ファイル構造の例</h3>
+
+            <div class="folder-tree">
+                MySite/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;aboutme.htm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; Self-introduction page<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;hobbies.htm&nbsp;&nbsp;&nbsp;&nbsp;&larr; Hobbies page<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;job.htm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; Future job page<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;myphoto.jpg&nbsp;&nbsp;&nbsp;&nbsp;&larr; Your photo<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;hobby1.jpg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; Hobby image 1<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;hobby2.jpg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; Hobby image 2<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;job-image.jpg&nbsp;&nbsp;&larr; Job-related image
+            </div>
+
+            <h3>Tips for Adding Images / 画像追加のヒント</h3>
+
+            <ul>
+                <li><strong>Put images in the same folder</strong> as your <code>.htm</code> files. This way you can reference them with just the filename: <code>&lt;img src="myphoto.jpg"&gt;</code><br>
+                    <span class="bilingual">画像を.htmファイルと同じフォルダに入れてください。ファイル名だけで参照できます。</span></li>
+                <li><strong>Always include alt text</strong>: <code>&lt;img src="myphoto.jpg" alt="My portrait photo"&gt;</code><br>
+                    <span class="bilingual">必ずalt属性を含めてください。</span></li>
+                <li><strong>Use common image formats</strong>: <code>.jpg</code>, <code>.png</code>, or <code>.gif</code><br>
+                    <span class="bilingual">一般的な画像形式を使用してください：.jpg、.png、または.gif</span></li>
+                <li><strong>Keep filenames simple</strong>: no spaces, no special characters. Use lowercase.<br>
+                    <span class="bilingual">ファイル名はシンプルに：スペースなし、特殊文字なし。小文字を使用してください。</span></li>
+            </ul>
+
+            <h3>Self-Study Resource / 自習用リソース</h3>
+
+            <div class="note-box">
+                <p><strong>Recommended:</strong> Complete the W3Schools HTML Tutorial to reinforce what you've learned.</p>
+                <p><a href="https://www.w3schools.com/html/" target="_blank" rel="noopener noreferrer" style="color: #2563eb; font-weight: bold;">https://www.w3schools.com/html/</a></p>
+                <p class="bilingual">推奨：学んだ内容を強化するためにW3Schools HTMLチュートリアルを完了してください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. COMMON MISTAKES TO AVOID -->
+            <!-- ============================================================ -->
+            <h2>9. Common Mistakes to Avoid / よくある間違い</h2>
+
+            <p>Here are the most common mistakes beginners make. Check your code for these issues!<br>
+            <span class="bilingual">初心者がよく犯す間違いです。コードにこれらの問題がないか確認してください！</span></p>
+
+            <h3>Mistake 1: Forgetting to close tags / 間違い1：タグの閉じ忘れ</h3>
+
+<pre><code>&lt;!-- WRONG: missing closing tag --&gt;
+&lt;p&gt;Hello, my name is Yuki.
+&lt;p&gt;I like programming.
+
+&lt;!-- CORRECT: every opening tag has a closing tag --&gt;
+&lt;p&gt;Hello, my name is Yuki.&lt;/p&gt;
+&lt;p&gt;I like programming.&lt;/p&gt;</code></pre>
+
+            <h3>Mistake 2: Confusing &lt;header&gt; with &lt;head&gt; / 間違い2：&lt;header&gt;と&lt;head&gt;の混同</h3>
+
+<pre><code>&lt;!-- WRONG: putting visible content in &lt;head&gt; --&gt;
+&lt;head&gt;
+  &lt;h1&gt;My Website&lt;/h1&gt;  &lt;!-- This will NOT display! --&gt;
+&lt;/head&gt;
+
+&lt;!-- CORRECT: visible content goes in &lt;header&gt; inside &lt;body&gt; --&gt;
+&lt;body&gt;
+  &lt;header&gt;
+    &lt;h1&gt;My Website&lt;/h1&gt;  &lt;!-- This WILL display! --&gt;
+  &lt;/header&gt;
+&lt;/body&gt;</code></pre>
+
+            <h3>Mistake 3: Broken links (wrong filename) / 間違い3：リンク切れ（ファイル名の間違い）</h3>
+
+<pre><code>&lt;!-- WRONG: filename doesn't match --&gt;
+&lt;a href="Hobbies.html"&gt;Hobbies&lt;/a&gt;
+&lt;!-- But your file is named "hobbies.htm" --&gt;
+
+&lt;!-- CORRECT: exact match, including extension --&gt;
+&lt;a href="hobbies.htm"&gt;Hobbies&lt;/a&gt;</code></pre>
+
+            <div class="warning-box">
+                <p><strong>Remember:</strong> File names are <strong>case-sensitive</strong> on many systems. <code>Hobbies.htm</code> and <code>hobbies.htm</code> are two different files!</p>
+                <p class="bilingual">覚えておいてください：多くのシステムではファイル名は大文字と小文字が区別されます。</p>
+            </div>
+
+            <h3>Mistake 4: Missing alt attributes on images / 間違い4：画像のalt属性の欠落</h3>
+
+<pre><code>&lt;!-- WRONG: no alt attribute --&gt;
+&lt;img src="myphoto.jpg"&gt;
+
+&lt;!-- CORRECT: always include alt text --&gt;
+&lt;img src="myphoto.jpg" alt="Photo of me at the park"&gt;</code></pre>
+
+            <div class="note-box">
+                <p><strong>Why is <code>alt</code> important?</strong></p>
+                <ul>
+                    <li>Screen readers read the alt text aloud to visually impaired users</li>
+                    <li>If the image fails to load, the alt text is displayed instead</li>
+                    <li>Search engines use alt text to understand your images</li>
+                </ul>
+                <p class="bilingual">なぜaltが重要か：スクリーンリーダーがalt属性を読み上げます。画像が読み込めない場合にalt属性が表示されます。検索エンジンがalt属性を使って画像を理解します。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 10. KEY TAKEAWAYS -->
+            <!-- ============================================================ -->
+            <h2>10. Key Takeaways / まとめ</h2>
+
+            <ol>
+                <li><strong>Semantic HTML gives meaning to your content.</strong> Use <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, and <code>&lt;footer&gt;</code> instead of <code>&lt;div&gt;</code> whenever possible.<br>
+                    <span class="bilingual">セマンティックHTMLはコンテンツに意味を与えます。可能な限り&lt;div&gt;の代わりにセマンティック要素を使用してください。</span></li>
+                <li><strong>Only ONE <code>&lt;main&gt;</code> per page.</strong> The header, nav, and footer go <em>outside</em> of main.<br>
+                    <span class="bilingual">1ページにつき&lt;main&gt;は1つだけ。header、nav、footerはmainの外に配置します。</span></li>
+                <li><strong>Keep navigation consistent.</strong> Every page should have the same menu so visitors can always find their way.<br>
+                    <span class="bilingual">ナビゲーションを一貫させてください。訪問者が常に移動できるように、すべてのページに同じメニューを配置します。</span></li>
+                <li><strong>Use relative links.</strong> When files are in the same folder, just use the filename: <code>href="hobbies.htm"</code>.<br>
+                    <span class="bilingual">相対リンクを使用してください。ファイルが同じフォルダにある場合、ファイル名だけを使用します。</span></li>
+                <li><strong>Always include <code>alt</code> on images.</strong> This is essential for accessibility and good practice.<br>
+                    <span class="bilingual">画像には必ずalt属性を含めてください。アクセシビリティに不可欠で、良い習慣です。</span></li>
+                <li><strong><code>&lt;header&gt;</code> is NOT <code>&lt;head&gt;</code>.</strong> Know the difference!<br>
+                    <span class="bilingual">&lt;header&gt;と&lt;head&gt;は異なります。違いを覚えてください！</span></li>
+            </ol>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 11. NEXT SESSION PREVIEW -->
+            <!-- ============================================================ -->
+            <h2>11. Next Session Preview / 次回のプレビュー</h2>
+
+            <p><strong>Session 3: CSS3 &mdash; Adding Visual Style to Your MySite</strong><br>
+            <span class="bilingual">第3回：CSS3 &mdash; MySiteにビジュアルスタイルを追加する</span></p>
+
+            <p>Right now, your MySite pages have content and structure, but they look plain. In the next session, we will learn <strong>CSS3 (Cascading Style Sheets)</strong> &mdash; the language that controls how your HTML looks.<br>
+            <span class="bilingual">現在、MySiteのページにはコンテンツと構造がありますが、見た目はシンプルです。次のセッションでは、HTMLの見た目を制御する言語であるCSS3（カスケーディングスタイルシート）を学びます。</span></p>
+
+            <p>You will learn how to:</p>
+            <ul>
+                <li>Change colors, fonts, and sizes</li>
+                <li>Add backgrounds and borders</li>
+                <li>Control spacing and layout</li>
+                <li>Make your MySite look professional</li>
+            </ul>
+            <p class="bilingual">色、フォント、サイズの変更、背景と枠線の追加、間隔とレイアウトの制御、MySiteをプロフェッショナルに見せる方法を学びます。</p>
+
+            <div class="tip-box">
+                <p><strong>Before next class:</strong> Make sure your MySite project is complete with all three pages and working navigation. We will be adding CSS to it!</p>
+                <p class="bilingual">次の授業までに：MySiteプロジェクトを3ページすべてとナビゲーションで完成させてください。CSSを追加します！</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>
