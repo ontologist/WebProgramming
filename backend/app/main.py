@@ -64,14 +64,22 @@ dashboard_path = os.path.join(os.path.dirname(__file__), "..", "dashboard")
 if os.path.exists(dashboard_path):
     app.mount("/dashboard", StaticFiles(directory=dashboard_path, html=True), name="dashboard")
 
-
-@app.get("/")
-async def root():
-    return {
-        "course": settings.COURSE_NAME,
-        "api_docs": "/docs",
-        "dashboard": "/dashboard",
-    }
+# Serve course site from docs/ folder as the root site
+# This must be mounted LAST because it catches all unmatched routes
+docs_path = os.path.join(os.path.dirname(__file__), "..", "..", "docs")
+if os.path.exists(docs_path):
+    app.mount("/", StaticFiles(directory=docs_path, html=True), name="course-site")
+    logger.info(f"Serving course site from {docs_path}")
+else:
+    # Fallback: if docs/ not found relative to backend, try COURSE_SITE_PATH from config
+    @app.get("/")
+    async def root():
+        return {
+            "course": settings.COURSE_NAME,
+            "course_site": "docs/ not found - set COURSE_SITE_PATH in .env",
+            "api_docs": "/docs",
+            "dashboard": "/dashboard",
+        }
 
 
 @app.get("/api/health")

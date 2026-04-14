@@ -25,6 +25,7 @@ class Settings(BaseSettings):
 
     # Server
     BACKEND_PORT: int = 8001
+    COURSE_SITE_PATH: str = ""  # Override path to docs/ folder; auto-detected if empty
 
     # Instructor auth
     INSTRUCTOR_PASSWORD: str = "CHANGE_THIS_TO_A_SECURE_PASSWORD"
