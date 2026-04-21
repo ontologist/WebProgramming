@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard | WP-200</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { background: var(--bg-light); }
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 1.5rem; }
+        .header .sub { opacity: 0.9; font-size: 0.9rem; }
+
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .panel h2 { margin-bottom: 12px; font-size: 1.15rem; color: var(--text-dark); }
+
+        .auth-box { max-width: 420px; margin: 80px auto; }
+        .auth-box input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+        }
+        .auth-box input:focus { outline: none; border-color: var(--primary-color); }
+        .auth-error { color: #dc2626; margin-top: 8px; min-height: 1em; }
+
+        button.btn, .btn {
+            background: var(--primary-color);
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        button.btn:hover { filter: brightness(1.1); }
+        button.btn.secondary { background: var(--text-light); }
+        button.btn.success { background: var(--success); }
+        button.btn.warn { background: var(--warning); color: var(--text-dark); }
+        button.btn:disabled { background: var(--disabled); cursor: not-allowed; }
+
+        .filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+        .filters label { display: flex; flex-direction: column; font-size: 0.85rem; color: var(--text-light); }
+        .filters select, .filters input {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            min-width: 180px;
+        }
+
+        table.submissions {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        table.submissions th, table.submissions td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        table.submissions th {
+            background: var(--bg-light);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        table.submissions tr.row { cursor: pointer; }
+        table.submissions tr.row:hover { background: #f3f4f6; }
+        .status-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-ai-graded    { background: #fef3c7; color: #92400e; }
+        .status-reviewed     { background: #dbeafe; color: #1e40af; }
+        .status-published    { background: #d1fae5; color: #065f46; }
+        .pub-yes { color: var(--success); font-weight: 600; }
+        .pub-no  { color: var(--text-light); }
+
+        /* Detail drawer */
+        .drawer-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            z-index: 100;
+        }
+        .drawer {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: min(720px, 96vw);
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+            overflow-y: auto;
+            padding: 20px;
+            transform: translateX(100%);
+            transition: transform 0.2s ease;
+            z-index: 101;
+        }
+        .drawer.open { transform: translateX(0); }
+        .drawer-head {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .drawer-head .close { cursor: pointer; font-size: 1.4rem; color: var(--text-light); border: 0; background: transparent; }
+        .drawer .meta-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 6px 16px;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .drawer .meta-grid dt { color: var(--text-light); }
+        .drawer .meta-grid dd { color: var(--text-dark); word-break: break-word; }
+
+        .drawer pre, .drawer .filebox {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.82rem;
+            overflow: auto;
+            max-height: 320px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .file-tab {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-right: 4px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .file-tab.active { background: #0f172a; color: white; border-color: #0f172a; }
+
+        .review-form {
+            background: var(--bg-light);
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+        .review-form label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.9rem; }
+        .review-form input[type=number] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .review-form textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+        .review-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .toast {
+            position: fixed;
+            bottom: 24px; left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-dark);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 200;
+        }
+        .toast.show { opacity: 1; }
+        .toast.error { background: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h1>WP-200 Instructor Dashboard</h1>
+                <div class="sub">Review and publish student submissions</div>
+            </div>
+            <div>
+                <a href="index.html" style="color:white; text-decoration:underline; font-size:0.9rem;">← Back to course site</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login gate -->
+    <div id="auth-screen" class="container">
+        <div class="panel auth-box">
+            <h2>Instructor sign-in</h2>
+            <p style="color:var(--text-light); margin-bottom:12px; font-size:0.9rem;">
+                Enter your instructor password. It is kept in memory only and is forgotten when you close the tab.
+            </p>
+            <input id="auth-password" type="password" placeholder="Password" autocomplete="current-password" />
+            <div class="auth-error" id="auth-error"></div>
+            <div style="margin-top:10px;">
+                <button class="btn" onclick="signIn()">Sign in</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main UI -->
+    <div id="main-screen" class="container" style="display:none;">
+        <div class="panel">
+            <div class="filters">
+                <label>Assignment
+                    <select id="filter-assignment">
+                        <option value="">(all)</option>
+                    </select>
+                </label>
+                <label>Status
+                    <select id="filter-status">
+                        <option value="">(all)</option>
+                        <option value="ai-graded">AI-graded (needs review)</option>
+                        <option value="reviewed">Reviewed (not published)</option>
+                        <option value="published">Published</option>
+                    </select>
+                </label>
+                <label>&nbsp;
+                    <button class="btn" onclick="loadSubmissions()">Refresh</button>
+                </label>
+                <label style="margin-left:auto; flex-direction:row; align-items:center; gap:8px;">
+                    <span id="row-count" style="color:var(--text-light); font-size:0.85rem;"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Submissions</h2>
+            <div style="overflow-x:auto;">
+                <table class="submissions">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Assignment</th>
+                            <th>AI</th>
+                            <th>Det.</th>
+                            <th>Proposed</th>
+                            <th>Final</th>
+                            <th>Status</th>
+                            <th>Published</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissions-body">
+                        <tr><td colspan="10" style="color:var(--text-light); padding:20px; text-align:center;">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Exports</h2>
+            <p style="color:var(--text-light); margin-bottom:10px; font-size:0.9rem;">
+                Downloads are generated server-side. "Grade summary" is the KGU-import-friendly one row per student.
+            </p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn secondary" onclick="downloadExport('grades', 'wp200_grades.csv')">Grades CSV</button>
+                <button class="btn secondary" onclick="downloadExport('summary', 'wp200_grade_summary.csv')">Grade summary CSV</button>
+                <button class="btn secondary" onclick="downloadExport('db', 'wp200_backup.db')">Database backup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail drawer -->
+    <div id="drawer-backdrop" class="drawer-backdrop" onclick="closeDrawer()"></div>
+    <aside id="drawer" class="drawer" role="dialog" aria-hidden="true">
+        <div class="drawer-head">
+            <h2 id="drawer-title">Submission</h2>
+            <button class="close" onclick="closeDrawer()" aria-label="Close">✕</button>
+        </div>
+        <div id="drawer-body">
+            <!-- populated on open -->
+        </div>
+    </aside>
+
+    <div id="toast" class="toast" role="status"></div>
+
+    <script>
+        // --- Session-scoped auth (never persisted) ---
+        let authHeader = null;
+        let rubrics = {};  // assignment_id -> {name, max_score, ...}
+
+        async function getApiUrl() {
+            const override = localStorage.getItem('wp200_api_url');
+            if (override) return override;
+            if (window.location.hostname === 'webprogramming.tijerino.ai') {
+                return `${window.location.origin}/api`;
+            }
+            return 'https://webprogramming.tijerino.ai/api';
+        }
+
+        function authedFetch(path, opts = {}) {
+            return (async () => {
+                const base = await getApiUrl();
+                const headers = Object.assign({
+                    'Authorization': authHeader,
+                    'ngrok-skip-browser-warning': 'true',
+                }, opts.headers || {});
+                return fetch(`${base}${path}`, Object.assign({}, opts, { headers }));
+            })();
+        }
+
+        async function signIn() {
+            const pwd = document.getElementById('auth-password').value;
+            const errEl = document.getElementById('auth-error');
+            errEl.textContent = '';
+            if (!pwd) { errEl.textContent = 'Please enter your password.'; return; }
+            authHeader = 'Basic ' + btoa('instructor:' + pwd);
+            try {
+                const res = await authedFetch('/instructor/rubrics');
+                if (res.status === 401) {
+                    authHeader = null;
+                    errEl.textContent = 'Wrong password.';
+                    return;
+                }
+                if (!res.ok) {
+                    authHeader = null;
+                    errEl.textContent = `Server error (${res.status}).`;
+                    return;
+                }
+                const data = await res.json();
+                rubrics = data.rubrics || {};
+                populateAssignmentFilter();
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('main-screen').style.display = '';
+                loadSubmissions();
+            } catch (e) {
+                authHeader = null;
+                errEl.textContent = 'Cannot reach the server.';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('auth-password').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') signIn();
+            });
+        });
+
+        function populateAssignmentFilter() {
+            const sel = document.getElementById('filter-assignment');
+            const entries = Object.entries(rubrics).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+            for (const [id, r] of entries) {
+                const o = document.createElement('option');
+                o.value = id;
+                o.textContent = `${id}: ${r.name}`;
+                sel.appendChild(o);
+            }
+            sel.addEventListener('change', loadSubmissions);
+            document.getElementById('filter-status').addEventListener('change', loadSubmissions);
+        }
+
+        async function loadSubmissions() {
+            const assignmentId = document.getElementById('filter-assignment').value;
+            const status = document.getElementById('filter-status').value;
+            const tbody = document.getElementById('submissions-body');
+            tbody.innerHTML = '<tr><td colspan="10" style="color:var(--text-light); padding:20px; text-align:center;">Loading…</td></tr>';
+
+            const params = new URLSearchParams();
+            if (assignmentId) params.set('assignment_id', assignmentId);
+            if (status) params.set('status', status);
+            const qs = params.toString() ? `?${params}` : '';
+
+            try {
+                const res = await authedFetch(`/instructor/submissions${qs}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                renderTable(data.submissions || []);
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="10" style="color:#dc2626; padding:20px; text-align:center;">Failed to load: ${e.message}</td></tr>`;
+            }
+        }
+
+        function renderTable(subs) {
+            const tbody = document.getElementById('submissions-body');
+            document.getElementById('row-count').textContent = `${subs.length} submission${subs.length === 1 ? '' : 's'}`;
+            if (subs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="color:var(--text-light); padding:20px; text-align:center;">No submissions match these filters.</td></tr>';
+                return;
+            }
+            subs.sort((a, b) => (b.submitted_at || '').localeCompare(a.submitted_at || ''));
+            tbody.innerHTML = '';
+            for (const s of subs) {
+                const tr = document.createElement('tr');
+                tr.className = 'row';
+                tr.onclick = () => openDrawer(s.id);
+                const finalCell = s.final_score == null ? '—' : `${s.final_score}/${s.max_score}`;
+                tr.innerHTML = `
+                    <td>${s.id}</td>
+                    <td>${escapeHtml(s.student_id)}</td>
+                    <td>${s.assignment_id}: ${escapeHtml(s.assignment_name || '')}</td>
+                    <td>${s.ai_score}/${s.ai_max}</td>
+                    <td>${s.deterministic_score}</td>
+                    <td>${s.total_proposed_score}/${s.max_score}</td>
+                    <td>${finalCell}</td>
+                    <td><span class="status-pill status-${s.status}">${s.status}</span></td>
+                    <td>${s.published ? '<span class="pub-yes">✓ yes</span>' : '<span class="pub-no">no</span>'}</td>
+                    <td style="white-space:nowrap;">${formatDate(s.submitted_at)}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        async function openDrawer(submissionId) {
+            const backdrop = document.getElementById('drawer-backdrop');
+            const drawer = document.getElementById('drawer');
+            const body = document.getElementById('drawer-body');
+            body.innerHTML = '<p style="color:var(--text-light); padding:20px;">Loading…</p>';
+            backdrop.style.display = 'block';
+            drawer.classList.add('open');
+            drawer.setAttribute('aria-hidden', 'false');
+            document.getElementById('drawer-title').textContent = `Submission #${submissionId}`;
+
+            try {
+                const res = await authedFetch(`/instructor/submissions/${submissionId}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const s = await res.json();
+                renderDetail(s);
+            } catch (e) {
+                body.innerHTML = `<p style="color:#dc2626;">Failed to load: ${e.message}</p>`;
+            }
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawer-backdrop').style.display = 'none';
+            const drawer = document.getElementById('drawer');
+            drawer.classList.remove('open');
+            drawer.setAttribute('aria-hidden', 'true');
+        }
+
+        function renderDetail(s) {
+            const body = document.getElementById('drawer-body');
+            const rubric = rubrics[s.assignment_id] || {};
+            const files = s.files || {};
+            const fileNames = Object.keys(files);
+
+            const detRows = (s.deterministic_results || []).map(r =>
+                `<li>${r.passed ? '✅' : '❌'} ${escapeHtml(r.name)} <span style="color:var(--text-light);">(${r.points}/${r.max_points})</span></li>`
+            ).join('');
+
+            let filesBlock = '<p style="color:var(--text-light);">No files uploaded.</p>';
+            if (fileNames.length > 0) {
+                const tabs = fileNames.map((n, i) => `<span class="file-tab ${i === 0 ? 'active' : ''}" data-file="${escapeHtml(n)}" onclick="switchFileTab('${escapeHtml(n)}')">${escapeHtml(n)}</span>`).join('');
+                filesBlock = `<div style="margin-bottom:-1px;">${tabs}</div>
+                    <div id="file-content" class="filebox">${escapeHtml(files[fileNames[0]] || '')}</div>`;
+            }
+
+            const codeBlock = s.code
+                ? `<h3 style="margin:16px 0 8px; font-size:0.95rem;">Pasted code</h3><pre>${escapeHtml(s.code)}</pre>`
+                : '';
+
+            const proposed = (s.deterministic_score || 0) + (s.ai_score || 0);
+            const currentFinal = s.final_score != null ? s.final_score : proposed;
+
+            body.innerHTML = `
+                <dl class="meta-grid">
+                    <dt>Student ID</dt><dd>${escapeHtml(s.student_id)}</dd>
+                    <dt>Handle</dt><dd>${escapeHtml(s.handle || '')}</dd>
+                    <dt>Assignment</dt><dd>${s.assignment_id}: ${escapeHtml(rubric.name || '')}</dd>
+                    <dt>Submitted</dt><dd>${formatDate(s.submitted_at)}</dd>
+                    <dt>Status</dt><dd><span class="status-pill status-${s.status}">${s.status}</span> ${s.published ? '<span class="pub-yes">(published)</span>' : ''}</dd>
+                    <dt>Deterministic</dt><dd>${s.deterministic_score}</dd>
+                    <dt>AI score</dt><dd>${s.ai_score} / ${s.ai_max}</dd>
+                    <dt>Proposed total</dt><dd>${proposed} / ${s.max_score}</dd>
+                </dl>
+
+                <h3 style="margin:16px 0 8px; font-size:0.95rem;">Deterministic checks</h3>
+                <ul style="padding-left:20px; margin-bottom:8px;">${detRows || '<li style="color:var(--text-light);">(none)</li>'}</ul>
+
+                <h3 style="margin:16px 0 8px; font-size:0.95rem;">AI feedback</h3>
+                <pre>${escapeHtml(s.ai_feedback || '(none)')}</pre>
+
+                <h3 style="margin:16px 0 8px; font-size:0.95rem;">Uploaded files</h3>
+                ${filesBlock}
+                ${codeBlock}
+
+                <div class="review-form">
+                    <h3 style="margin-bottom:10px;">Instructor review</h3>
+                    <label>Final score (0 to ${s.max_score})</label>
+                    <input type="number" id="review-score" min="0" max="${s.max_score}" value="${currentFinal}" />
+                    <label>Final feedback (visible to student)</label>
+                    <textarea id="review-feedback" placeholder="Leave empty to use the AI feedback as-is.">${escapeHtml(s.final_feedback || '')}</textarea>
+                    <div class="review-actions">
+                        <button class="btn" onclick="saveReview(${s.id}, false)">Save review</button>
+                        <button class="btn success" onclick="saveReview(${s.id}, true)">Save &amp; publish</button>
+                        ${s.final_score != null && !s.published ? `<button class="btn warn" onclick="publishOnly(${s.id})">Publish existing review</button>` : ''}
+                    </div>
+                </div>
+            `;
+
+            body._filesCache = files;
+        }
+
+        window.switchFileTab = function (name) {
+            const body = document.getElementById('drawer-body');
+            const files = body._filesCache || {};
+            body.querySelectorAll('.file-tab').forEach(t => t.classList.toggle('active', t.dataset.file === name));
+            const content = body.querySelector('#file-content');
+            if (content) content.textContent = files[name] || '';
+        };
+
+        async function saveReview(submissionId, publish) {
+            const score = parseInt(document.getElementById('review-score').value, 10);
+            const feedback = document.getElementById('review-feedback').value;
+            if (isNaN(score)) { toast('Please enter a numeric score.', true); return; }
+
+            try {
+                const res = await authedFetch(`/instructor/submissions/${submissionId}/review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ final_score: score, final_feedback: feedback, publish }),
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(formatError(err, res.status));
+                }
+                toast(publish ? 'Saved and published' : 'Review saved');
+                closeDrawer();
+                loadSubmissions();
+            } catch (e) {
+                toast(`Failed: ${e.message}`, true);
+            }
+        }
+
+        async function publishOnly(submissionId) {
+            try {
+                const res = await authedFetch(`/instructor/submissions/${submissionId}/publish`, { method: 'POST' });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(formatError(err, res.status));
+                }
+                toast('Published');
+                closeDrawer();
+                loadSubmissions();
+            } catch (e) {
+                toast(`Failed: ${e.message}`, true);
+            }
+        }
+
+        async function downloadExport(kind, filename) {
+            try {
+                const res = await authedFetch(`/instructor/export/${kind}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+                toast(`Downloaded ${filename}`);
+            } catch (e) {
+                toast(`Export failed: ${e.message}`, true);
+            }
+        }
+
+        // --- helpers ---
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        function formatDate(iso) {
+            if (!iso) return '';
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return iso;
+            return d.toLocaleString();
+        }
+        function formatError(errObj, status) {
+            const d = errObj && errObj.detail;
+            if (Array.isArray(d)) {
+                return d.map(x => {
+                    const field = Array.isArray(x.loc) ? x.loc.slice(1).join('.') : '';
+                    return field ? `${field}: ${x.msg}` : x.msg;
+                }).join('; ');
+            }
+            if (d && typeof d === 'object') return JSON.stringify(d);
+            return d || `HTTP ${status}`;
+        }
+        let toastTimer = null;
+        function toast(msg, isError = false) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.toggle('error', !!isError);
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+        }
+    </script>
+</body>
+</html>
