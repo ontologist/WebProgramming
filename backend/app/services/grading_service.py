@@ -6,6 +6,7 @@ import logging
 import re
 
 from app.services.ollama_service import ollama_service
+from app.services import graders
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -13,20 +14,21 @@ logger = logging.getLogger(__name__)
 # Assignment rubrics: deterministic checks + AI evaluation criteria
 ASSIGNMENT_RUBRICS = {
     1: {
+        # Graded by graders.assignment1 — the lists below are descriptive only
+        # (used by /api/instructor/rubrics so the dashboard can show what each
+        # assignment is graded on).
         "name": "MySite HTML Pages",
         "max_score": 100,
         "deterministic_checks": [
-            {"name": "Has aboutme page", "points": 10, "check": "aboutme"},
-            {"name": "Has hobbies page", "points": 10, "check": "hobbies"},
-            {"name": "Has job page", "points": 10, "check": "job"},
-            {"name": "Uses navigation links", "points": 10, "check": "nav_links"},
-            {"name": "Uses semantic HTML5 tags", "points": 10, "check": "semantic_tags"},
+            {"name": "Personal content completeness", "points": 20, "check": "_agent"},
+            {"name": "Advanced HTML/CSS techniques (min 5)", "points": 30, "check": "_agent"},
+            {"name": "Navigation to all sibling pages", "points": 10, "check": "_agent"},
+            {"name": "HTML validity", "points": 5, "check": "_agent"},
         ],
         "ai_criteria": [
-            "Content quality and completeness (20 points)",
-            "Proper HTML structure and nesting (15 points)",
-            "Use of appropriate HTML elements (15 points)",
-            "Code readability and formatting (10 points)",
+            "Content quality prose (10 points)",
+            "Visual design creativity and uniqueness (20 points)",
+            "Code readability and structure (5 points)",
         ],
     },
     2: {
@@ -163,6 +165,11 @@ ASSIGNMENT_RUBRICS = {
 
 def run_deterministic_checks(assignment_id: int, code: str, files: dict = None) -> list:
     """Run automated checks against submitted code. Returns list of {name, points, passed}."""
+    # If an assignment-specific grader is registered, use it.
+    grader = graders.get_grader(assignment_id)
+    if grader is not None:
+        return grader.deterministic(code, files)
+
     rubric = ASSIGNMENT_RUBRICS.get(assignment_id)
     if not rubric:
         return []
@@ -252,6 +259,10 @@ def _has_file_or_content(files: dict, code_lower: str, keywords: list) -> bool:
 
 async def ai_evaluate(assignment_id: int, code: str, files: dict = None, deterministic_results: list = None, language: str = "en") -> dict:
     """Use AI to evaluate code quality against rubric criteria."""
+    grader = graders.get_grader(assignment_id)
+    if grader is not None:
+        return await grader.ai_evaluate(code, files, deterministic_results, language)
+
     rubric = ASSIGNMENT_RUBRICS.get(assignment_id)
     if not rubric:
         return {"ai_score": 0, "ai_feedback": "Unknown assignment", "ai_max": 0}
