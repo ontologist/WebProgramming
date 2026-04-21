@@ -12,6 +12,7 @@ router = APIRouter()
 
 class SubmissionRequest(BaseModel):
     student_id: str
+    handle: str = ""  # authenticated handle; required to satisfy the FK to students.handle
     assignment_id: int
     code: str = None
     files: dict = None  # {filename: content}
@@ -28,6 +29,23 @@ class SubmissionResponse(BaseModel):
 async def submit_assignment(request: SubmissionRequest):
     if not request.code and not request.files:
         raise HTTPException(status_code=400, detail="No code or files provided")
+
+    # Resolve handle: fall back to student_id lookup if the client didn't send
+    # one (older frontends, or submissions from curl). Without a valid handle
+    # the FK to students.handle refuses the INSERT.
+    handle = (request.handle or "").strip().lower()
+    if not handle:
+        match = next(
+            (s for s in db_service.get_all_students() if s["student_id"] == request.student_id),
+            None,
+        )
+        if match:
+            handle = match["handle"]
+    if not handle:
+        raise HTTPException(
+            status_code=401,
+            detail="Cannot identify submitter. Please log in again and resubmit.",
+        )
 
     rubric = grading_service.get_rubric(request.assignment_id)
     if not rubric:
@@ -47,6 +65,7 @@ async def submit_assignment(request: SubmissionRequest):
     # Save submission
     submission = db_service.create_submission(
         student_id=request.student_id,
+        handle=handle,
         assignment_id=request.assignment_id,
         code=request.code,
         files=request.files,

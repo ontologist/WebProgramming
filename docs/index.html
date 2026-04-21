@@ -595,6 +595,7 @@
                     },
                     body: JSON.stringify({
                         student_id: studentId,
+                        handle: (typeof siteAuth !== 'undefined' && siteAuth.session && siteAuth.session.handle) || '',
                         assignment_id: parseInt(assignmentId),
                         code: codeInput || null,
                         files: Object.keys(files).length > 0 ? files : null,
