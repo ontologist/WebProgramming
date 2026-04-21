@@ -613,7 +613,22 @@
                             <p>Your instructor will review and publish your grade. / 講師が確認後、成績を公開します。</p>
                         </div>`;
                 } else {
-                    resultDiv.innerHTML = `<p style="color: red;">Error: ${data.detail || 'Submission failed'}</p>`;
+                    // FastAPI returns HTTPException detail as a string and
+                    // Pydantic validation errors as an array of {loc,msg,...};
+                    // format both into something a human can read.
+                    let detail = data.detail;
+                    let message;
+                    if (Array.isArray(detail)) {
+                        message = detail.map(d => {
+                            const field = Array.isArray(d.loc) ? d.loc.slice(1).join('.') : '';
+                            return field ? `${field}: ${d.msg}` : d.msg;
+                        }).join('; ');
+                    } else if (detail && typeof detail === 'object') {
+                        message = JSON.stringify(detail);
+                    } else {
+                        message = detail || `Submission failed (HTTP ${response.status})`;
+                    }
+                    resultDiv.innerHTML = `<p style="color: red;">Error: ${message}</p>`;
                 }
             } catch (error) {
                 resultDiv.innerHTML = `<p style="color: red;">Cannot connect to server. Please try again later.<br>サーバーに接続できません。後でもう一度お試しください。</p>`;
