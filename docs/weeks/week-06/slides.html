@@ -1,0 +1,802 @@
+<!-- Copyright (c) 2026 Yuri Tijerino. All rights reserved. / 著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6: Collision Detection & Conditionals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 80px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 3em;
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            color: #7c3aed;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #2563eb;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .slide h4 {
+            font-size: 1.4em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .slide ul, .slide ol {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+        }
+
+        .content-section {
+            margin: 20px 0;
+        }
+
+        .japanese-content {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #7c3aed;
+            border-radius: 8px;
+        }
+
+        .japanese-heading {
+            color: #7c3aed;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: #fef3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-box {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            color: #2563eb;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 2em;
+            color: #7c3aed;
+            margin-bottom: 40px;
+        }
+
+        .title-slide .info {
+            font-size: 1.3em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .column-section {
+            margin: 20px 0;
+        }
+
+        .column-item {
+            margin-bottom: 30px;
+        }
+
+        .column-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 1024px) {
+            .slide {
+                padding: 40px 50px;
+            }
+
+            .slide h1 {
+                font-size: 2.5em;
+            }
+
+            .slide h2 {
+                font-size: 2em;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .slide-container {
+                padding: 0;
+            }
+
+            .slide {
+                width: 100vw;
+                height: auto;
+                min-height: 100vh;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .slide h1 {
+                font-size: 2em;
+            }
+
+            .slide h2 {
+                font-size: 1.6em;
+            }
+
+            .slide h3 {
+                font-size: 1.5em;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+
+            .title-slide .subtitle {
+                font-size: 1.4em;
+            }
+
+            .navigation {
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="slide-number" id="slideNumber">Slide 1 / 15</div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Session 6</h1>
+            <p class="subtitle">Collision Detection &amp; Conditionals<br>衝突検出と条件分岐</p>
+            <p class="info"><strong>Course:</strong> WP-200 Web Programming</p>
+            <p class="info"><strong>Topic:</strong> Bounce off the Walls</p>
+        </div>
+
+        <!-- Slide 2: Review - Where We Left Off -->
+        <div class="slide">
+            <h2>Review: Where We Left Off / 前回の復習</h2>
+            <div class="content-section">
+                <h3>In Sessions 4-5, you learned:</h3>
+                <ul>
+                    <li><strong>Canvas drawing</strong> -- using ctx.beginPath(), ctx.arc(), ctx.fill()</li>
+                    <li><strong>Variables</strong> -- storing data like x, y, dx, dy</li>
+                    <li><strong>Functions</strong> -- organizing code into reusable blocks</li>
+                    <li><strong>Animation</strong> -- using setInterval() to create a game loop</li>
+                </ul>
+
+                <div class="code-box">function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    x += dx;
+    y += dy;
+}
+setInterval(draw, 10);</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">セッション4-5で学んだこと：</h3>
+                    <ul>
+                        <li><strong>Canvas描画</strong> -- ctx.beginPath(), ctx.arc(), ctx.fill()を使う</li>
+                        <li><strong>変数</strong> -- x, y, dx, dyなどのデータを保存する</li>
+                        <li><strong>関数</strong> -- コードを再利用可能なブロックに整理する</li>
+                        <li><strong>アニメーション</strong> -- setInterval()でゲームループを作る</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Problem -->
+        <div class="slide">
+            <h2>The Problem / 問題</h2>
+            <div class="content-section">
+                <h3>The ball flies off the screen!</h3>
+                <p>Right now, our ball moves in one direction forever. Once it reaches the edge of the canvas, it keeps going and disappears. We never see it again.</p>
+
+                <div class="highlight-box">
+                    <p><strong>What we have:</strong> A ball that moves but escapes the canvas.</p>
+                    <p><strong>What we want:</strong> A ball that bounces off the walls -- like a real ball in a room!</p>
+                </div>
+
+                <p>To fix this, we need our code to <strong>make a decision</strong>: "Has the ball reached a wall? If yes, reverse its direction."</p>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">ボールが画面外に飛んでいく！</h3>
+                    <p>現在、ボールは一方向に永遠に動きます。キャンバスの端に到達すると、そのまま進んで消えてしまいます。</p>
+                    <p><strong>今あるもの：</strong> 動くがキャンバスから逃げるボール。</p>
+                    <p><strong>欲しいもの：</strong> 壁で跳ね返るボール -- 部屋の中の本物のボールのように！</p>
+                    <p>これを修正するには、コードに<strong>判断</strong>させる必要があります：「ボールは壁に到達したか？はいなら、方向を反転する。」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Making Decisions in Code -->
+        <div class="slide">
+            <h2>Making Decisions in Code / コードで判断する</h2>
+            <div class="content-section">
+                <h3>The if Statement</h3>
+                <p>The <strong>if</strong> statement lets your code make decisions. It checks a condition and runs code only if that condition is true.</p>
+
+                <div class="code-box">if (condition) {
+    // this code runs ONLY when condition is true
+}</div>
+
+                <h4>Real-life analogy:</h4>
+                <ul>
+                    <li>"<strong>If</strong> it is raining, <strong>then</strong> bring an umbrella."</li>
+                    <li>"<strong>If</strong> the ball hits a wall, <strong>then</strong> reverse direction."</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">if文（もし〜ならば）</h3>
+                    <p><strong>if文</strong>はコードに判断させます。条件をチェックし、その条件が真（true）のときだけコードを実行します。</p>
+                    <h4 class="japanese-heading">実生活のたとえ：</h4>
+                    <ul>
+                        <li>「<strong>もし</strong>雨が降っているなら、傘を持っていく。」</li>
+                        <li>「<strong>もし</strong>ボールが壁にぶつかったなら、方向を反転する。」</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: if Statement Syntax -->
+        <div class="slide">
+            <h2>if Statement Syntax / if文の構文</h2>
+            <div class="content-section">
+                <div class="code-box">if (condition) {
+    // code to run when condition is true
+}
+
+// Example:
+var score = 10;
+if (score > 5) {
+    console.log("High score!");
+}</div>
+
+                <h4>Parts of the if statement:</h4>
+                <ul>
+                    <li><strong>if</strong> -- the keyword that starts the decision</li>
+                    <li><strong>( )</strong> -- parentheses contain the condition to check</li>
+                    <li><strong>{ }</strong> -- curly braces contain the code to run if true</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Important:</strong> The condition inside ( ) must evaluate to <strong>true</strong> or <strong>false</strong>. This is called a boolean value.</p>
+                    <p><strong>重要：</strong> ( ) の中の条件は <strong>true</strong> か <strong>false</strong> に評価されなければなりません。これをブール値と呼びます。</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">if文の各部分：</h4>
+                    <ul>
+                        <li><strong>if</strong> -- 判断を開始するキーワード</li>
+                        <li><strong>( )</strong> -- チェックする条件を含む括弧</li>
+                        <li><strong>{ }</strong> -- 条件が真のとき実行するコードを含む波括弧</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Comparison Operators -->
+        <div class="slide">
+            <h2>Comparison Operators / 比較演算子</h2>
+            <div class="content-section">
+                <p>Comparison operators let you compare two values. They always return <strong>true</strong> or <strong>false</strong>.</p>
+
+                <div class="code-box">x > 10    // x is greater than 10
+x < 10    // x is less than 10
+x >= 10   // x is greater than or equal to 10
+x <= 10   // x is less than or equal to 10
+x === 10  // x is exactly equal to 10
+x !== 10  // x is not equal to 10</div>
+
+                <h4>Examples with real values:</h4>
+                <div class="code-box">var x = 7;
+x > 5     // true (7 is greater than 5)
+x < 3     // false (7 is not less than 3)
+x === 7   // true (7 equals 7)
+x !== 7   // false (7 does equal 7)</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">比較演算子</h3>
+                    <p>比較演算子は2つの値を比較します。常に<strong>true</strong>または<strong>false</strong>を返します。</p>
+                    <ul>
+                        <li><code>&gt;</code> -- より大きい</li>
+                        <li><code>&lt;</code> -- より小さい</li>
+                        <li><code>&gt;=</code> -- 以上</li>
+                        <li><code>&lt;=</code> -- 以下</li>
+                        <li><code>===</code> -- 等しい</li>
+                        <li><code>!==</code> -- 等しくない</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: The Canvas Coordinate System -->
+        <div class="slide">
+            <h2>Canvas Coordinates / キャンバスの座標系</h2>
+            <div class="content-section">
+                <p>Remember: the canvas coordinate system starts at the <strong>top-left corner</strong> (0, 0).</p>
+
+                <div class="code-box">(0,0) -------- x increases -------> (canvas.width, 0)
+  |                                          |
+  |                                          |
+  y increases                                |
+  |                                          |
+  |                                          |
+  v                                          v
+(0, canvas.height) -----------> (canvas.width, canvas.height)</div>
+
+                <h4>Key boundaries:</h4>
+                <ul>
+                    <li><strong>Left wall:</strong> x = 0</li>
+                    <li><strong>Right wall:</strong> x = canvas.width</li>
+                    <li><strong>Top wall:</strong> y = 0</li>
+                    <li><strong>Bottom wall:</strong> y = canvas.height</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">キャンバスの座標系</h3>
+                    <p>覚えておこう：キャンバスの座標系は<strong>左上隅</strong> (0, 0) から始まります。</p>
+                    <ul>
+                        <li><strong>左壁：</strong> x = 0</li>
+                        <li><strong>右壁：</strong> x = canvas.width</li>
+                        <li><strong>上壁：</strong> y = 0</li>
+                        <li><strong>下壁：</strong> y = canvas.height</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Detecting the Right Wall -->
+        <div class="slide">
+            <h2>Detecting the Right Wall / 右壁の検出</h2>
+            <div class="content-section">
+                <p>The ball hits the right wall when its x position exceeds the canvas width. We check where the ball <strong>will be</strong> after the next move:</p>
+
+                <div class="code-box">// If the ball's next x position goes past the right wall...
+if (x + dx > canvas.width) {
+    dx = -dx;  // reverse horizontal direction!
+}</div>
+
+                <h4>What happens step by step:</h4>
+                <ol>
+                    <li><code>x + dx</code> calculates where the ball will be next frame</li>
+                    <li>If that position is greater than <code>canvas.width</code>, the ball has hit the right wall</li>
+                    <li><code>dx = -dx</code> flips the horizontal velocity (e.g., 2 becomes -2)</li>
+                    <li>The ball now moves left instead of right!</li>
+                </ol>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">右壁の検出</h3>
+                    <p>ボールのx位置がキャンバスの幅を超えると、右壁にぶつかります。次の移動後にボールが<strong>どこにいるか</strong>をチェックします。</p>
+                    <ol>
+                        <li><code>x + dx</code> が次のフレームでのボールの位置を計算する</li>
+                        <li>その位置が <code>canvas.width</code> より大きければ、右壁に到達している</li>
+                        <li><code>dx = -dx</code> で水平方向の速度を反転する（例：2が-2になる）</li>
+                        <li>ボールは右ではなく左に動くようになる！</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Detecting the Left Wall -->
+        <div class="slide">
+            <h2>Detecting the Left Wall / 左壁の検出</h2>
+            <div class="content-section">
+                <p>The ball hits the left wall when its x position goes below 0:</p>
+
+                <div class="code-box">// If the ball's next x position goes past the left wall...
+if (x + dx < 0) {
+    dx = -dx;  // reverse horizontal direction!
+}</div>
+
+                <h4>We can combine both checks:</h4>
+                <div class="code-box">if (x + dx > canvas.width || x + dx < 0) {
+    dx = -dx;
+}</div>
+
+                <p>The <code>||</code> means "OR" -- if <strong>either</strong> condition is true, reverse direction.</p>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">左壁の検出</h3>
+                    <p>ボールのx位置が0を下回ると、左壁にぶつかります。</p>
+                    <p>両方のチェックを組み合わせることができます。<code>||</code> は「または」を意味します -- <strong>どちらか</strong>の条件が真なら、方向を反転します。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Detecting Top and Bottom Walls -->
+        <div class="slide">
+            <h2>Top &amp; Bottom Walls / 上壁と下壁</h2>
+            <div class="content-section">
+                <p>The same logic applies to vertical movement (y-axis):</p>
+
+                <div class="code-box">// Top and bottom wall detection
+if (y + dy > canvas.height || y + dy < 0) {
+    dy = -dy;  // reverse vertical direction!
+}</div>
+
+                <h4>Complete wall detection (4 walls):</h4>
+                <div class="code-box">// Horizontal walls (left and right)
+if (x + dx > canvas.width || x + dx < 0) {
+    dx = -dx;
+}
+
+// Vertical walls (top and bottom)
+if (y + dy > canvas.height || y + dy < 0) {
+    dy = -dy;
+}</div>
+
+                <div class="highlight-box">
+                    <p><strong>Key insight:</strong> <code>dx = -dx</code> reverses horizontal movement. <code>dy = -dy</code> reverses vertical movement. Each axis is independent!</p>
+                    <p><strong>重要なポイント：</strong> <code>dx = -dx</code> は水平方向の動きを反転。<code>dy = -dy</code> は垂直方向の動きを反転。各軸は独立しています！</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">上壁と下壁の検出</h3>
+                    <p>同じロジックが垂直方向の動き（y軸）にも適用されます。</p>
+                    <p><code>dx = -dx</code> は水平の反転、<code>dy = -dy</code> は垂直の反転です。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Velocity Reversal Explained -->
+        <div class="slide">
+            <h2>Velocity Reversal: dx = -dx / 速度の反転</h2>
+            <div class="content-section">
+                <h3>Why does <code>dx = -dx</code> work?</h3>
+
+                <div class="code-box">// If dx is 2 (moving right):
+dx = -dx;    // dx becomes -2 (now moving left!)
+
+// If dx is -2 (moving left):
+dx = -dx;    // dx becomes 2 (now moving right!)
+
+// The negative sign "flips" the direction.</div>
+
+                <p>Think of a ball bouncing off a wall in real life. When it hits, its speed stays the same, but the direction reverses. That is exactly what negating the velocity does in code.</p>
+
+                <div class="code-box">Before bounce:  dx = 2   (moving right at speed 2)
+After bounce:   dx = -2  (moving left at speed 2)
+
+Before bounce:  dy = -3  (moving up at speed 3)
+After bounce:   dy = 3   (moving down at speed 3)</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">なぜ dx = -dx が機能するのか？</h3>
+                    <p>実生活でボールが壁に跳ね返るのを考えてください。ぶつかると、速さは同じままですが、方向が反転します。コードで速度を否定する（マイナスにする）のは、まさにそれと同じことです。</p>
+                    <p>マイナス記号が方向を「反転」させます。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Accounting for Ball Radius -->
+        <div class="slide">
+            <h2>Accounting for Ball Radius / ボールの半径を考慮する</h2>
+            <div class="content-section">
+                <p>There is a problem: the ball clips into the wall before bouncing! This is because we check the <strong>center</strong> of the ball, not its <strong>edge</strong>.</p>
+
+                <div class="code-box">// WRONG: checks center point only
+if (x + dx > canvas.width || x + dx < 0) { ... }
+
+// CORRECT: accounts for ball radius
+if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    dx = -dx;
+}
+if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+    dy = -dy;
+}</div>
+
+                <h4>Why?</h4>
+                <ul>
+                    <li>Right wall: ball edge = x + ballRadius, so bounce when x + dx > canvas.width - ballRadius</li>
+                    <li>Left wall: ball edge = x - ballRadius, so bounce when x + dx < ballRadius</li>
+                    <li>Same logic for top (ballRadius) and bottom (canvas.height - ballRadius)</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">ボールの半径を考慮する</h3>
+                    <p>問題があります：ボールが跳ね返る前に壁に食い込んでしまいます！これはボールの<strong>端</strong>ではなく<strong>中心</strong>をチェックしているためです。</p>
+                    <p>ballRadiusを引いたり足したりして、ボールの端が壁に触れたときに跳ね返るようにします。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Logical Operators -->
+        <div class="slide">
+            <h2>Logical Operators / 論理演算子</h2>
+            <div class="content-section">
+                <h3>&amp;&amp; (AND) and || (OR)</h3>
+
+                <div class="code-box">// || means OR - true if EITHER condition is true
+if (x > 100 || y > 100) {
+    // runs if x > 100 OR y > 100 (or both)
+}
+
+// && means AND - true only if BOTH conditions are true
+if (x > 0 && x < 480) {
+    // runs only if x is between 0 and 480
+}</div>
+
+                <h4>How to remember:</h4>
+                <ul>
+                    <li><strong>|| (OR)</strong> = "at least one must be true" -- like a door with two keys, either one opens it</li>
+                    <li><strong>&amp;&amp; (AND)</strong> = "both must be true" -- like a safe that needs two keys at the same time</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">論理演算子</h3>
+                    <ul>
+                        <li><strong>|| (OR / または)</strong> = 「少なくとも1つが真であればよい」</li>
+                        <li><strong>&amp;&amp; (AND / かつ)</strong> = 「両方とも真でなければならない」</li>
+                    </ul>
+                    <p>覚え方：|| は「どちらかの鍵で開くドア」、&amp;&amp; は「2つの鍵が同時に必要な金庫」</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: The Complete Bouncing Ball -->
+        <div class="slide">
+            <h2>The Complete Bouncing Ball / 完全な跳ね返るボール</h2>
+            <div class="content-section">
+                <div class="code-box">var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var x = canvas.width / 2;
+var y = canvas.height - 30;
+var dx = 2;
+var dy = -2;
+var ballRadius = 10;
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+
+    // Bounce off left and right walls
+    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+    }
+    // Bounce off top and bottom walls
+    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+        dy = -dy;
+    }
+
+    x += dx;
+    y += dy;
+}
+setInterval(draw, 10);</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">完全な跳ね返るボールのコード</h3>
+                    <p>これがセッション6の最終成果物です。ボールが4つの壁すべてで跳ね返ります！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Next Session Preview -->
+        <div class="slide">
+            <h2>Next Session Preview / 次回のプレビュー</h2>
+            <div class="highlight-box">
+                <h3>Session 7: Paddle &amp; User Input</h3>
+                <h3 class="japanese-heading">セッション7：パドルとユーザー入力</h3>
+            </div>
+            <div class="content-section">
+                <h4>What's Coming:</h4>
+                <ul>
+                    <li><strong>Drawing a paddle</strong> -- a rectangle the player controls</li>
+                    <li><strong>Keyboard events</strong> -- detecting arrow key presses</li>
+                    <li><strong>Moving the paddle</strong> -- left and right based on key input</li>
+                    <li><strong>Game over logic</strong> -- ball hits the bottom without hitting the paddle</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">次回の内容：</h4>
+                    <ul>
+                        <li><strong>パドルの描画</strong> -- プレイヤーが操作する四角形</li>
+                        <li><strong>キーボードイベント</strong> -- 矢印キーの押下を検出</li>
+                        <li><strong>パドルの移動</strong> -- キー入力に基づいて左右に移動</li>
+                        <li><strong>ゲームオーバーロジック</strong> -- パドルに当たらず底に落ちたら終了</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#9664; Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &#9654;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                showSlide(0);
+            } else if (event.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

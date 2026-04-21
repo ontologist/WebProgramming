@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6: Collision Detection &amp; Conditionals | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Lecture-specific styles */
+        .lecture-content {
+            max-width: 1000px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .lecture-content h2 {
+            font-size: 1.8rem;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+
+        .lecture-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .lecture-content h3 {
+            font-size: 1.3rem;
+            color: #7c3aed;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+
+        .lecture-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .lecture-content ul,
+        .lecture-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .lecture-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+            color: #374151;
+        }
+
+        .lecture-content pre {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .lecture-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        .lecture-content code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #dc2626;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .note-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .note-box p {
+            margin-bottom: 5px;
+        }
+
+        .note-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        .warning-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .tip-box {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        .tip-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .analogy-box {
+            background: #f5f3ff;
+            border-left: 4px solid #7c3aed;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .analogy-box p {
+            margin-bottom: 5px;
+        }
+
+        .analogy-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+
+        .tag-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0 25px 0;
+        }
+
+        .tag-table th,
+        .tag-table td {
+            border: 1px solid #e5e7eb;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .tag-table th {
+            background: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .tag-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .key-takeaway {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .key-takeaway:last-child {
+            border-bottom: none;
+        }
+
+        .takeaway-number {
+            background: #2563eb;
+            color: white;
+            min-width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .diagram-box {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        .diagram-box .diagram-title {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .step-list {
+            counter-reset: steps;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: steps;
+            padding: 12px 15px 12px 50px;
+            position: relative;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .lecture-content {
+                padding: 20px;
+                margin: 15px;
+            }
+
+            .lecture-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .lecture-content pre {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+
+            .tag-table {
+                font-size: 0.9rem;
+            }
+
+            .tag-table th,
+            .tag-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Session 6: Collision Detection &amp; Conditionals</h1>
+            <p class="subtitle">衝突検出と条件分岐</p>
+            <p class="instructor">WP-200 Web Programming | Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home</a>
+            <a href="slides.html">Slides</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="lecture-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. Learning Objectives -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">1</span> Learning Objectives <span class="bilingual">/ 学習目標</span></h2>
+
+            <p>By the end of this session, you will be able to:</p>
+            <p class="bilingual">このセッションの終わりまでに、以下のことができるようになります：</p>
+
+            <ul>
+                <li>Use if statements to make decisions in your code <span class="bilingual">/ if文を使ってコード内で判断を下す</span></li>
+                <li>Use comparison operators to check conditions (<, >, <=, >=, ===, !==) <span class="bilingual">/ 比較演算子を使って条件をチェックする</span></li>
+                <li>Detect when the ball reaches the boundaries of the canvas <span class="bilingual">/ ボールがキャンバスの境界に到達したことを検出する</span></li>
+                <li>Reverse the ball's velocity to create a bounce effect <span class="bilingual">/ ボールの速度を反転させて跳ね返り効果を作る</span></li>
+                <li>Account for the ball's radius in boundary calculations <span class="bilingual">/ 境界計算でボールの半径を考慮する</span></li>
+                <li>Use logical operators (&amp;&amp;, ||) to combine conditions <span class="bilingual">/ 論理演算子（&&, ||）を使って条件を組み合わせる</span></li>
+                <li>Write a complete bouncing ball program <span class="bilingual">/ 完全な跳ね返るボールのプログラムを書く</span></li>
+            </ul>
+
+            <!-- ============================================================ -->
+            <!-- 2. Review of Session 5 -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">2</span> Review of Session 5 <span class="bilingual">/ セッション5の復習</span></h2>
+
+            <p>In Session 5, you learned how to animate a ball moving across the canvas. Here is the code we ended with:</p>
+
+            <p class="bilingual">セッション5では、キャンバス上でボールを動かすアニメーションの方法を学びました。前回のコードがこちらです：</p>
+
+            <pre><code>var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var x = canvas.width / 2;
+var y = canvas.height - 30;
+var dx = 2;
+var dy = -2;
+var ballRadius = 10;
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    x += dx;
+    y += dy;
+}
+
+setInterval(draw, 10);</code></pre>
+
+            <h3>What each variable means <span class="bilingual">/ 各変数の意味</span></h3>
+
+            <table class="tag-table">
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Purpose / 目的</th>
+                        <th>Initial Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>x</code></td>
+                        <td>Ball's horizontal position <span class="bilingual">/ ボールの水平位置</span></td>
+                        <td><code>canvas.width / 2</code> (center)</td>
+                    </tr>
+                    <tr>
+                        <td><code>y</code></td>
+                        <td>Ball's vertical position <span class="bilingual">/ ボールの垂直位置</span></td>
+                        <td><code>canvas.height - 30</code> (near bottom)</td>
+                    </tr>
+                    <tr>
+                        <td><code>dx</code></td>
+                        <td>Horizontal speed and direction <span class="bilingual">/ 水平方向の速度と方向</span></td>
+                        <td><code>2</code> (moving right)</td>
+                    </tr>
+                    <tr>
+                        <td><code>dy</code></td>
+                        <td>Vertical speed and direction <span class="bilingual">/ 垂直方向の速度と方向</span></td>
+                        <td><code>-2</code> (moving up)</td>
+                    </tr>
+                    <tr>
+                        <td><code>ballRadius</code></td>
+                        <td>Size of the ball <span class="bilingual">/ ボールのサイズ</span></td>
+                        <td><code>10</code> pixels</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note-box">
+                <p><strong>The animation loop:</strong> Every 10 milliseconds, the <code>draw()</code> function clears the canvas, draws the ball at its current position, then updates the position by adding <code>dx</code> and <code>dy</code>. This creates the illusion of smooth movement.</p>
+                <p class="bilingual"><strong>アニメーションループ：</strong> 10ミリ秒ごとに、<code>draw()</code>関数がキャンバスをクリアし、現在の位置にボールを描画し、<code>dx</code>と<code>dy</code>を足して位置を更新します。これにより滑らかな動きの錯覚が生まれます。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 3. The Problem -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">3</span> The Problem: Ball Flies Off Screen <span class="bilingual">/ 問題：ボールが画面外へ</span></h2>
+
+            <p>If you run the code from Session 5, you will notice a problem: the ball moves across the canvas and then <strong>disappears off the edge</strong>. It never comes back. Once <code>x</code> exceeds <code>canvas.width</code> or <code>y</code> goes below 0, the ball is being drawn outside the visible area.</p>
+
+            <p class="bilingual">セッション5のコードを実行すると、問題に気づくでしょう：ボールがキャンバスを横切って<strong>端から消えてしまいます</strong>。二度と戻ってきません。<code>x</code>が<code>canvas.width</code>を超えたり、<code>y</code>が0以下になると、ボールは可視領域の外に描画されています。</p>
+
+            <h3>What we have now <span class="bilingual">/ 今の状態</span></h3>
+            <ul>
+                <li>The ball moves diagonally across the screen</li>
+                <li>It exits through the top-right corner (because dx is positive and dy is negative)</li>
+                <li>It never stops or changes direction</li>
+            </ul>
+
+            <h3>What we want <span class="bilingual">/ 目指す状態</span></h3>
+            <ul>
+                <li>When the ball hits a wall, it should <strong>bounce</strong> off it</li>
+                <li>The ball should stay visible inside the canvas forever</li>
+                <li>It should bounce off all four walls: left, right, top, and bottom</li>
+            </ul>
+
+            <div class="analogy-box">
+                <p><strong>Analogy / たとえ話:</strong> Imagine throwing a rubber ball inside a closed room. When it hits a wall, it bounces off and goes the other way. It does not pass through the wall. That is exactly the behavior we want to program.</p>
+                <p class="bilingual">閉じた部屋の中でゴムボールを投げることを想像してください。壁にぶつかると跳ね返って反対方向に進みます。壁を通り抜けることはありません。それがまさに私たちがプログラムしたい動作です。</p>
+            </div>
+
+            <p>To make the ball bounce, we need our code to <strong>detect</strong> when the ball reaches a wall and then <strong>react</strong> by reversing its direction. This requires two new concepts: <strong>if statements</strong> (to detect) and <strong>velocity reversal</strong> (to react).</p>
+
+            <p class="bilingual">ボールを跳ね返らせるには、ボールが壁に到達したことを<strong>検出</strong>し、方向を反転させて<strong>反応</strong>する必要があります。これには2つの新しい概念が必要です：<strong>if文</strong>（検出用）と<strong>速度の反転</strong>（反応用）。</p>
+
+            <!-- ============================================================ -->
+            <!-- 4. The if Statement -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">4</span> Making Decisions: The if Statement <span class="bilingual">/ 判断を下す：if文</span></h2>
+
+            <p>Until now, our code has been <strong>sequential</strong> -- it runs every line from top to bottom, no exceptions. But real programs need to make decisions. Should the ball bounce? Should the game end? Should we add a point to the score? These all require <strong>conditional logic</strong>.</p>
+
+            <p class="bilingual">これまで、コードは<strong>順次的</strong>でした -- すべての行を上から下へ例外なく実行していました。しかし実際のプログラムは判断を下す必要があります。ボールは跳ね返るべきか？ゲームは終了すべきか？スコアに点を追加すべきか？これらすべてに<strong>条件ロジック</strong>が必要です。</p>
+
+            <h3>The if statement syntax <span class="bilingual">/ if文の構文</span></h3>
+
+            <pre><code>if (condition) {
+    // This code runs ONLY when condition is true
+    // 条件がtrueのときだけ、このコードが実行される
+}</code></pre>
+
+            <p>The structure has three parts:</p>
+            <ol>
+                <li><strong><code>if</code></strong> -- the keyword that tells JavaScript "I want to make a decision" <span class="bilingual">/ JavaScriptに「判断したい」と伝えるキーワード</span></li>
+                <li><strong><code>(condition)</code></strong> -- the question to ask, inside parentheses. Must be true or false <span class="bilingual">/ 括弧の中の質問。trueまたはfalseでなければならない</span></li>
+                <li><strong><code>{ code }</code></strong> -- the code to run if the condition is true, inside curly braces <span class="bilingual">/ 条件がtrueのとき実行するコード、波括弧の中</span></li>
+            </ol>
+
+            <div class="analogy-box">
+                <p><strong>Real-life analogy / 実生活のたとえ:</strong></p>
+                <ul>
+                    <li>"If it is raining, bring an umbrella." -- You only bring the umbrella when the condition (raining) is true. <span class="bilingual">「もし雨が降っていたら、傘を持っていく。」</span></li>
+                    <li>"If the traffic light is red, stop the car." -- You only stop when the condition (red light) is true. <span class="bilingual">「もし信号が赤なら、車を止める。」</span></li>
+                    <li>"If the ball hits a wall, reverse direction." -- We only reverse when the condition (hitting wall) is true. <span class="bilingual">「もしボールが壁にぶつかったら、方向を反転する。」</span></li>
+                </ul>
+            </div>
+
+            <h3>A simple example <span class="bilingual">/ 簡単な例</span></h3>
+
+            <pre><code>var temperature = 35;
+
+if (temperature > 30) {
+    console.log("It is hot today!");
+}
+// Output: "It is hot today!" (because 35 > 30 is true)</code></pre>
+
+            <pre><code>var temperature = 20;
+
+if (temperature > 30) {
+    console.log("It is hot today!");
+}
+// No output (because 20 > 30 is false, code inside {} is skipped)</code></pre>
+
+            <div class="warning-box">
+                <p><strong>Common mistake / よくある間違い:</strong> Do not forget the parentheses around the condition or the curly braces around the code. Both are required!</p>
+                <p class="bilingual">条件を囲む括弧とコードを囲む波括弧を忘れないでください。両方とも必須です！</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 5. Comparison Operators -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">5</span> Comparison Operators <span class="bilingual">/ 比較演算子</span></h2>
+
+            <p>To write conditions, we need <strong>comparison operators</strong>. These compare two values and produce a boolean result: either <code>true</code> or <code>false</code>.</p>
+
+            <p class="bilingual">条件を書くには、<strong>比較演算子</strong>が必要です。これらは2つの値を比較し、ブール結果（<code>true</code>または<code>false</code>）を生成します。</p>
+
+            <table class="tag-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Meaning / 意味</th>
+                        <th>Example</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&gt;</code></td>
+                        <td>Greater than <span class="bilingual">/ より大きい</span></td>
+                        <td><code>7 &gt; 5</code></td>
+                        <td><code>true</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;</code></td>
+                        <td>Less than <span class="bilingual">/ より小さい</span></td>
+                        <td><code>3 &lt; 2</code></td>
+                        <td><code>false</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&gt;=</code></td>
+                        <td>Greater than or equal to <span class="bilingual">/ 以上</span></td>
+                        <td><code>5 &gt;= 5</code></td>
+                        <td><code>true</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;=</code></td>
+                        <td>Less than or equal to <span class="bilingual">/ 以下</span></td>
+                        <td><code>10 &lt;= 8</code></td>
+                        <td><code>false</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>===</code></td>
+                        <td>Strictly equal to <span class="bilingual">/ 厳密に等しい</span></td>
+                        <td><code>4 === 4</code></td>
+                        <td><code>true</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>!==</code></td>
+                        <td>Not equal to <span class="bilingual">/ 等しくない</span></td>
+                        <td><code>4 !== 5</code></td>
+                        <td><code>true</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Using comparison operators with variables <span class="bilingual">/ 変数との使用</span></h3>
+
+            <pre><code>var x = 150;
+var canvasWidth = 480;
+
+x > canvasWidth      // false (150 is not greater than 480)
+x < canvasWidth      // true  (150 is less than 480)
+x === 150            // true  (x is exactly 150)
+
+// For our game:
+x + dx > canvasWidth // Is the ball past the right wall?</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Tip / ヒント:</strong> Use <code>===</code> (three equals signs) instead of <code>==</code> (two equals signs) for equality comparisons in JavaScript. The triple equals checks both value and type, which prevents subtle bugs.</p>
+                <p class="bilingual">JavaScriptでの等価比較には<code>==</code>（2つの等号）ではなく<code>===</code>（3つの等号）を使いましょう。トリプルイコールは値と型の両方をチェックするため、微妙なバグを防ぎます。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 6. if/else -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">6</span> if/else and if/else if/else <span class="bilingual">/ if/else と if/else if/else</span></h2>
+
+            <p>Sometimes you want to do one thing if a condition is true, and a <strong>different thing</strong> if it is false. That is what <code>else</code> is for.</p>
+
+            <p class="bilingual">条件がtrueのときに一つのことをし、falseのときに<strong>別のこと</strong>をしたい場合があります。それが<code>else</code>の役割です。</p>
+
+            <h3>if/else <span class="bilingual">/ if/else文</span></h3>
+
+            <pre><code>if (condition) {
+    // runs when condition is TRUE
+} else {
+    // runs when condition is FALSE
+}
+
+// Example:
+var score = 3;
+if (score >= 5) {
+    console.log("You win!");
+} else {
+    console.log("Keep trying!");
+}
+// Output: "Keep trying!" (because 3 >= 5 is false)</code></pre>
+
+            <h3>if/else if/else (multiple conditions) <span class="bilingual">/ 複数の条件</span></h3>
+
+            <pre><code>var temperature = 25;
+
+if (temperature > 35) {
+    console.log("Very hot!");
+} else if (temperature > 25) {
+    console.log("Warm.");
+} else if (temperature > 15) {
+    console.log("Cool.");
+} else {
+    console.log("Cold!");
+}
+// Output: "Cool." (because 25 > 15 is true, checked after 25 > 35 and 25 > 25 failed)</code></pre>
+
+            <div class="note-box">
+                <p><strong>For our bouncing ball:</strong> We primarily use simple <code>if</code> statements (without else), because we just need to check "is the ball at a wall?" and reverse direction if true. We do not need an else because if the ball is NOT at a wall, we simply do nothing special.</p>
+                <p class="bilingual"><strong>跳ね返るボールの場合：</strong> 主にシンプルな<code>if</code>文（elseなし）を使います。「ボールは壁にいるか？」をチェックし、trueなら方向を反転するだけです。壁にいない場合は何もしないので、elseは不要です。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 7. Boundary Detection: Right and Left Walls -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">7</span> Boundary Detection: Right and Left Walls <span class="bilingual">/ 境界検出：右壁と左壁</span></h2>
+
+            <p>Now let's apply what we learned about if statements and comparison operators to detect when our ball hits the walls.</p>
+
+            <p class="bilingual">では、if文と比較演算子について学んだことを使って、ボールが壁にぶつかるタイミングを検出しましょう。</p>
+
+            <h3>The canvas coordinate system <span class="bilingual">/ キャンバスの座標系</span></h3>
+
+            <div class="diagram-box">
+                <div class="diagram-title">Canvas Boundaries / キャンバスの境界</div>
+                <pre style="background: transparent; color: #1f2937; text-align: left; display: inline-block; border: none; box-shadow: none;">
+  x = 0                              x = canvas.width
+    |                                      |
+    v                                      v
+    +--------------------------------------+  <-- y = 0
+    |                                      |
+    |          Canvas (480 x 320)          |
+    |                                      |
+    |              o  <-- ball at (x, y)   |
+    |                                      |
+    |                                      |
+    +--------------------------------------+  <-- y = canvas.height</pre>
+            </div>
+
+            <h3>Detecting the right wall <span class="bilingual">/ 右壁の検出</span></h3>
+
+            <p>The ball hits the right wall when its x position exceeds the canvas width. We check where the ball <strong>will be</strong> after the next frame (x + dx), not where it is now:</p>
+
+            <p class="bilingual">ボールのx位置がキャンバスの幅を超えると、右壁にぶつかります。ボールが今どこにいるかではなく、次のフレーム後に<strong>どこにいるか</strong>（x + dx）をチェックします：</p>
+
+            <pre><code>// Detect right wall
+if (x + dx > canvas.width) {
+    dx = -dx;  // reverse horizontal direction
+}</code></pre>
+
+            <h3>Detecting the left wall <span class="bilingual">/ 左壁の検出</span></h3>
+
+            <p>The ball hits the left wall when its x position goes below 0:</p>
+
+            <p class="bilingual">ボールのx位置が0を下回ると、左壁にぶつかります：</p>
+
+            <pre><code>// Detect left wall
+if (x + dx < 0) {
+    dx = -dx;  // reverse horizontal direction
+}</code></pre>
+
+            <h3>Combining both into one statement <span class="bilingual">/ 両方を1つの文にまとめる</span></h3>
+
+            <p>Since both conditions trigger the same action (<code>dx = -dx</code>), we can combine them with the OR operator (<code>||</code>):</p>
+
+            <p class="bilingual">両方の条件が同じアクション（<code>dx = -dx</code>）を引き起こすので、OR演算子（<code>||</code>）で組み合わせることができます：</p>
+
+            <pre><code>// Detect left OR right wall
+if (x + dx > canvas.width || x + dx < 0) {
+    dx = -dx;
+}</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Why check x + dx instead of just x? / なぜxではなくx + dxをチェックするのか？</strong> We want to detect the collision <em>before</em> it happens, so we can reverse direction in time. If we waited until x was already past the wall, the ball would briefly appear outside the canvas.</p>
+                <p class="bilingual">衝突が起きる<em>前に</em>検出したいからです。そうすれば時間内に方向を反転できます。xがすでに壁を超えてから検出すると、ボールがキャンバスの外に一瞬現れてしまいます。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 8. Boundary Detection: Top and Bottom Walls -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">8</span> Boundary Detection: Top and Bottom Walls <span class="bilingual">/ 境界検出：上壁と下壁</span></h2>
+
+            <p>The same logic applies to the vertical axis (y). The only difference is we check <code>y + dy</code> and reverse <code>dy</code> instead of <code>dx</code>.</p>
+
+            <p class="bilingual">同じロジックが垂直軸（y）にも適用されます。唯一の違いは、<code>y + dy</code>をチェックし、<code>dx</code>ではなく<code>dy</code>を反転することです。</p>
+
+            <h3>Detecting the top wall <span class="bilingual">/ 上壁の検出</span></h3>
+
+            <pre><code>// Ball hits top wall when y goes below 0
+if (y + dy < 0) {
+    dy = -dy;  // reverse vertical direction
+}</code></pre>
+
+            <h3>Detecting the bottom wall <span class="bilingual">/ 下壁の検出</span></h3>
+
+            <pre><code>// Ball hits bottom wall when y exceeds canvas height
+if (y + dy > canvas.height) {
+    dy = -dy;  // reverse vertical direction
+}</code></pre>
+
+            <h3>Combined vertical check <span class="bilingual">/ 垂直方向のチェックをまとめる</span></h3>
+
+            <pre><code>// Detect top OR bottom wall
+if (y + dy > canvas.height || y + dy < 0) {
+    dy = -dy;
+}</code></pre>
+
+            <h3>All four walls together <span class="bilingual">/ 4つの壁をすべてまとめる</span></h3>
+
+            <pre><code>// Horizontal walls (left and right)
+if (x + dx > canvas.width || x + dx < 0) {
+    dx = -dx;
+}
+
+// Vertical walls (top and bottom)
+if (y + dy > canvas.height || y + dy < 0) {
+    dy = -dy;
+}</code></pre>
+
+            <div class="note-box">
+                <p><strong>Important pattern / 重要なパターン:</strong> Notice the symmetry. For the x-axis, we check x boundaries and reverse dx. For the y-axis, we check y boundaries and reverse dy. Each axis is handled independently.</p>
+                <p class="bilingual">対称性に注目してください。x軸ではxの境界をチェックしてdxを反転。y軸ではyの境界をチェックしてdyを反転。各軸は独立して処理されます。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 9. Velocity Reversal -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">9</span> Velocity Reversal: The Bounce <span class="bilingual">/ 速度の反転：跳ね返り</span></h2>
+
+            <p>The key to making the ball bounce is one simple operation: <code>dx = -dx</code> (or <code>dy = -dy</code>). Let's understand exactly why this works.</p>
+
+            <p class="bilingual">ボールを跳ね返らせる鍵は、一つのシンプルな操作です：<code>dx = -dx</code>（または<code>dy = -dy</code>）。なぜこれが機能するのか正確に理解しましょう。</p>
+
+            <h3>What does negation do? <span class="bilingual">/ 否定は何をするのか？</span></h3>
+
+            <pre><code>// dx = 2 means: move 2 pixels to the RIGHT each frame
+dx = -dx;
+// Now dx = -2 means: move 2 pixels to the LEFT each frame
+
+// dx = -2 means: move 2 pixels to the LEFT each frame
+dx = -dx;
+// Now dx = 2 means: move 2 pixels to the RIGHT each frame</code></pre>
+
+            <p>Negation <strong>flips the sign</strong> of the number. A positive number becomes negative, and vice versa. The magnitude (speed) stays the same -- only the direction changes.</p>
+
+            <p class="bilingual">否定は数値の<strong>符号を反転</strong>します。正の数は負になり、その逆も同様です。大きさ（速さ）は同じまま -- 方向だけが変わります。</p>
+
+            <div class="diagram-box">
+                <div class="diagram-title">Velocity Reversal Visualized / 速度反転の可視化</div>
+                <pre style="background: transparent; color: #1f2937; text-align: left; display: inline-block; border: none; box-shadow: none;">
+Before hitting right wall:    After bounce:
+dx = 2 (moving right -->)     dx = -2 (moving <-- left)
+
+    o -->  |                      |  <-- o
+   ball   wall                  wall   ball
+
+
+Before hitting top wall:      After bounce:
+dy = -2 (moving up ^)         dy = 2 (moving down v)
+
+    ------                      ------
+      ^                           |
+      |                           v
+      o                           o</pre>
+            </div>
+
+            <div class="analogy-box">
+                <p><strong>Analogy / たとえ話:</strong> Think of a rubber ball hitting a wall. The ball does not slow down or speed up (in our simplified physics) -- it simply reverses direction. If it was going right at speed 2, after the bounce it goes left at speed 2. The negation operator (<code>-</code>) is our code's way of expressing this reversal.</p>
+                <p class="bilingual">壁にぶつかるゴムボールを考えてください。（私たちの単純化した物理学では）ボールは減速も加速もしません -- ただ方向が反転するだけです。速度2で右に進んでいたら、跳ね返り後は速度2で左に進みます。否定演算子（<code>-</code>）は、この反転をコードで表現する方法です。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 10. Accounting for Ball Radius -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">10</span> Accounting for Ball Radius <span class="bilingual">/ ボールの半径を考慮する</span></h2>
+
+            <p>If you test the code from the previous sections, you will notice a visual problem: the ball seems to clip into the wall before bouncing back. Part of the ball disappears behind the edge before it reverses.</p>
+
+            <p class="bilingual">前のセクションのコードをテストすると、視覚的な問題に気づくでしょう：ボールが跳ね返る前に壁に食い込んでいるように見えます。反転する前にボールの一部が端の後ろに消えます。</p>
+
+            <h3>Why does this happen? <span class="bilingual">/ なぜこれが起こるのか？</span></h3>
+
+            <p>The variable <code>x</code> represents the <strong>center</strong> of the ball, not its edge. When we check <code>x + dx > canvas.width</code>, we are checking if the center has passed the wall. But the ball's visible edge is at <code>x + ballRadius</code>, which reaches the wall before the center does!</p>
+
+            <p class="bilingual">変数<code>x</code>はボールの<strong>中心</strong>を表し、端ではありません。<code>x + dx > canvas.width</code>をチェックするとき、中心が壁を通過したかを確認しています。しかしボールの目に見える端は<code>x + ballRadius</code>にあり、中心より先に壁に到達します！</p>
+
+            <div class="diagram-box">
+                <div class="diagram-title">Ball Center vs. Ball Edge / ボールの中心 vs. ボールの端</div>
+                <pre style="background: transparent; color: #1f2937; text-align: left; display: inline-block; border: none; box-shadow: none;">
+Without radius correction:         With radius correction:
+(ball clips into wall)             (ball bounces at edge)
+
+         |                                   |
+    [ o ]|  <-- center at wall,         [ o ]|  <-- edge touches wall,
+         |      half the ball is             |      ball bounces here
+         |      hidden behind wall           |
+
+  x = canvas.width (too late!)      x = canvas.width - ballRadius (just right!)</pre>
+            </div>
+
+            <h3>The fix: subtract and add ballRadius <span class="bilingual">/ 修正：ballRadiusを引いたり足したりする</span></h3>
+
+            <pre><code>// WITHOUT radius correction (ball clips into walls):
+if (x + dx > canvas.width || x + dx < 0) {
+    dx = -dx;
+}
+
+// WITH radius correction (ball bounces at edge):
+if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    dx = -dx;
+}
+if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+    dy = -dy;
+}</code></pre>
+
+            <h3>Understanding each boundary <span class="bilingual">/ 各境界の理解</span></h3>
+
+            <table class="tag-table">
+                <thead>
+                    <tr>
+                        <th>Wall / 壁</th>
+                        <th>Without Radius</th>
+                        <th>With Radius</th>
+                        <th>Why / 理由</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Right</td>
+                        <td><code>x + dx > canvas.width</code></td>
+                        <td><code>x + dx > canvas.width - ballRadius</code></td>
+                        <td>Ball edge is at x + ballRadius</td>
+                    </tr>
+                    <tr>
+                        <td>Left</td>
+                        <td><code>x + dx < 0</code></td>
+                        <td><code>x + dx < ballRadius</code></td>
+                        <td>Ball edge is at x - ballRadius</td>
+                    </tr>
+                    <tr>
+                        <td>Top</td>
+                        <td><code>y + dy < 0</code></td>
+                        <td><code>y + dy < ballRadius</code></td>
+                        <td>Ball edge is at y - ballRadius</td>
+                    </tr>
+                    <tr>
+                        <td>Bottom</td>
+                        <td><code>y + dy > canvas.height</code></td>
+                        <td><code>y + dy > canvas.height - ballRadius</code></td>
+                        <td>Ball edge is at y + ballRadius</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <p><strong>Remember / 覚えておこう:</strong> Always account for the ball's radius when doing boundary detection. Without it, the ball will visually clip through walls. This is a common source of bugs in game development.</p>
+                <p class="bilingual">境界検出のときは常にボールの半径を考慮してください。これがないと、ボールが視覚的に壁を突き抜けます。これはゲーム開発でよくあるバグの原因です。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 11. Logical Operators -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">11</span> Logical Operators: &amp;&amp; (AND) and || (OR) <span class="bilingual">/ 論理演算子：&&（AND）と ||（OR）</span></h2>
+
+            <p>We have already used <code>||</code> (OR) in our wall detection code. Let's formally learn both logical operators.</p>
+
+            <p class="bilingual">壁検出コードで既に<code>||</code>（OR）を使いました。両方の論理演算子を正式に学びましょう。</p>
+
+            <h3>|| (OR) -- at least one must be true <span class="bilingual">/ ||（OR）-- 少なくとも1つがtrue</span></h3>
+
+            <pre><code>// || means "or" -- the whole expression is true if EITHER side is true
+
+true || true    // true
+true || false   // true
+false || true   // true
+false || false  // false (neither is true)
+
+// Our game example:
+if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    // This runs if the ball hits the right wall OR the left wall
+    dx = -dx;
+}</code></pre>
+
+            <h3>&amp;&amp; (AND) -- both must be true <span class="bilingual">/ &&（AND）-- 両方がtrue</span></h3>
+
+            <pre><code>// && means "and" -- the whole expression is true only if BOTH sides are true
+
+true && true    // true
+true && false   // false
+false && true   // false
+false && false  // false
+
+// Example: check if something is within a range
+var x = 100;
+if (x > 50 && x < 200) {
+    console.log("x is between 50 and 200");
+}
+// true, because both (100 > 50) AND (100 < 200) are true</code></pre>
+
+            <div class="analogy-box">
+                <p><strong>Analogy / たとえ話:</strong></p>
+                <ul>
+                    <li><strong>|| (OR)</strong> is like a door with two keys -- either key can open it. You need at least one. <span class="bilingual">2つの鍵があるドア -- どちらか1つで開きます。</span></li>
+                    <li><strong>&amp;&amp; (AND)</strong> is like a safe that needs two keys turned at the same time -- both are required. <span class="bilingual">2つの鍵を同時に回す必要がある金庫 -- 両方必要です。</span></li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>When to use which? / どちらを使うか？</strong></p>
+                <p><code>||</code> -- When you want to do something if <strong>any one</strong> of several conditions is met. "Bounce if ball hits right wall OR left wall."</p>
+                <p><code>&amp;&amp;</code> -- When you want to do something only if <strong>all</strong> conditions are met simultaneously. "The ball is in the safe zone if x > 0 AND x < canvas.width."</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 12. Compound Conditions -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">12</span> Compound Conditions <span class="bilingual">/ 複合条件</span></h2>
+
+            <p>A <strong>compound condition</strong> is a condition made by combining multiple simpler conditions with logical operators. We have been using these already!</p>
+
+            <p class="bilingual"><strong>複合条件</strong>は、複数のより単純な条件を論理演算子で組み合わせて作られる条件です。すでに使っていました！</p>
+
+            <h3>Our wall detection uses compound conditions <span class="bilingual">/ 壁検出は複合条件を使っている</span></h3>
+
+            <pre><code>// This is a compound condition using OR:
+if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^
+//  Condition 1: right wall                 Condition 2: left wall
+//  (joined by || which means "or")
+    dx = -dx;
+}</code></pre>
+
+            <h3>You can combine as many conditions as you need <span class="bilingual">/ 必要なだけ条件を組み合わせられる</span></h3>
+
+            <pre><code>// Check if a point is inside a rectangle (using AND):
+if (x > rectLeft && x < rectRight && y > rectTop && y < rectBottom) {
+    console.log("Point is inside the rectangle!");
+}
+
+// Check multiple failure conditions (using OR):
+if (lives === 0 || time === 0 || health <= 0) {
+    console.log("Game Over!");
+}</code></pre>
+
+            <div class="note-box">
+                <p><strong>For today's code / 今日のコード:</strong> We primarily use <code>||</code> (OR) to check if the ball is at either of two opposing walls. In later sessions, we will use <code>&amp;&amp;</code> (AND) for more complex collision detection (like checking if the ball hits the paddle).</p>
+                <p class="bilingual">今日は主に<code>||</code>（OR）を使って、ボールが2つの対向する壁のどちらかにいるかをチェックします。後のセッションでは、より複雑な衝突検出（ボールがパドルに当たったかなど）に<code>&amp;&amp;</code>（AND）を使います。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 13. The Complete Bouncing Ball -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">13</span> The Complete Bouncing Ball <span class="bilingual">/ 完全な跳ね返るボール</span></h2>
+
+            <p>Here is the complete, working code for a ball that bounces off all four walls. This is the full HTML file you can create and run:</p>
+
+            <p class="bilingual">4つの壁すべてで跳ね返るボールの完全な動作コードがこちらです。作成して実行できる完全なHTMLファイルです：</p>
+
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Bouncing Ball&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;
+    &lt;script&gt;
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+        // Ball position (starts near center-bottom)
+        var x = canvas.width / 2;
+        var y = canvas.height - 30;
+
+        // Ball velocity (speed and direction)
+        var dx = 2;
+        var dy = -2;
+
+        // Ball size
+        var ballRadius = 10;
+
+        function draw() {
+            // Clear the entire canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the ball
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+
+            // Bounce off left and right walls
+            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                dx = -dx;
+            }
+
+            // Bounce off top and bottom walls
+            if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+                dy = -dy;
+            }
+
+            // Move the ball
+            x += dx;
+            y += dy;
+        }
+
+        // Run draw() every 10 milliseconds
+        setInterval(draw, 10);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>Code walkthrough <span class="bilingual">/ コードの解説</span></h3>
+
+            <ul class="step-list">
+                <li><strong>Lines 1-10:</strong> Standard HTML setup with a canvas element (480 pixels wide, 320 pixels tall). <span class="bilingual">キャンバス要素を含む標準的なHTMLセットアップ。</span></li>
+                <li><strong>Lines 11-12:</strong> Get references to the canvas and its 2D drawing context. <span class="bilingual">キャンバスとその2D描画コンテキストへの参照を取得。</span></li>
+                <li><strong>Lines 14-15:</strong> Set the ball's starting position (center-bottom of canvas). <span class="bilingual">ボールの開始位置を設定（キャンバスの中央下部）。</span></li>
+                <li><strong>Lines 17-18:</strong> Set velocity: dx=2 means 2 pixels right per frame, dy=-2 means 2 pixels up per frame. <span class="bilingual">速度を設定：dx=2はフレームごとに右に2ピクセル、dy=-2は上に2ピクセル。</span></li>
+                <li><strong>Line 20:</strong> Ball radius of 10 pixels (ball is 20 pixels in diameter). <span class="bilingual">ボールの半径10ピクセル（直径20ピクセル）。</span></li>
+                <li><strong>Lines 22-24:</strong> Clear the canvas so old frames do not stack up (creates animation). <span class="bilingual">キャンバスをクリアして古いフレームが重ならないようにする（アニメーションを作成）。</span></li>
+                <li><strong>Lines 26-30:</strong> Draw the ball at its current (x, y) position. <span class="bilingual">現在の(x, y)位置にボールを描画。</span></li>
+                <li><strong>Lines 32-34:</strong> Boundary detection for horizontal walls with radius correction. If hit, reverse dx. <span class="bilingual">半径補正付きの水平壁の境界検出。ぶつかったらdxを反転。</span></li>
+                <li><strong>Lines 36-38:</strong> Boundary detection for vertical walls with radius correction. If hit, reverse dy. <span class="bilingual">半径補正付きの垂直壁の境界検出。ぶつかったらdyを反転。</span></li>
+                <li><strong>Lines 40-41:</strong> Update the ball's position by adding velocity to current position. <span class="bilingual">速度を現在位置に足してボールの位置を更新。</span></li>
+            </ul>
+
+            <div class="tip-box">
+                <p><strong>Order matters / 順番が重要:</strong> Notice that we check boundaries BEFORE updating position (x += dx). This ensures the ball never actually moves past the wall. The check happens first, reversal happens if needed, then the position updates in the correct direction.</p>
+                <p class="bilingual">境界チェックは位置更新（x += dx）の前に行っていることに注目してください。これにより、ボールが実際に壁を超えることがありません。チェックが先に行われ、必要なら反転が起き、その後正しい方向に位置が更新されます。</p>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 14. Key Takeaways -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">14</span> Key Takeaways <span class="bilingual">/ 重要なポイント</span></h2>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">1</span>
+                <div>
+                    <strong>The if statement lets code make decisions.</strong> It checks a condition and runs code only if that condition is true.
+                    <br><span class="bilingual">if文はコードに判断させます。条件をチェックし、その条件がtrueのときだけコードを実行します。</span>
+                </div>
+            </div>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">2</span>
+                <div>
+                    <strong>Comparison operators</strong> (&lt;, &gt;, &lt;=, &gt;=, ===, !==) compare two values and return true or false.
+                    <br><span class="bilingual">比較演算子は2つの値を比較し、trueまたはfalseを返します。</span>
+                </div>
+            </div>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">3</span>
+                <div>
+                    <strong>Boundary detection</strong> checks if the ball's next position will exceed the canvas boundaries.
+                    <br><span class="bilingual">境界検出は、ボールの次の位置がキャンバスの境界を超えるかどうかをチェックします。</span>
+                </div>
+            </div>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">4</span>
+                <div>
+                    <strong>Velocity reversal</strong> (<code>dx = -dx</code>) flips the direction of movement while keeping the speed the same.
+                    <br><span class="bilingual">速度の反転（<code>dx = -dx</code>）は、速さを同じに保ちながら動きの方向を反転します。</span>
+                </div>
+            </div>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">5</span>
+                <div>
+                    <strong>Always account for ball radius</strong> in boundary checks to prevent visual clipping through walls.
+                    <br><span class="bilingual">壁への視覚的な食い込みを防ぐため、境界チェックでは常にボールの半径を考慮しましょう。</span>
+                </div>
+            </div>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">6</span>
+                <div>
+                    <strong>Logical operators</strong> combine conditions: <code>||</code> (OR) means "at least one is true"; <code>&amp;&amp;</code> (AND) means "both must be true."
+                    <br><span class="bilingual">論理演算子は条件を組み合わせます：<code>||</code>（OR）は「少なくとも1つがtrue」、<code>&&</code>（AND）は「両方がtrueでなければならない」。</span>
+                </div>
+            </div>
+
+            <div class="key-takeaway">
+                <span class="takeaway-number">7</span>
+                <div>
+                    <strong>Each axis is independent.</strong> Horizontal bouncing (dx) and vertical bouncing (dy) are handled separately.
+                    <br><span class="bilingual">各軸は独立しています。水平方向の跳ね返り（dx）と垂直方向の跳ね返り（dy）は別々に処理されます。</span>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- 15. Next Session Preview -->
+            <!-- ============================================================ -->
+            <h2><span class="section-number">15</span> Next Session Preview <span class="bilingual">/ 次回のセッション予告</span></h2>
+
+            <p>In <strong>Session 7</strong>, we will add player interaction to our game:</p>
+
+            <p class="bilingual"><strong>セッション7</strong>では、ゲームにプレイヤーのインタラクションを追加します：</p>
+
+            <ul>
+                <li><strong>Drawing a paddle</strong> -- a rectangle at the bottom of the screen that the player controls <span class="bilingual">/ パドルの描画 -- プレイヤーが操作する画面下部の四角形</span></li>
+                <li><strong>Keyboard events</strong> -- detecting when the player presses the left and right arrow keys <span class="bilingual">/ キーボードイベント -- プレイヤーが左右の矢印キーを押したことを検出</span></li>
+                <li><strong>Moving the paddle</strong> -- updating the paddle's position based on key presses <span class="bilingual">/ パドルの移動 -- キー押下に基づいてパドルの位置を更新</span></li>
+                <li><strong>Game over logic</strong> -- ending the game when the ball hits the bottom without hitting the paddle <span class="bilingual">/ ゲームオーバーロジック -- ボールがパドルに当たらず底に落ちたら終了</span></li>
+            </ul>
+
+            <div class="note-box">
+                <p><strong>MDN Reference:</strong> Today's content is based on <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Bounce_off_the_walls" target="_blank" rel="noopener">MDN Lesson 3: Bounce off the walls</a>. Next session will cover <a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Paddle_and_keyboard_controls" target="_blank" rel="noopener">MDN Lesson 4: Paddle and keyboard controls</a>.</p>
+                <p class="bilingual"><strong>MDNリファレンス：</strong> 今日の内容はMDNレッスン3「壁での跳ね返り」に基づいています。次回はMDNレッスン4「パドルとキーボード操作」を扱います。</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kwansei Gakuin University - School of Policy Studies. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -71,7 +71,9 @@ def load_students_from_excel(file_path: str) -> int:
     """
     import openpyxl
 
-    wb = openpyxl.load_workbook(file_path, read_only=True)
+    # NOTE: read_only=True fails on KGU enrollment exports because the xlsx
+    # has no <dimension> tag, which makes read-only mode stop at row 1.
+    wb = openpyxl.load_workbook(file_path, read_only=False, data_only=True)
     ws = wb.active
     count = 0
 

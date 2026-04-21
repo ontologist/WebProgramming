@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 4: Ball Animation | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Assignment-specific styles */
+        .assignment-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .assignment-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .assignment-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .assignment-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .assignment-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .assignment-content ul, .assignment-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .assignment-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .assignment-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .assignment-content pre {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .assignment-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        /* Info box (blue) */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Warning box (yellow) */
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Success box (green) */
+        .success-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .success-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Tip box (green) */
+        .tip-box {
+            background-color: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Checklist styling */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 15px;
+            padding-left: 40px;
+            position: relative;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 12px;
+            font-size: 1.3em;
+            color: #7c3aed;
+        }
+
+        /* Step cards */
+        .step-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 5px solid #2563eb;
+        }
+
+        .step-card h4 {
+            font-size: 1.1rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            margin-bottom: 5px;
+        }
+
+        /* Grading table */
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .grading-table thead th {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .grading-table tbody td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .grading-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .grading-table tbody tr:last-child {
+            background-color: #eff6ff;
+            font-weight: 700;
+        }
+
+        .grading-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Folder tree */
+        .folder-tree {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 15px 0 25px 0;
+        }
+
+        /* Mistakes list */
+        .mistakes-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mistakes-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #991b1b;
+        }
+
+        .mistakes-list li::before {
+            content: "\2718";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #dc2626;
+        }
+
+        /* Tips list */
+        .tips-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #065f46;
+        }
+
+        .tips-list li::before {
+            content: "\2714";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .assignment-content {
+                padding: 20px;
+            }
+
+            .assignment-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .assignment-content pre {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Assignment 4: Ball Animation</h1>
+            <p class="subtitle">課題4：ボールアニメーション</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+            <a href="lecture.html">Lecture / 講義</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="assignment-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. ASSIGNMENT OVERVIEW -->
+            <!-- ============================================================ -->
+            <h2>1. Assignment Overview / 課題概要</h2>
+
+            <p>In this assignment, you will bring your static ball to life! Using the <strong>game loop pattern</strong> you learned in Session 5, you will make a ball move smoothly across the canvas.<br>
+            <span class="bilingual">この課題では、静止しているボールに命を吹き込みます！セッション5で学んだゲームループパターンを使って、ボールをキャンバス上で滑らかに動かします。</span></p>
+
+            <p>This builds directly on your work from Assignment 3 (drawing shapes on canvas). Now instead of a static drawing, you will create a <strong>real animation</strong> -- the first step toward building the Breakout game!<br>
+            <span class="bilingual">これは課題3（キャンバスに図形を描く）の直接的な発展です。静止した絵ではなく、本物のアニメーションを作ります -- ブロック崩しゲームを作るための最初のステップです！</span></p>
+
+            <div class="info-box">
+                <p><strong>Goal:</strong> Make a ball move smoothly across the canvas using a <code>draw()</code> function called repeatedly by <code>setInterval()</code>.</p>
+                <p class="bilingual"><strong>目標：</strong> <code>setInterval()</code>で繰り返し呼び出される<code>draw()</code>関数を使って、ボールをキャンバス上で滑らかに動かします。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. WHAT YOU NEED TO DO -->
+            <!-- ============================================================ -->
+            <h2>2. What You Need To Do / やるべきこと</h2>
+
+            <p>Follow these steps to create your ball animation:<br>
+            <span class="bilingual">以下のステップに従ってボールアニメーションを作成してください：</span></p>
+
+            <div class="step-card">
+                <h4>Step 1: Set Up the HTML / HTMLを設定する</h4>
+                <p>Create an HTML file with a <code>&lt;canvas&gt;</code> element (480 x 320 pixels) and a <code>&lt;script&gt;</code> tag for your JavaScript code.<br>
+                <span class="bilingual">canvas要素（480 x 320ピクセル）とscriptタグを持つHTMLファイルを作成します。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 2: Get the Canvas Context / キャンバスコンテキストを取得する</h4>
+                <p>Use <code>document.getElementById()</code> to get the canvas, then <code>getContext("2d")</code> to get the drawing context.<br>
+                <span class="bilingual">document.getElementById()でキャンバスを取得し、getContext("2d")で描画コンテキストを取得します。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 3: Create Position Variables / 位置変数を作成する</h4>
+                <p>Define variables for the ball's x and y position. Start the ball somewhere on the canvas (e.g., the center).<br>
+                <span class="bilingual">ボールのx座標とy座標の変数を定義します。キャンバス上のどこか（例：中心）からスタートします。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 4: Create Velocity Variables (dx and dy) / 速度変数を作成する</h4>
+                <p>Define <code>dx</code> and <code>dy</code> variables that control how many pixels the ball moves each frame.<br>
+                <span class="bilingual">各フレームでボールが何ピクセル動くかを制御する<code>dx</code>と<code>dy</code>変数を定義します。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 5: Define a draw() Function / draw()関数を定義する</h4>
+                <p>Create a function called <code>draw</code> that does three things in this order:<br>
+                <span class="bilingual">以下の3つのことをこの順番で行う<code>draw</code>関数を作成します：</span></p>
+                <ol>
+                    <li><strong>Clear the canvas</strong> with <code>clearRect()</code> <span class="bilingual">/ clearRect()でキャンバスをクリア</span></li>
+                    <li><strong>Draw the ball</strong> at the current x, y position using <code>arc()</code> <span class="bilingual">/ arc()を使って現在のx, y位置にボールを描画</span></li>
+                    <li><strong>Update the position</strong> by adding dx to x, and dy to y <span class="bilingual">/ xにdxを、yにdyを加えて位置を更新</span></li>
+                </ol>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 6: Start the Animation with setInterval / setIntervalでアニメーション開始</h4>
+                <p>Use <code>setInterval(draw, 10)</code> to call your draw function every 10 milliseconds, creating smooth animation.<br>
+                <span class="bilingual"><code>setInterval(draw, 10)</code>を使って10ミリ秒ごとにdraw関数を呼び出し、滑らかなアニメーションを作ります。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 7: Add Comments / コメントを追加する</h4>
+                <p>Add comments to your code explaining what each section does. Use <code>//</code> for single-line comments.<br>
+                <span class="bilingual">各セクションが何をするかを説明するコメントをコードに追加します。単一行コメントには<code>//</code>を使います。</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. REQUIREMENTS CHECKLIST -->
+            <!-- ============================================================ -->
+            <h2>3. Requirements Checklist / 要件チェックリスト</h2>
+
+            <p>Before submitting, make sure you can check off every item:<br>
+            <span class="bilingual">提出前に、すべての項目をチェックできることを確認してください：</span></p>
+
+            <ul class="checklist">
+                <li>A <code>draw()</code> function is defined<br>
+                    <span class="bilingual">draw()関数が定義されている</span></li>
+                <li><code>setInterval()</code> is used to call the draw function repeatedly<br>
+                    <span class="bilingual">setInterval()でdraw関数が繰り返し呼び出されている</span></li>
+                <li>The canvas is cleared each frame with <code>clearRect()</code><br>
+                    <span class="bilingual">各フレームでclearRect()を使ってキャンバスがクリアされている</span></li>
+                <li>The ball moves using <code>dx</code> and <code>dy</code> velocity variables<br>
+                    <span class="bilingual">dxとdy速度変数を使ってボールが動いている</span></li>
+                <li>The ball is drawn with <code>arc()</code><br>
+                    <span class="bilingual">ボールがarc()で描画されている</span></li>
+                <li>Variables are used for position (x, y) and speed (dx, dy)<br>
+                    <span class="bilingual">位置（x, y）と速度（dx, dy）に変数が使われている</span></li>
+                <li>Code has comments explaining what each part does<br>
+                    <span class="bilingual">各部分が何をするか説明するコメントがある</span></li>
+                <li>The ball visibly moves across the canvas when the page loads<br>
+                    <span class="bilingual">ページ読み込み時にボールがキャンバス上で目に見えるように動く</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. GRADING CRITERIA -->
+            <!-- ============================================================ -->
+            <h2>4. Grading Criteria / 評価基準</h2>
+
+            <p>Your assignment will be graded on the following criteria:<br>
+            <span class="bilingual">課題は以下の基準で評価されます：</span></p>
+
+            <table class="grading-table">
+                <thead>
+                    <tr>
+                        <th>Criteria / 評価項目</th>
+                        <th>Points / 配点</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Functions (draw function correctly defined and called)<br><span class="bilingual">関数（draw関数が正しく定義され呼び出されている）</span></td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>Game loop pattern (setInterval + clearRect used correctly)<br><span class="bilingual">ゲームループパターン（setInterval + clearRectが正しく使われている）</span></td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>Animation correctness (ball moves smoothly, no ghost trails)<br><span class="bilingual">アニメーションの正確さ（ボールが滑らかに動き、残像がない）</span></td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>Code organization and comments<br><span class="bilingual">コードの整理とコメント</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td>Visual quality (ball appearance, canvas styling)<br><span class="bilingual">視覚的品質（ボールの見た目、キャンバスのスタイリング）</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total / 合計</strong></td>
+                        <td><strong>100</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. STARTER CODE -->
+            <!-- ============================================================ -->
+            <h2>5. Starter Code / スターターコード</h2>
+
+            <p>Use this template as a starting point. Fill in the missing parts (marked with comments):<br>
+            <span class="bilingual">このテンプレートをスタート地点として使ってください。足りない部分（コメントで示されています）を埋めてください：</span></p>
+
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Assignment 4: Ball Animation&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        canvas {
+            border: 2px solid #333;
+            background-color: #fff;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;
+
+    &lt;script&gt;
+        // Step 1: Get the canvas and context
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+        // Step 2: Define position variables
+        // TODO: Create x and y variables for the ball's starting position
+
+
+        // Step 3: Define velocity variables
+        // TODO: Create dx and dy variables for the ball's speed
+
+
+        // Step 4: Define the draw function
+        function draw() {
+            // TODO: Clear the entire canvas using clearRect
+
+
+            // TODO: Draw the ball using beginPath, arc, fillStyle, fill, closePath
+
+
+            // TODO: Update the position (add dx to x, add dy to y)
+
+        }
+
+        // Step 5: Start the animation
+        // TODO: Use setInterval to call draw every 10 milliseconds
+
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="info-box">
+                <p><strong>Hint:</strong> Look back at the lecture notes for the complete code example. The starter code above has the same structure -- you just need to fill in the TODO sections.</p>
+                <p class="bilingual"><strong>ヒント：</strong> 完成コードの例は講義ノートを参照してください。上のスターターコードは同じ構造です -- TODOの部分を埋めるだけです。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. BONUS CHALLENGES -->
+            <!-- ============================================================ -->
+            <h2>6. Bonus Challenges / ボーナスチャレンジ</h2>
+
+            <p>Already finished the basic assignment? Try these extra challenges for bonus creativity points:<br>
+            <span class="bilingual">基本の課題が終わりましたか？ボーナスの創造性ポイントのために、これらの追加チャレンジに挑戦してみてください：</span></p>
+
+            <div class="step-card" style="border-left-color: #7c3aed;">
+                <h4 style="color: #7c3aed;">Challenge A: Color-Changing Ball / 色が変わるボール</h4>
+                <p>Make the ball change color as it moves. You could use a counter variable and change the fillStyle each frame.<br>
+                <span class="bilingual">ボールが動くにつれて色を変えるようにしましょう。カウンター変数を使って、各フレームでfillStyleを変更できます。</span></p>
+            </div>
+
+            <div class="step-card" style="border-left-color: #7c3aed;">
+                <h4 style="color: #7c3aed;">Challenge B: Trail Effect / トレイルエフェクト</h4>
+                <p>Instead of fully clearing the canvas, use a semi-transparent rectangle to create a fading trail effect behind the ball.<br>
+                <span class="bilingual">キャンバスを完全にクリアする代わりに、半透明の四角形を使ってボールの後ろにフェードするトレイル効果を作りましょう。</span></p>
+                <pre><code>// Replace clearRect with this for a trail effect:
+ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+ctx.fillRect(0, 0, canvas.width, canvas.height);</code></pre>
+            </div>
+
+            <div class="step-card" style="border-left-color: #7c3aed;">
+                <h4 style="color: #7c3aed;">Challenge C: Multiple Moving Objects / 複数の動くオブジェクト</h4>
+                <p>Draw two or more balls that move in different directions at different speeds. Use separate variables for each ball's position and velocity.<br>
+                <span class="bilingual">異なる方向に異なる速度で動く2つ以上のボールを描きましょう。各ボールの位置と速度に別々の変数を使います。</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. SUBMISSION -->
+            <!-- ============================================================ -->
+            <h2>7. Submission / 提出方法</h2>
+
+            <p>Submit your completed assignment through the course website:<br>
+            <span class="bilingual">完成した課題をコースウェブサイトから提出してください：</span></p>
+
+            <ol>
+                <li>Go to the course website's <strong>Submissions</strong> section<br>
+                    <span class="bilingual">コースウェブサイトの「提出」セクションに移動する</span></li>
+                <li>Upload your HTML file<br>
+                    <span class="bilingual">HTMLファイルをアップロードする</span></li>
+                <li>Or paste your code in the text field provided<br>
+                    <span class="bilingual">またはテキストフィールドにコードを貼り付ける</span></li>
+            </ol>
+
+            <div class="warning-box">
+                <p><strong>Important:</strong> Make sure your file works when opened in a browser before submitting! Open your HTML file and verify that the ball moves smoothly.</p>
+                <p class="bilingual"><strong>重要：</strong> 提出前にブラウザで開いて動作確認をしてください！HTMLファイルを開き、ボールが滑らかに動くことを確認しましょう。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. TIPS FOR SUCCESS -->
+            <!-- ============================================================ -->
+            <h2>8. Tips for Success / 成功のためのヒント</h2>
+
+            <ul class="tips-list">
+                <li>Build your code step by step. First draw a static ball, then add the function, then add setInterval, then add clearRect, then add dx/dy.<br>
+                    <span class="bilingual">コードを段階的に構築しましょう。まず静止したボールを描き、次に関数を追加し、setIntervalを追加し、clearRectを追加し、最後にdx/dyを追加します。</span></li>
+                <li>Use the browser console (F12) to check for errors. If the ball does not appear or does not move, there might be a JavaScript error.<br>
+                    <span class="bilingual">ブラウザコンソール（F12）でエラーを確認しましょう。ボールが表示されないか動かない場合、JavaScriptエラーがあるかもしれません。</span></li>
+                <li>Experiment with different values for dx and dy. Try <code>dx = 1</code>, <code>dx = 3</code>, <code>dx = 5</code> to see how speed changes. Try negative values to change direction.<br>
+                    <span class="bilingual">dxとdyの異なる値を試してみましょう。dx = 1、3、5を試して速度がどう変わるか見てください。負の値で方向が変わります。</span></li>
+                <li>Start the ball at a visible position. If you start at (0, 0), the ball might move off-screen before you see it. Try starting at the center of the canvas.<br>
+                    <span class="bilingual">ボールを見える位置から始めましょう。(0, 0)から始めると、見える前に画面外に出てしまうかもしれません。キャンバスの中心から始めてみてください。</span></li>
+                <li>Read the lecture notes carefully if you get stuck. The complete working code is provided there!<br>
+                    <span class="bilingual">行き詰まったら講義ノートをよく読みましょう。完全な動作コードがそこに記載されています！</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. COMMON MISTAKES -->
+            <!-- ============================================================ -->
+            <h2>9. Common Mistakes to Avoid / よくある間違い</h2>
+
+            <ul class="mistakes-list">
+                <li>Forgetting <code>clearRect()</code> -- Without it, you get ghost trails instead of smooth animation. The ball leaves a streak across the canvas.<br>
+                    <span class="bilingual">clearRect()を忘れる -- これがないと、滑らかなアニメーションではなく残像ができます。ボールがキャンバスに軌跡を残します。</span></li>
+                <li>Putting parentheses in setInterval: <code>setInterval(draw(), 10)</code> -- This calls draw immediately instead of passing it. Write <code>setInterval(draw, 10)</code> without the ().<br>
+                    <span class="bilingual">setIntervalで括弧をつける：setInterval(draw(), 10) -- これはdrawを渡すのではなくすぐに呼び出してしまいます。()なしでsetInterval(draw, 10)と書きましょう。</span></li>
+                <li>Not updating the position -- If you forget <code>x = x + dx</code> and <code>y = y + dy</code> inside the draw function, the ball will be drawn in the same spot every frame (no movement).<br>
+                    <span class="bilingual">位置を更新しない -- draw関数内でx = x + dxとy = y + dyを忘れると、ボールは毎フレーム同じ場所に描かれます（動かない）。</span></li>
+                <li>Placing setInterval inside the draw function -- This creates a new interval every frame, causing the animation to speed up uncontrollably. Put setInterval <strong>outside</strong> and <strong>after</strong> the draw function definition.<br>
+                    <span class="bilingual">setIntervalをdraw関数の中に書く -- これは毎フレーム新しいインターバルを作り、アニメーションが制御不能に加速します。setIntervalはdraw関数の定義の外側かつ後に書きましょう。</span></li>
+                <li>Typos in function or variable names -- JavaScript is case-sensitive. <code>mycanvas</code> is NOT the same as <code>myCanvas</code>. Check your spelling carefully!<br>
+                    <span class="bilingual">関数名や変数名のタイプミス -- JavaScriptは大文字小文字を区別します。mycanvasとmyCanvasは同じではありません。スペルを注意深く確認してください！</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 10. RESOURCES -->
+            <!-- ============================================================ -->
+            <h2>10. Resources / 参考資料</h2>
+
+            <p>Use these resources if you need help:<br>
+            <span class="bilingual">助けが必要な場合はこれらのリソースを使ってください：</span></p>
+
+            <ul>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Move_the_ball" target="_blank" style="color: #2563eb;">MDN: Move the ball</a> &mdash; The tutorial this session is based on<br>
+                    <span class="bilingual">このセッションの基になっているチュートリアル</span></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect" target="_blank" style="color: #2563eb;">MDN: clearRect() reference</a> &mdash; Full documentation for clearRect<br>
+                    <span class="bilingual">clearRectの完全なドキュメント</span></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/setInterval" target="_blank" style="color: #2563eb;">MDN: setInterval() reference</a> &mdash; Full documentation for setInterval<br>
+                    <span class="bilingual">setIntervalの完全なドキュメント</span></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions" target="_blank" style="color: #2563eb;">MDN: Functions Guide</a> &mdash; Learn more about JavaScript functions<br>
+                    <span class="bilingual">JavaScript関数についてさらに学ぶ</span></li>
+                <li><a href="lecture.html" style="color: #2563eb;">Session 5 Lecture Notes</a> &mdash; Complete walkthrough with all code examples<br>
+                    <span class="bilingual">すべてのコード例を含む完全なウォークスルー</span></li>
+            </ul>
+
+            <div class="success-box">
+                <p><strong>You can do this!</strong> This is your first real animation. Once you see that ball moving across the screen, you will feel the excitement of bringing code to life. This is the foundation of every game you will ever build!</p>
+                <p class="bilingual"><strong>あなたならできます！</strong> これは初めての本物のアニメーションです。ボールが画面を横切るのを見たとき、コードに命を吹き込む興奮を感じるでしょう。これはあなたが作るすべてのゲームの基礎です！</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>
