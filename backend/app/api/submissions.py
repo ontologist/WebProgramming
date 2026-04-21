@@ -58,8 +58,8 @@ async def submit_assignment(request: SubmissionRequest):
     if not rubric:
         raise HTTPException(status_code=400, detail=f"Unknown assignment: {request.assignment_id}")
 
-    # Run deterministic checks
-    det_results = grading_service.run_deterministic_checks(
+    # Run deterministic checks (async — some graders call the model internally)
+    det_results = await grading_service.run_deterministic_checks(
         request.assignment_id, request.code, request.files
     )
     det_score = sum(r["points"] for r in det_results)

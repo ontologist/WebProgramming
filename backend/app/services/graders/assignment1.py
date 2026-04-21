@@ -151,18 +151,135 @@ def _score_content_completeness(files: dict) -> tuple[int, list[str]]:
     return min(pts, 20), notes
 
 
-def _score_techniques(files: dict) -> tuple[int, list[str]]:
-    """Up to 30 pts: 6 pts per distinct technique detected, capped at 5
-    techniques (30 pts). Returns (points, detected_names)."""
+def _detect_techniques(files: dict) -> list[str]:
+    """Regex pass — returns the candidate list (may contain false positives)."""
     blob = base.all_html_text(files)
     if not blob:
-        return 0, []
-    detected: list[str] = []
-    for name, pattern in _TECHNIQUES.items():
-        if pattern.search(blob):
-            detected.append(name)
-    pts = min(len(detected), 5) * 6
-    return pts, detected
+        return []
+    return [name for name, pattern in _TECHNIQUES.items() if pattern.search(blob)]
+
+
+def _score_from_confirmed(confirmed_count: int) -> int:
+    """30-pt bucket: 6 pts per confirmed technique, capped at 5."""
+    return min(confirmed_count, 5) * 6
+
+
+async def _verify_techniques(files: dict, candidates: list[str]) -> tuple[list[str], list[dict], str]:
+    """Ask llama3.2 to confirm each regex-flagged technique is really being
+    used (not commented-out, not a coincidental text match, etc.).
+
+    Verify-only: the model cannot add techniques beyond the candidate list.
+    On model failure or unparseable output, falls back to the raw candidate
+    list (so a model hiccup never penalizes the student).
+
+    Returns (confirmed_names, rejections, raw_response)
+      - confirmed_names: subset of candidates the model accepted (or all
+        candidates if the fallback fired).
+      - rejections: list of {"name", "reason"} for each rejected candidate.
+      - raw_response: the model's raw text, for the submission audit trail.
+    """
+    if not candidates:
+        return [], [], ""
+
+    blob_parts: list[str] = []
+    for fname, content in (files or {}).items():
+        if isinstance(content, str) and fname.lower().endswith((".htm", ".html", ".css")):
+            blob_parts.append(f"// === {fname} ===\n{content}")
+    blob = "\n\n".join(blob_parts)
+    if len(blob) > 12000:
+        blob = blob[:12000] + "\n... (truncated)"
+
+    numbered = "\n".join(f"{i+1}. {name}" for i, name in enumerate(candidates))
+
+    prompt = f"""You are auditing an automatic technique-detector for a beginner Web Programming student's submission.
+
+A regex pass flagged the following candidate techniques as present in the student's HTML/CSS:
+{numbered}
+
+Your job: for EACH candidate in the list above, decide whether it is actually being used as a real styling or markup technique in the submitted code. A candidate should be rejected ("confirmed": false) if:
+  - the match is only inside a comment
+  - the match is only inside plain text content (not a CSS rule or tag)
+  - the code is present but commented out or not actually rendered
+  - the match is a false positive (e.g. the word "gallery" used in a paragraph, not a real image gallery)
+
+Rules:
+- Do NOT add techniques that are not in the list above.
+- Return STRICTLY valid JSON with exactly this shape:
+  {{"techniques": [{{"name": "<exact name from list>", "confirmed": true|false, "reason": "<one short sentence>"}}]}}
+- Include every candidate from the list, in the same order.
+- "reason" must be in English and under 20 words.
+
+Student's code:
+```
+{blob}
+```
+"""
+
+    try:
+        raw = await ollama_service.generate(
+            prompt,
+            temperature=0.1,
+            max_tokens=900,
+            model=PROSE_MODEL,
+        )
+    except Exception as e:
+        logger.error(f"assignment1 technique-verify failed, falling back to regex: {e}")
+        return list(candidates), [], f"[verify_failed: {e}]"
+
+    confirmed, rejections = _parse_verification(raw, candidates)
+    if confirmed is None:
+        # Unparseable response — fall back to raw regex count, no rejections.
+        logger.warning("assignment1 technique-verify: could not parse model response, using raw regex list")
+        return list(candidates), [], raw
+    return confirmed, rejections, raw
+
+
+def _parse_verification(raw: str, candidates: list[str]) -> tuple[list[str] | None, list[dict]]:
+    """Returns (confirmed_list, rejections). confirmed_list is None if the
+    response could not be parsed at all."""
+    candidate_set = {c.lower() for c in candidates}
+
+    for candidate_json in _extract_json_candidates(raw):
+        try:
+            obj = json.loads(candidate_json)
+        except Exception:
+            continue
+        if not isinstance(obj, dict):
+            continue
+        items = obj.get("techniques")
+        if not isinstance(items, list):
+            continue
+
+        confirmed: list[str] = []
+        rejections: list[dict] = []
+        seen: set[str] = set()
+        # Build a lookup of candidate names so we preserve original casing.
+        original_by_lower = {c.lower(): c for c in candidates}
+
+        for entry in items:
+            if not isinstance(entry, dict):
+                continue
+            name = str(entry.get("name", "")).strip()
+            if not name or name.lower() not in candidate_set or name.lower() in seen:
+                continue  # verify-only: drop anything not in the candidate list
+            seen.add(name.lower())
+            orig = original_by_lower[name.lower()]
+            confirmed_flag = bool(entry.get("confirmed"))
+            reason = str(entry.get("reason", "")).strip()
+            if confirmed_flag:
+                confirmed.append(orig)
+            else:
+                rejections.append({"name": orig, "reason": reason or "(no reason provided)"})
+
+        # Any candidate the model forgot about → treat as confirmed (verify-only
+        # fallback: we only remove on explicit rejection).
+        for name in candidates:
+            if name.lower() not in seen:
+                confirmed.append(name)
+
+        return confirmed, rejections
+
+    return None, []
 
 
 def _score_navigation(files: dict) -> tuple[int, list[str]]:
@@ -210,7 +327,7 @@ def _score_html_validity(files: dict) -> tuple[int, list[str]]:
     return 0, notes
 
 
-def deterministic(code: str | None, files: dict | None) -> list[dict]:
+async def deterministic(code: str | None, files: dict | None) -> list[dict]:
     files = files or {}
 
     is_unchanged, overlap, reasons = _template_unchanged(files)
@@ -225,9 +342,22 @@ def deterministic(code: str | None, files: dict | None) -> list[dict]:
         }]
 
     content_pts, content_notes = _score_content_completeness(files)
-    tech_pts, detected = _score_techniques(files)
     nav_pts, nav_notes = _score_navigation(files)
     html_pts, html_notes = _score_html_validity(files)
+
+    # Techniques: regex finds candidates, then llama3.2 rejects false positives.
+    candidates = _detect_techniques(files)
+    confirmed, rejections, verify_raw = await _verify_techniques(files, candidates)
+    tech_pts = _score_from_confirmed(len(confirmed))
+
+    if not candidates:
+        tech_details = "no advanced techniques detected"
+    else:
+        parts = [f"detected by regex: {', '.join(candidates)}"]
+        if rejections:
+            parts.append("AI-rejected: " + "; ".join(f"{r['name']} ({r['reason']})" for r in rejections))
+        parts.append(f"confirmed: {', '.join(confirmed)}" if confirmed else "confirmed: (none)")
+        tech_details = " | ".join(parts)
 
     return [
         {
@@ -236,10 +366,13 @@ def deterministic(code: str | None, files: dict | None) -> list[dict]:
             "details": "; ".join(content_notes) if content_notes else "all expected pages present with content",
         },
         {
-            "name": f"Advanced HTML/CSS techniques ({len(detected)}/5 needed)",
+            "name": f"Advanced HTML/CSS techniques ({len(confirmed)}/5 needed)",
             "points": tech_pts, "max_points": 30, "passed": tech_pts >= 30,
-            "details": f"detected: {', '.join(detected)}" if detected else "no advanced techniques detected",
-            "techniques_detected": detected,
+            "details": tech_details,
+            "techniques_detected": candidates,
+            "techniques_confirmed": confirmed,
+            "techniques_rejected": rejections,
+            "techniques_verify_raw": verify_raw,
         },
         {
             "name": "Navigation to all sibling pages",

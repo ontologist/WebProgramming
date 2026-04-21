@@ -163,12 +163,17 @@ ASSIGNMENT_RUBRICS = {
 }
 
 
-def run_deterministic_checks(assignment_id: int, code: str, files: dict = None) -> list:
-    """Run automated checks against submitted code. Returns list of {name, points, passed}."""
+async def run_deterministic_checks(assignment_id: int, code: str, files: dict = None) -> list:
+    """Run automated checks against submitted code. Returns list of {name, points, passed}.
+
+    Async because some per-assignment graders (e.g. Assignment 1's technique
+    verification) make LLM calls from within the deterministic layer. Legacy
+    assignments still run synchronously and are awaited trivially.
+    """
     # If an assignment-specific grader is registered, use it.
     grader = graders.get_grader(assignment_id)
     if grader is not None:
-        return grader.deterministic(code, files)
+        return await grader.deterministic(code, files)
 
     rubric = ASSIGNMENT_RUBRICS.get(assignment_id)
     if not rubric:
