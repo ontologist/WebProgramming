@@ -8,10 +8,10 @@ import json
 import logging
 from datetime import datetime, timezone
 
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update, delete, func
 
 from app.core.database import SessionLocal, engine, get_engine_type
-from app.core.models import Base, Student, Session, OTPCode, Submission
+from app.core.models import Base, Student, Session, OTPCode, Submission, Conversation, Message
 
 logger = logging.getLogger(__name__)
 
@@ -300,6 +300,121 @@ def _submission_to_dict(s: Submission) -> dict:
         "submitted_at": s.submitted_at.isoformat() if s.submitted_at else "",
         "reviewed_at": s.reviewed_at.isoformat() if s.reviewed_at else None,
     }
+
+
+# ========== Conversations ==========
+
+CONVERSATION_IDLE_MINUTES = 30
+
+
+def get_or_create_active_conversation(handle: str, language: str = "en") -> int:
+    """Return the id of the student's most recent conversation if it was active
+    within CONVERSATION_IDLE_MINUTES; otherwise create a new one.
+    """
+    from datetime import timedelta
+    with SessionLocal() as db:
+        recent = db.execute(
+            select(Conversation)
+            .where(Conversation.handle == handle)
+            .order_by(Conversation.last_message_at.desc())
+            .limit(1)
+        ).scalar_one_or_none()
+
+        now = _utcnow()
+        if recent and recent.last_message_at:
+            last = recent.last_message_at
+            if last.tzinfo is None:
+                last = last.replace(tzinfo=timezone.utc)
+            if (now - last) < timedelta(minutes=CONVERSATION_IDLE_MINUTES):
+                if language and recent.language != language:
+                    recent.language = language
+                    db.commit()
+                return recent.id
+
+        conv = Conversation(handle=handle, language=language or "en",
+                            started_at=now, last_message_at=now)
+        db.add(conv)
+        db.commit()
+        db.refresh(conv)
+        return conv.id
+
+
+def append_message(conversation_id: int, role: str, content: str):
+    with SessionLocal() as db:
+        db.add(Message(conversation_id=conversation_id, role=role, content=content))
+        conv = db.get(Conversation, conversation_id)
+        if conv:
+            conv.last_message_at = _utcnow()
+        db.commit()
+
+
+def list_conversations(handle: str = None, limit: int = 200) -> list:
+    """Most-recent-first list of conversations, with a few summary fields."""
+    with SessionLocal() as db:
+        q = (
+            select(
+                Conversation.id, Conversation.handle, Conversation.language,
+                Conversation.started_at, Conversation.last_message_at,
+                Student.student_id, Student.romaji_name, Student.kanji_name,
+            )
+            .outerjoin(Student, Conversation.handle == Student.handle)
+        )
+        if handle:
+            q = q.where(Conversation.handle == handle)
+        q = q.order_by(Conversation.last_message_at.desc()).limit(limit)
+        rows = db.execute(q).all()
+
+        msg_counts = dict(
+            db.execute(
+                select(Message.conversation_id, func.count(Message.id))
+                .group_by(Message.conversation_id)
+            ).all()
+        )
+
+    return [
+        {
+            "id": r.id,
+            "handle": r.handle,
+            "student_id": r.student_id or "",
+            "romaji_name": r.romaji_name or "",
+            "kanji_name": r.kanji_name or "",
+            "language": r.language,
+            "started_at": r.started_at.isoformat() if r.started_at else "",
+            "last_message_at": r.last_message_at.isoformat() if r.last_message_at else "",
+            "message_count": msg_counts.get(r.id, 0),
+        }
+        for r in rows
+    ]
+
+
+def get_conversation_with_messages(conversation_id: int) -> dict:
+    with SessionLocal() as db:
+        conv = db.get(Conversation, conversation_id)
+        if not conv:
+            return None
+        student = db.get(Student, conv.handle)
+        msgs = db.execute(
+            select(Message).where(Message.conversation_id == conversation_id)
+            .order_by(Message.created_at)
+        ).scalars().all()
+        return {
+            "id": conv.id,
+            "handle": conv.handle,
+            "student_id": student.student_id if student else "",
+            "romaji_name": student.romaji_name if student else "",
+            "kanji_name": student.kanji_name if student else "",
+            "language": conv.language,
+            "started_at": conv.started_at.isoformat() if conv.started_at else "",
+            "last_message_at": conv.last_message_at.isoformat() if conv.last_message_at else "",
+            "messages": [
+                {
+                    "role": m.role,
+                    "content": m.content,
+                    "created_at": m.created_at.isoformat() if m.created_at else "",
+                }
+                for m in msgs
+            ],
+        }
 
 
 # ========== CSV Export ==========

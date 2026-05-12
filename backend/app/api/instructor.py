@@ -166,6 +166,27 @@ async def export_database(_user: str = Depends(verify_instructor)):
             raise HTTPException(status_code=500, detail="pg_dump not found. Install PostgreSQL client tools.")
 
 
+@router.get("/conversations")
+async def list_conversations(
+    handle: str = None,
+    limit: int = 200,
+    _user: str = Depends(verify_instructor),
+):
+    """List chat conversations (most recent first). Optional handle filter."""
+    return {"conversations": db_service.list_conversations(handle=handle, limit=limit)}
+
+
+@router.get("/conversations/{conversation_id}")
+async def get_conversation(
+    conversation_id: int,
+    _user: str = Depends(verify_instructor),
+):
+    conv = db_service.get_conversation_with_messages(conversation_id)
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+    return conv
+
+
 @router.get("/rubrics")
 async def list_rubrics(_user: str = Depends(verify_instructor)):
     rubrics = {}

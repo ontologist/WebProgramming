@@ -48,6 +48,31 @@ class OTPCode(Base):
     attempts = Column(Integer, default=0)
 
 
+class Conversation(Base):
+    __tablename__ = "conversations"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    handle = Column(String(20), ForeignKey("students.handle"), nullable=False, index=True)
+    language = Column(String(8), default="en")
+    started_at = Column(DateTime, default=utcnow)
+    last_message_at = Column(DateTime, default=utcnow, index=True)
+
+    messages = relationship("Message", back_populates="conversation",
+                            cascade="all, delete-orphan", order_by="Message.created_at")
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False, index=True)
+    role = Column(String(16), nullable=False)  # "user" | "assistant"
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=utcnow)
+
+    conversation = relationship("Conversation", back_populates="messages")
+
+
 class Submission(Base):
     __tablename__ = "submissions"
 
