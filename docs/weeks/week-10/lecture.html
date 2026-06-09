@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 10: Introduction to OOP &mdash; The Ball Class | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Lecture-specific styles */
+        .lecture-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .lecture-content h2 {
+            font-size: 1.8rem;
+            color: #2563eb;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #7c3aed;
+        }
+
+        .lecture-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .lecture-content h3 {
+            font-size: 1.3rem;
+            color: #7c3aed;
+            margin-top: 30px;
+            margin-bottom: 12px;
+        }
+
+        .lecture-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: #1f2937;
+        }
+
+        .lecture-content ul,
+        .lecture-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .lecture-content li {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .note-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .note-box p {
+            margin-bottom: 5px;
+        }
+
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        .tip-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        pre {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        code {
+            background-color: #f3f4f6;
+            color: #dc2626;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #e5e7eb;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .comparison-table tr:hover {
+            background-color: #eff6ff;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
+            border: 2px solid #7c3aed;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .analogy-box p {
+            margin-bottom: 8px;
+        }
+
+        .box-model-diagram {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            margin: 20px 0;
+            text-align: center;
+            white-space: pre;
+        }
+
+        .step-number {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .assignment-box {
+            background-color: #faf5ff;
+            border: 2px solid #7c3aed;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .assignment-box h3 {
+            color: #7c3aed;
+            margin-top: 0;
+        }
+
+        .takeaway-list li {
+            background-color: #f0fdf4;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            list-style: none;
+            border-left: 4px solid #10b981;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, #2563eb, #7c3aed, #2563eb);
+            margin: 40px 0;
+        }
+
+        @media (max-width: 768px) {
+            .lecture-content {
+                padding: 20px;
+            }
+
+            .lecture-content h2 {
+                font-size: 1.4rem;
+            }
+
+            pre {
+                font-size: 0.8rem;
+                padding: 12px;
+            }
+
+            .box-model-diagram {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Session 10: Introduction to OOP &mdash; The Ball Class</h1>
+            <p class="subtitle">OOP入門 &mdash; Ballクラス</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="lecture-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. Learning Objectives -->
+            <!-- ============================================================ -->
+            <h2>1. Learning Objectives / 学習目標</h2>
+
+            <p>By the end of this session, you will be able to:</p>
+            <p class="bilingual">このセッション終了時に、以下のことができるようになります：</p>
+
+            <ul>
+                <li>
+                    Explain what Object-Oriented Programming (OOP) is and why it helps organize code
+                    <br><span class="bilingual">オブジェクト指向プログラミング（OOP）とは何か、なぜコードの整理に役立つのかを説明できる</span>
+                </li>
+                <li>
+                    Describe the difference between a <strong>class</strong> (blueprint) and an <strong>object</strong> (instance)
+                    <br><span class="bilingual"><strong>クラス</strong>（設計図）と<strong>オブジェクト</strong>（インスタンス）の違いを説明できる</span>
+                </li>
+                <li>
+                    Write a <code>class</code> with a <code>constructor()</code> and methods
+                    <br><span class="bilingual"><code>constructor()</code>とメソッドを持つ<code>class</code>を記述できる</span>
+                </li>
+                <li>
+                    Understand and use the <code>this</code> keyword inside a class
+                    <br><span class="bilingual">クラス内で<code>this</code>キーワードを理解して使える</span>
+                </li>
+                <li>
+                    Create objects from a class using the <code>new</code> keyword
+                    <br><span class="bilingual"><code>new</code>キーワードでクラスからオブジェクトを作成できる</span>
+                </li>
+                <li>
+                    Refactor the procedural ball code from your Breakout game into a reusable <code>Ball</code> class with <code>draw()</code>, <code>move()</code>, and <code>reset()</code> methods
+                    <br><span class="bilingual">ブレイクアウトゲームの手続き型のボールコードを、<code>draw()</code>、<code>move()</code>、<code>reset()</code>メソッドを持つ再利用可能な<code>Ball</code>クラスにリファクタリングできる</span>
+                </li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. Review of Phase 2 -->
+            <!-- ============================================================ -->
+            <h2>2. Where We Are / これまでの歩み</h2>
+
+            <p>
+                Congratulations &mdash; over Sessions 4 through 9 you built a <strong>complete, working Breakout game</strong>
+                from an empty canvas! You learned variables, functions, conditionals, events, arrays, and loops.
+                Your game already draws a ball, moves it, bounces it off the walls, has a paddle, a brick field,
+                a score, and lives.
+            </p>
+            <p class="bilingual">
+                おめでとうございます &mdash; セッション4から9にかけて、空のキャンバスから<strong>完全に動作するブレイクアウトゲーム</strong>を
+                作り上げました！変数、関数、条件分岐、イベント、配列、ループを学びました。
+                あなたのゲームは既にボールを描画し、動かし、壁で跳ね返し、パドル、ブロックフィールド、スコア、ライフを持っています。
+            </p>
+
+            <div class="note-box">
+                <p><strong>So why change anything? / では、なぜ変更するのか？</strong></p>
+                <p>
+                    The game <em>works</em>, but the code is becoming hard to manage. This session begins
+                    <strong>Phase 3: Object-Oriented JavaScript</strong>, where we reorganize the same game
+                    into clean, reusable pieces &mdash; without changing what the player sees.
+                    <br><span class="bilingual">
+                    ゲームは<em>動きます</em>が、コードの管理が難しくなってきました。このセッションから
+                    <strong>フェーズ3：オブジェクト指向JavaScript</strong>が始まります。プレイヤーに見えるものを変えずに、
+                    同じゲームをきれいで再利用可能な部品に再構成します。</span>
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. The Problem with Procedural Code -->
+            <!-- ============================================================ -->
+            <h2>3. The Problem with Our Current Code / 現在のコードの問題点</h2>
+
+            <p>
+                Look at the top of your <code>game.htm</code>. The ball is described by several
+                <strong>separate global variables</strong> that float around in the script:
+            </p>
+            <p class="bilingual">
+                <code>game.htm</code>の上部を見てください。ボールは、スクリプト内に散らばった
+                いくつかの<strong>別々のグローバル変数</strong>で表現されています：
+            </p>
+<pre><code>// The ball is scattered across many separate variables
+// ボールは多くの別々の変数に散らばっている
+var x = 240;          // ball position X / ボールの位置X
+var y = 160;          // ball position Y / ボールの位置Y
+var dx = 2;           // ball speed X / ボールの速度X
+var dy = -2;          // ball speed Y / ボールの速度Y
+var radius = 10;      // ball size / ボールのサイズ
+
+function drawBall(x, y, radius) { /* ... */ }</code></pre>
+
+            <p>These loose variables cause real problems as a program grows:</p>
+            <p class="bilingual">これらのバラバラな変数は、プログラムが大きくなると本当の問題を引き起こします：</p>
+
+            <ul>
+                <li>
+                    <strong>They are not grouped.</strong> <code>x</code>, <code>y</code>, <code>dx</code>, <code>dy</code>,
+                    and <code>radius</code> all belong to "the ball", but nothing in the code says so.
+                    <br><span class="bilingual">グループ化されていない。これらはすべて「ボール」に属しますが、コードはそう言っていません。</span>
+                </li>
+                <li>
+                    <strong>What if you want a second ball?</strong> You would have to copy every variable:
+                    <code>x2</code>, <code>y2</code>, <code>dx2</code>, <code>dy2</code>, <code>radius2</code>... messy!
+                    <br><span class="bilingual">2つ目のボールが欲しい場合、すべての変数をコピーする必要があります &mdash; 大混乱！</span>
+                </li>
+                <li>
+                    <strong>Behavior is separated from data.</strong> The numbers live at the top, but
+                    <code>drawBall()</code> and the movement (<code>x += dx</code>) live far away in <code>draw()</code>.
+                    <br><span class="bilingual">振る舞いがデータから分離されている。数値は上部にあり、描画と移動は離れた場所にあります。</span>
+                </li>
+                <li>
+                    <strong>Names collide.</strong> A short name like <code>x</code> is a global &mdash; any other part
+                    of the program could accidentally change it.
+                    <br><span class="bilingual">名前が衝突する。<code>x</code>のような短い名前はグローバルで、他の部分が誤って変更する可能性があります。</span>
+                </li>
+            </ul>
+
+            <p>
+                The solution is to <strong>bundle the ball's data and behavior together into one unit</strong>.
+                That unit is called an <strong>object</strong>, and the blueprint for making such objects is a <strong>class</strong>.
+            </p>
+            <p class="bilingual">
+                解決策は、<strong>ボールのデータと振る舞いを1つの単位にまとめる</strong>ことです。
+                その単位を<strong>オブジェクト</strong>と呼び、そのオブジェクトを作る設計図を<strong>クラス</strong>と呼びます。
+            </p>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. What is OOP? -->
+            <!-- ============================================================ -->
+            <h2>4. What is Object-Oriented Programming? / オブジェクト指向プログラミングとは？</h2>
+
+            <p>
+                <strong>Object-Oriented Programming (OOP)</strong> is a way of organizing code around
+                <strong>objects</strong> &mdash; self-contained units that bundle together:
+            </p>
+            <p class="bilingual">
+                <strong>オブジェクト指向プログラミング（OOP）</strong>は、<strong>オブジェクト</strong>を中心に
+                コードを整理する方法です。オブジェクトは以下をまとめた自己完結型の単位です：
+            </p>
+
+            <ul>
+                <li><strong>Data</strong> (called <em>properties</em>) &mdash; what the object <em>knows</em> (a ball knows its position, speed, size).
+                    <br><span class="bilingual">データ（<em>プロパティ</em>と呼ぶ）&mdash; オブジェクトが<em>知っている</em>こと（ボールは位置、速度、サイズを知っている）。</span>
+                </li>
+                <li><strong>Behavior</strong> (called <em>methods</em>) &mdash; what the object <em>can do</em> (a ball can draw itself, move, reset).
+                    <br><span class="bilingual">振る舞い（<em>メソッド</em>と呼ぶ）&mdash; オブジェクトが<em>できる</em>こと（ボールは自分を描画し、動き、リセットできる）。</span>
+                </li>
+            </ul>
+
+            <h3>The Real-World Analogy / 現実世界のアナロジー</h3>
+            <div class="analogy-box">
+                <p>Think about a real ball you can hold in your hand:</p>
+                <p class="bilingual">手に持てる本物のボールを考えてみましょう：</p>
+                <ul>
+                    <li><strong>Properties (what it knows / data):</strong> its color, its size, where it is, how fast it is moving.
+                        <br><span class="bilingual">プロパティ（データ）：色、サイズ、位置、移動の速さ。</span>
+                    </li>
+                    <li><strong>Methods (what it does / behavior):</strong> it can roll, bounce, and stop.
+                        <br><span class="bilingual">メソッド（振る舞い）：転がる、跳ねる、止まる。</span>
+                    </li>
+                </ul>
+                <p>
+                    In OOP, we model the game ball the same way: one object that <em>holds</em> its own position and speed,
+                    and <em>knows how</em> to draw, move, and reset itself.
+                </p>
+                <p class="bilingual">
+                    OOPでは、ゲームのボールも同じようにモデル化します &mdash; 自分の位置と速度を<em>保持</em>し、
+                    自分を描画・移動・リセットする<em>方法を知っている</em>1つのオブジェクトです。
+                </p>
+            </div>
+
+            <h3>Why OOP Helps / OOPが役立つ理由</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Benefit / 利点</th>
+                        <th>What it means / 意味</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Organization</strong><br>整理</td>
+                        <td>Related data and behavior live together in one place, not scattered. / 関連するデータと振る舞いが1か所にまとまる。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reusability</strong><br>再利用性</td>
+                        <td>Write the blueprint once, create as many balls as you like. / 設計図を一度書けば、いくつでもボールを作れる。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Readability</strong><br>読みやすさ</td>
+                        <td><code>ball.move()</code> reads like a sentence &mdash; the code explains itself. / <code>ball.move()</code>は文章のように読める。</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Maintainability</strong><br>保守性</td>
+                        <td>To fix the ball, you only look in one place: the <code>Ball</code> class. / ボールを直すには、<code>Ball</code>クラスの1か所を見るだけ。</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. Objects you already know -->
+            <!-- ============================================================ -->
+            <h2>5. You Have Already Used Objects! / すでにオブジェクトを使っています！</h2>
+
+            <p>
+                OOP is not entirely new to you. In Session 8 you used <strong>object literals</strong> for each brick:
+            </p>
+            <p class="bilingual">
+                OOPは全く新しいものではありません。セッション8では、各ブロックに<strong>オブジェクトリテラル</strong>を使いました：
+            </p>
+<pre><code>// An object literal: data grouped with { } and key: value pairs
+// オブジェクトリテラル：{ } と key: value のペアでデータをグループ化
+var brick = { x: 30, y: 20, status: 1 };
+
+// You read its properties with a dot:
+// ドットでプロパティを読み取る：
+console.log(brick.x);       // 30
+console.log(brick.status);  // 1</code></pre>
+
+            <p>
+                And the <code>canvas</code> and <code>ctx</code> you use every session are objects too &mdash;
+                <code>ctx.fillRect(...)</code> calls a <strong>method</strong> on the <code>ctx</code> object!
+            </p>
+            <p class="bilingual">
+                毎回使う<code>canvas</code>と<code>ctx</code>もオブジェクトです &mdash;
+                <code>ctx.fillRect(...)</code>は<code>ctx</code>オブジェクトの<strong>メソッド</strong>を呼び出しています！
+            </p>
+
+            <p>
+                An object literal is great for <em>one</em> object. But when you need <em>many</em> objects that
+                share the same structure and behavior (many balls, many bricks, many paddles), you want a
+                <strong>blueprint</strong>. That blueprint is a <strong>class</strong>.
+            </p>
+            <p class="bilingual">
+                オブジェクトリテラルは<em>1つ</em>のオブジェクトには最適です。しかし、同じ構造と振る舞いを共有する
+                <em>多数</em>のオブジェクトが必要なときは、<strong>設計図</strong>が欲しくなります。それが<strong>クラス</strong>です。
+            </p>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. Class vs Object -->
+            <!-- ============================================================ -->
+            <h2>6. Class vs Object: Blueprint vs Building / クラス対オブジェクト：設計図対建物</h2>
+
+            <div class="analogy-box">
+                <p><strong>The most important idea in this session:</strong></p>
+                <p class="bilingual"><strong>このセッションで最も重要な考え方：</strong></p>
+                <ul>
+                    <li>A <strong>class</strong> is a <strong>blueprint</strong> (設計図) &mdash; a plan that describes
+                        what every ball will have and do. A blueprint is <em>not</em> a real ball; you cannot play with a blueprint.
+                        <br><span class="bilingual"><strong>クラス</strong>は<strong>設計図</strong>です &mdash; すべてのボールが持つもの・することを記述した計画。設計図自体は本物のボールではありません。</span>
+                    </li>
+                    <li>An <strong>object</strong> (also called an <strong>instance</strong>) is a <strong>real ball</strong>
+                        built from the blueprint. You can make many real balls from one blueprint.
+                        <br><span class="bilingual"><strong>オブジェクト</strong>（<strong>インスタンス</strong>とも呼ぶ）は、設計図から作られた<strong>本物のボール</strong>です。1つの設計図から多数の本物のボールを作れます。</span>
+                    </li>
+                </ul>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Blueprint (Class) / 設計図（クラス）</th>
+                        <th>Building (Object / Instance) / 建物（オブジェクト）</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>A house plan on paper</td>
+                        <td>An actual house you can live in (you can build many)</td>
+                    </tr>
+                    <tr>
+                        <td>A cookie cutter</td>
+                        <td>Each cookie it stamps out</td>
+                    </tr>
+                    <tr>
+                        <td><code>class Ball { ... }</code></td>
+                        <td><code>let ball = new Ball(...)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. Class syntax -->
+            <!-- ============================================================ -->
+            <h2>7. Writing a Class / クラスの書き方</h2>
+
+            <p>The basic structure of a class looks like this:</p>
+            <p class="bilingual">クラスの基本構造は次のようになります：</p>
+<pre><code>class Ball {
+    constructor() {
+        // set up the object's starting properties here
+        // ここでオブジェクトの初期プロパティを設定
+    }
+
+    // methods go here (the things a ball can do)
+    // メソッドはここに（ボールができること）
+    draw() {
+        // ...
+    }
+}</code></pre>
+
+            <h3>Key Rules / 重要なルール</h3>
+            <ul>
+                <li>
+                    Use the keyword <code>class</code>, followed by a name. By convention, class names start with a
+                    <strong>Capital letter</strong> (<code>Ball</code>, not <code>ball</code>).
+                    <br><span class="bilingual"><code>class</code>キーワードの後に名前を書きます。慣習として、クラス名は<strong>大文字</strong>で始めます。</span>
+                </li>
+                <li>
+                    Everything for the class goes inside the curly braces <code>{ }</code>.
+                    <br><span class="bilingual">クラスのすべては中括弧<code>{ }</code>の中に入れます。</span>
+                </li>
+                <li>
+                    Methods are written like functions, but <strong>without the <code>function</code> keyword</strong>,
+                    and there are <strong>no commas</strong> between them.
+                    <br><span class="bilingual">メソッドは関数のように書きますが、<strong><code>function</code>キーワードなし</strong>で、メソッド間に<strong>カンマは不要</strong>です。</span>
+                </li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. The constructor -->
+            <!-- ============================================================ -->
+            <h2>8. The <code>constructor()</code> / コンストラクター</h2>
+
+            <p>
+                The <code>constructor()</code> is a special method that runs <strong>automatically</strong>
+                the moment you create a new object. Its job is to <strong>set up the object's starting properties</strong>.
+            </p>
+            <p class="bilingual">
+                <code>constructor()</code>は、新しいオブジェクトを作成した瞬間に<strong>自動的に</strong>実行される
+                特別なメソッドです。その役割は<strong>オブジェクトの初期プロパティを設定する</strong>ことです。
+            </p>
+
+<pre><code>class Ball {
+    // The constructor receives starting values as parameters
+    // コンストラクターは初期値をパラメーターとして受け取る
+    constructor(x, y, radius) {
+        this.x = x;            // store the starting X / 開始Xを保存
+        this.y = y;            // store the starting Y / 開始Yを保存
+        this.radius = radius;  // store the size / サイズを保存
+        this.dx = 2;           // default speed X / デフォルト速度X
+        this.dy = -2;          // default speed Y / デフォルト速度Y
+        this.color = "yellow"; // default color / デフォルト色
+    }
+}</code></pre>
+
+            <div class="note-box">
+                <p>
+                    Notice we also <strong>remember the starting position</strong> so we can reset later.
+                    The constructor is the perfect place to give every property a sensible starting value.
+                </p>
+                <p class="bilingual">
+                    後でリセットできるように<strong>開始位置を覚えておく</strong>点にも注目。
+                    コンストラクターは、すべてのプロパティに適切な初期値を与える絶好の場所です。
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. The this keyword -->
+            <!-- ============================================================ -->
+            <h2>9. The <code>this</code> Keyword / <code>this</code>キーワード</h2>
+
+            <p>
+                Inside a class, <code>this</code> means <strong>"the specific object I am working on right now."</strong>
+                It is how an object refers to <em>its own</em> properties.
+            </p>
+            <p class="bilingual">
+                クラス内で、<code>this</code>は<strong>「今まさに操作しているこの特定のオブジェクト」</strong>を意味します。
+                オブジェクトが<em>自分自身</em>のプロパティを参照する方法です。
+            </p>
+
+            <div class="analogy-box">
+                <p>
+                    Imagine a classroom of students all doing the same worksheet. When a student writes
+                    "<em>my</em> name" at the top, "my" means <em>that</em> student &mdash; not the whole class.
+                    <code>this</code> works the same way: it means <em>this one object</em>, not all objects.
+                </p>
+                <p class="bilingual">
+                    同じワークシートをやっている教室の生徒たちを想像してください。生徒が「<em>私の</em>名前」と書くとき、
+                    「私の」は<em>その</em>生徒を意味します &mdash; クラス全体ではありません。
+                    <code>this</code>も同じで、すべてのオブジェクトではなく<em>このオブジェクト1つ</em>を意味します。
+                </p>
+            </div>
+
+            <p>
+                When you have two balls, each one has its own <code>this.x</code>. Calling <code>ballA.move()</code>
+                changes <code>ballA</code>'s <code>this.x</code>; calling <code>ballB.move()</code> changes
+                <code>ballB</code>'s <code>this.x</code>. They never get confused.
+            </p>
+            <p class="bilingual">
+                2つのボールがあるとき、それぞれが独自の<code>this.x</code>を持ちます。<code>ballA.move()</code>は
+                <code>ballA</code>の<code>this.x</code>を変更し、<code>ballB.move()</code>は<code>ballB</code>の
+                <code>this.x</code>を変更します。混同することはありません。
+            </p>
+
+            <div class="warning-box">
+                <p>
+                    <strong>Common mistake / よくある間違い:</strong> Forgetting <code>this.</code> inside a class.
+                    Writing <code>x = x + dx</code> does <em>not</em> update the object's property &mdash; you must write
+                    <code>this.x = this.x + this.dx</code>.
+                </p>
+                <p class="bilingual">
+                    クラス内で<code>this.</code>を忘れること。<code>x = x + dx</code>ではオブジェクトのプロパティは
+                    更新されません &mdash; <code>this.x = this.x + this.dx</code>と書く必要があります。
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 10. Methods vs functions -->
+            <!-- ============================================================ -->
+            <h2>10. Methods vs Functions / メソッドと関数</h2>
+
+            <p>
+                A <strong>method</strong> is simply a function that <strong>belongs to an object</strong>.
+                The difference is mostly about <em>where it lives</em> and <em>how you call it</em>.
+            </p>
+            <p class="bilingual">
+                <strong>メソッド</strong>とは、単に<strong>オブジェクトに属する</strong>関数のことです。
+                違いは主に<em>どこにあるか</em>と<em>どう呼び出すか</em>です。
+            </p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Function / 関数</th>
+                        <th>Method / メソッド</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Lives where? / どこにある？</td>
+                        <td>On its own, anywhere in the script</td>
+                        <td>Inside a class / object</td>
+                    </tr>
+                    <tr>
+                        <td>How to call? / 呼び方</td>
+                        <td><code>drawBall(x, y, radius)</code></td>
+                        <td><code>ball.draw()</code></td>
+                    </tr>
+                    <tr>
+                        <td>Gets its data from? / データの取得元</td>
+                        <td>Parameters passed in</td>
+                        <td><code>this</code> (its own properties)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                This is the big shift: instead of <code>drawBall(x, y, radius)</code> where you pass the data <em>in</em>,
+                you write <code>ball.draw()</code> &mdash; the ball already <em>knows</em> its own <code>x</code>,
+                <code>y</code>, and <code>radius</code> through <code>this</code>.
+            </p>
+            <p class="bilingual">
+                これが大きな転換です。データを<em>渡す</em><code>drawBall(x, y, radius)</code>の代わりに、
+                <code>ball.draw()</code>と書きます &mdash; ボールは<code>this</code>を通じて、自分の<code>x</code>、
+                <code>y</code>、<code>radius</code>を既に<em>知っている</em>のです。
+            </p>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 11. new keyword -->
+            <!-- ============================================================ -->
+            <h2>11. Creating Objects with <code>new</code> / <code>new</code>でオブジェクトを作成</h2>
+
+            <p>
+                A class is just a blueprint &mdash; it does nothing by itself. To build a real object from it,
+                use the <code>new</code> keyword. This runs the constructor and gives you back a fresh object.
+            </p>
+            <p class="bilingual">
+                クラスは設計図に過ぎず、それ自体は何もしません。そこから本物のオブジェクトを作るには、
+                <code>new</code>キーワードを使います。これはコンストラクターを実行し、新しいオブジェクトを返します。
+            </p>
+
+<pre><code>// new runs the constructor and builds an object
+// new はコンストラクターを実行してオブジェクトを作る
+let ball = new Ball(240, 160, 10);
+
+// Now we can read its properties:
+// プロパティを読み取れる：
+console.log(ball.x);       // 240
+console.log(ball.color);   // "yellow"
+
+// And we can make MORE balls from the same blueprint!
+// 同じ設計図からもっとボールを作れる！
+let ball2 = new Ball(100, 50, 15);
+let ball3 = new Ball(400, 200, 8);</code></pre>
+
+            <div class="tip-box">
+                <p>
+                    <strong>This is the payoff / これが見返り:</strong> three lines, three completely independent balls,
+                    each with its own position, speed, and size &mdash; no copy-pasting <code>x2</code>, <code>x3</code>, etc.
+                </p>
+                <p class="bilingual">
+                    3行で、完全に独立した3つのボール &mdash; それぞれ独自の位置、速度、サイズを持ち、
+                    <code>x2</code>、<code>x3</code>などをコピペする必要はありません。
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 12. Building the Ball class -->
+            <!-- ============================================================ -->
+            <h2>12. Building the Complete <code>Ball</code> Class / 完全な<code>Ball</code>クラスの構築</h2>
+
+            <p>
+                Now let's refactor the ball from your game step by step. We will give it three methods:
+                <code>draw()</code>, <code>move()</code>, and <code>reset()</code>.
+            </p>
+            <p class="bilingual">
+                それでは、ゲームのボールを段階的にリファクタリングしましょう。3つのメソッドを与えます：
+                <code>draw()</code>、<code>move()</code>、<code>reset()</code>。
+            </p>
+
+            <h3><span class="step-number">1</span> The Constructor / コンストラクター</h3>
+            <p>Group all the ball's data into properties. Remember the start position for <code>reset()</code> later.</p>
+            <p class="bilingual">ボールのすべてのデータをプロパティにまとめます。後の<code>reset()</code>のために開始位置を覚えておきます。</p>
+<pre><code>class Ball {
+    constructor(startX, startY, radius) {
+        this.x = startX;          // current position X / 現在位置X
+        this.y = startY;          // current position Y / 現在位置Y
+        this.startX = startX;     // remember start for reset / リセット用に記憶
+        this.startY = startY;
+        this.radius = radius;     // size / サイズ
+        this.dx = 2;              // speed X / 速度X
+        this.dy = -2;             // speed Y / 速度Y
+        this.color = "yellow";    // fill color / 塗りつぶし色
+    }
+}</code></pre>
+
+            <h3><span class="step-number">2</span> The <code>draw()</code> Method / <code>draw()</code>メソッド</h3>
+            <p>
+                This is the old <code>drawBall()</code> function &mdash; but now it reads from <code>this</code>
+                instead of taking parameters. It needs the drawing context <code>ctx</code> to draw on the canvas.
+            </p>
+            <p class="bilingual">
+                これは古い<code>drawBall()</code>関数ですが、パラメーターを取る代わりに<code>this</code>から読み取ります。
+                キャンバスに描画するため、描画コンテキスト<code>ctx</code>を必要とします。
+            </p>
+<pre><code>    // Draw the ball using its own properties
+    // 自身のプロパティを使ってボールを描画
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = "blue";
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }</code></pre>
+
+            <h3><span class="step-number">3</span> The <code>move()</code> Method / <code>move()</code>メソッド</h3>
+            <p>
+                This replaces <code>x += dx; y += dy;</code> and also handles bouncing off the four walls
+                (the same logic from Session 6), all inside the ball itself.
+            </p>
+            <p class="bilingual">
+                これは<code>x += dx; y += dy;</code>を置き換え、4つの壁での跳ね返り（セッション6と同じロジック）も
+                すべてボール自身の中で処理します。
+            </p>
+<pre><code>    // Move the ball and bounce it off the walls
+    // ボールを動かし、壁で跳ね返らせる
+    move(canvasWidth, canvasHeight) {
+        // Bounce off left and right walls / 左右の壁で跳ね返る
+        if (this.x + this.dx + this.radius > canvasWidth ||
+            this.x + this.dx - this.radius < 0) {
+            this.dx = -this.dx;
+        }
+        // Bounce off top and bottom walls / 上下の壁で跳ね返る
+        if (this.y + this.dy - this.radius < 0 ||
+            this.y + this.dy + this.radius > canvasHeight) {
+            this.dy = -this.dy;
+        }
+        // Update the position / 位置を更新
+        this.x += this.dx;
+        this.y += this.dy;
+    }</code></pre>
+
+            <h3><span class="step-number">4</span> The <code>reset()</code> Method / <code>reset()</code>メソッド</h3>
+            <p>
+                When the player loses a life, send the ball back to its starting position. Because we saved
+                <code>startX</code> and <code>startY</code> in the constructor, this is easy.
+            </p>
+            <p class="bilingual">
+                プレイヤーがライフを失ったとき、ボールを開始位置に戻します。コンストラクターで<code>startX</code>と
+                <code>startY</code>を保存したので、これは簡単です。
+            </p>
+<pre><code>    // Send the ball back to its starting position
+    // ボールを開始位置に戻す
+    reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        this.dx = 2;
+        this.dy = -2;
+    }</code></pre>
+
+            <h3>The Complete Class / 完全なクラス</h3>
+            <div class="note-box">
+                <p>Here are all the pieces assembled into one clean, reusable <code>Ball</code> class:</p>
+                <p class="bilingual">すべての部品を1つのきれいで再利用可能な<code>Ball</code>クラスに組み立てました：</p>
+            </div>
+<pre><code>class Ball {
+    constructor(startX, startY, radius) {
+        this.x = startX;
+        this.y = startY;
+        this.startX = startX;
+        this.startY = startY;
+        this.radius = radius;
+        this.dx = 2;
+        this.dy = -2;
+        this.color = "yellow";
+    }
+
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = "blue";
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    move(canvasWidth, canvasHeight) {
+        if (this.x + this.dx + this.radius > canvasWidth ||
+            this.x + this.dx - this.radius < 0) {
+            this.dx = -this.dx;
+        }
+        if (this.y + this.dy - this.radius < 0 ||
+            this.y + this.dy + this.radius > canvasHeight) {
+            this.dy = -this.dy;
+        }
+        this.x += this.dx;
+        this.y += this.dy;
+    }
+
+    reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        this.dx = 2;
+        this.dy = -2;
+    }
+}</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 13. Using the class in the game -->
+            <!-- ============================================================ -->
+            <h2>13. Using the <code>Ball</code> Class in the Game / ゲームでの<code>Ball</code>クラスの使用</h2>
+
+            <p>
+                Now look how much <strong>simpler and cleaner</strong> the main game code becomes. Compare the
+                "before" and "after".
+            </p>
+            <p class="bilingual">
+                メインのゲームコードが、どれだけ<strong>シンプルで読みやすく</strong>なるか見てください。「変更前」と「変更後」を比べましょう。
+            </p>
+
+            <h3>Before (Procedural) / 変更前（手続き型）</h3>
+<pre><code>var x = 240;
+var y = 160;
+var dx = 2;
+var dy = -2;
+var radius = 10;
+
+function drawBall(x, y, radius) { /* ...lots of code... */ }
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall(x, y, radius);
+    // ...4 separate if-statements for the walls...
+    x += dx;
+    y += dy;
+}
+setInterval(draw, 10);</code></pre>
+
+            <h3>After (Object-Oriented) / 変更後（オブジェクト指向）</h3>
+<pre><code>// Create one ball object from the blueprint
+// 設計図から1つのボールオブジェクトを作成
+let ball = new Ball(240, 160, 10);
+
+function draw() {
+    // 1. CLEAR / クリア
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 2. The ball draws and moves ITSELF
+    //    ボールが自分自身を描画して移動する
+    ball.draw(ctx);
+    ball.move(canvas.width, canvas.height);
+}
+setInterval(draw, 10);</code></pre>
+
+            <div class="tip-box">
+                <p>
+                    <strong>Read it out loud / 声に出して読む:</strong> "ball draw, ball move."
+                    The code now reads like plain English &mdash; that is the power of good OOP.
+                </p>
+                <p class="bilingual">
+                    「ボール、描画。ボール、移動。」&mdash; コードが普通の英語のように読めます。これが良いOOPの力です。
+                </p>
+            </div>
+
+            <h3>Complete Refactored <code>game.htm</code> / 完成したリファクタリング版</h3>
+            <p>Here is the full page you can copy into your <code>game.htm</code> and run:</p>
+            <p class="bilingual"><code>game.htm</code>にコピーして実行できる完全なページです：</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+&lt;title&gt;My Game&lt;/title&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;style&gt;
+canvas { background: #eee; display: block; margin: 0 auto; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;
+
+&lt;script&gt;
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+
+// ===== The Ball Blueprint / ボールの設計図 =====
+class Ball {
+    constructor(startX, startY, radius) {
+        this.x = startX;
+        this.y = startY;
+        this.startX = startX;
+        this.startY = startY;
+        this.radius = radius;
+        this.dx = 2;
+        this.dy = -2;
+        this.color = "yellow";
+    }
+
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.strokeStyle = "blue";
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    move(canvasWidth, canvasHeight) {
+        if (this.x + this.dx + this.radius > canvasWidth ||
+            this.x + this.dx - this.radius < 0) {
+            this.dx = -this.dx;
+        }
+        if (this.y + this.dy - this.radius < 0 ||
+            this.y + this.dy + this.radius > canvasHeight) {
+            this.dy = -this.dy;
+        }
+        this.x += this.dx;
+        this.y += this.dy;
+    }
+
+    reset() {
+        this.x = this.startX;
+        this.y = this.startY;
+        this.dx = 2;
+        this.dy = -2;
+    }
+}
+
+// ===== Create a ball and run the game loop =====
+// ===== ボールを作成してゲームループを実行 =====
+let ball = new Ball(240, 160, 10);
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ball.draw(ctx);
+    ball.move(canvas.width, canvas.height);
+}
+
+setInterval(draw, 10);
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 14. Assignment 8 -->
+            <!-- ============================================================ -->
+            <h2>14. Assignment 8 Details / 課題8の詳細</h2>
+
+            <div class="assignment-box">
+                <h3>Assignment 8: Refactor the Ball into a Class / 課題8：ボールをクラスにリファクタリング</h3>
+
+                <p><strong>Objective / 目的:</strong></p>
+                <p>
+                    Take the procedural ball code from your Breakout game and refactor it into a clean,
+                    reusable <code>Ball</code> class &mdash; without changing how the game looks or plays.
+                </p>
+                <p class="bilingual">
+                    ブレイクアウトゲームの手続き型のボールコードを、きれいで再利用可能な<code>Ball</code>クラスに
+                    リファクタリングしましょう &mdash; ゲームの見た目や動作は変えずに。
+                </p>
+
+                <p><strong>Requirements / 要件:</strong></p>
+                <ol>
+                    <li>
+                        <strong>Define a <code>Ball</code> class</strong> with a <code>constructor()</code> that sets
+                        <code>x</code>, <code>y</code>, <code>radius</code>, <code>dx</code>, <code>dy</code>, and <code>color</code> as properties on <code>this</code>.
+                        <br><span class="bilingual"><code>this</code>にプロパティを設定する<code>constructor()</code>を持つ<code>Ball</code>クラスを定義する。</span>
+                    </li>
+                    <li>
+                        <strong>Write a <code>draw()</code> method</strong> that draws the ball using its own properties (no parameters except <code>ctx</code>).
+                        <br><span class="bilingual">自身のプロパティを使ってボールを描画する<code>draw()</code>メソッドを書く。</span>
+                    </li>
+                    <li>
+                        <strong>Write a <code>move()</code> method</strong> that updates the position and bounces off all four walls.
+                        <br><span class="bilingual">位置を更新し4つの壁で跳ね返る<code>move()</code>メソッドを書く。</span>
+                    </li>
+                    <li>
+                        <strong>Write a <code>reset()</code> method</strong> that returns the ball to its starting position and speed.
+                        <br><span class="bilingual">ボールを開始位置と速度に戻す<code>reset()</code>メソッドを書く。</span>
+                    </li>
+                    <li>
+                        <strong>Create the ball with <code>new</code></strong> (<code>let ball = new Ball(...)</code>) and use
+                        <code>ball.draw()</code> and <code>ball.move()</code> in your game loop. Remove the old global ball variables.
+                        <br><span class="bilingual"><code>new</code>でボールを作成し、ゲームループで<code>ball.draw()</code>と<code>ball.move()</code>を使う。古いグローバル変数は削除する。</span>
+                    </li>
+                </ol>
+
+                <p><strong>Challenge (optional) / チャレンジ（任意）:</strong></p>
+                <p>
+                    Create <strong>two or three balls</strong> from the same class, each with a different start position,
+                    size, and color, and draw them all in the loop. Notice you did <em>not</em> rewrite any ball logic!
+                </p>
+                <p class="bilingual">
+                    同じクラスから<strong>2〜3個のボール</strong>を、それぞれ異なる開始位置・サイズ・色で作成し、
+                    ループですべて描画してみましょう。ボールのロジックを<em>一切</em>書き直していないことに気づくはずです！
+                </p>
+
+                <p><strong>Self-Study / 自習:</strong></p>
+                <p>
+                    Read the MDN guide on classes:
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank" rel="noopener noreferrer"
+                       style="color: #2563eb; text-decoration: underline;">
+                        MDN &mdash; Classes
+                    </a>, and the W3Schools
+                    <a href="https://www.w3schools.com/js/js_classes.asp" target="_blank" rel="noopener noreferrer"
+                       style="color: #2563eb; text-decoration: underline;">JavaScript Classes</a> tutorial.
+                </p>
+                <p class="bilingual">
+                    MDNのクラスガイドとW3SchoolsのJavaScriptクラスチュートリアルを読んでください。
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 15. Common Mistakes -->
+            <!-- ============================================================ -->
+            <h2>15. Common OOP Mistakes / よくあるOOPのミス</h2>
+
+            <h3>Mistake 1: Forgetting <code>this.</code> / <code>this.</code>を忘れる</h3>
+<pre><code>// WRONG -- "x" is undefined inside the method! / 間違い -- メソッド内で "x" は未定義！
+move() {
+    x = x + dx;       // does NOT touch the object's property
+}
+
+// CORRECT / 正解
+move() {
+    this.x = this.x + this.dx;   // updates THIS object's property
+}</code></pre>
+
+            <h3>Mistake 2: Forgetting <code>new</code> / <code>new</code>を忘れる</h3>
+<pre><code>// WRONG -- without new, you do NOT get an object / 間違い -- new なしではオブジェクトを得られない
+let ball = Ball(240, 160, 10);   // error / エラー
+
+// CORRECT / 正解
+let ball = new Ball(240, 160, 10);</code></pre>
+
+            <h3>Mistake 3: Putting commas between methods / メソッド間にカンマを置く</h3>
+<pre><code>// WRONG -- no commas between methods in a class! / 間違い -- クラス内のメソッド間にカンマは不要！
+class Ball {
+    draw() { /* ... */ },     // &lt;-- remove this comma!
+    move() { /* ... */ }
+}
+
+// CORRECT / 正解
+class Ball {
+    draw() { /* ... */ }      // no comma
+    move() { /* ... */ }
+}</code></pre>
+
+            <h3>Mistake 4: Lowercase class name / 小文字のクラス名</h3>
+<pre><code>// Works, but breaks convention / 動くが慣習に反する
+class ball { }
+
+// CORRECT -- class names start with a Capital letter / 正解 -- クラス名は大文字で始める
+class Ball { }</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Debugging Tip / デバッグのヒント:</strong> Use <code>console.log(ball)</code> in the
+                    Developer Tools (F12) to inspect an object and see all of its current properties at once!
+                </p>
+                <p class="bilingual">
+                    開発者ツール（F12）で<code>console.log(ball)</code>を使い、オブジェクトの現在のすべてのプロパティを
+                    一度に確認しましょう！
+                </p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 16. Key Takeaways -->
+            <!-- ============================================================ -->
+            <h2>16. Key Takeaways / 重要ポイント</h2>
+
+            <ul class="takeaway-list">
+                <li>
+                    <strong>OOP bundles data and behavior</strong> into self-contained objects, instead of
+                    scattering loose variables and functions.
+                    <br><span class="bilingual">OOPはデータと振る舞いを自己完結型のオブジェクトにまとめる。</span>
+                </li>
+                <li>
+                    <strong>A class is a blueprint; an object is a real thing</strong> built from it with <code>new</code>.
+                    <br><span class="bilingual">クラスは設計図、オブジェクトは<code>new</code>で作られた本物。</span>
+                </li>
+                <li>
+                    <strong>The <code>constructor()</code> runs automatically</strong> and sets the object's starting properties.
+                    <br><span class="bilingual"><code>constructor()</code>は自動的に実行され、初期プロパティを設定する。</span>
+                </li>
+                <li>
+                    <strong><code>this</code> means "this specific object"</strong> &mdash; how an object refers to its own properties.
+                    <br><span class="bilingual"><code>this</code>は「この特定のオブジェクト」を意味する。</span>
+                </li>
+                <li>
+                    <strong>Methods are functions that belong to an object</strong> &mdash; call them with a dot: <code>ball.draw()</code>.
+                    <br><span class="bilingual">メソッドはオブジェクトに属する関数 &mdash; ドットで呼ぶ：<code>ball.draw()</code>。</span>
+                </li>
+                <li>
+                    <strong>One blueprint, many objects</strong> &mdash; <code>new Ball(...)</code> makes as many balls as you want.
+                    <br><span class="bilingual">1つの設計図から多数のオブジェクト &mdash; 好きなだけボールを作れる。</span>
+                </li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 17. Next Session Preview -->
+            <!-- ============================================================ -->
+            <h2>17. Next Session Preview / 次回のセッション予告</h2>
+
+            <div class="analogy-box">
+                <h3 style="margin-top: 0;">Session 11: Paddle &amp; Brick Classes</h3>
+                <h3 style="margin-top: 5px;">セッション11：PaddleとBrickクラス</h3>
+
+                <p>
+                    You turned the ball into a class &mdash; now we do the same for the rest of the game.
+                    In the next session, we will:
+                </p>
+                <p class="bilingual">
+                    ボールをクラスにしました &mdash; 次はゲームの残りも同じようにします。次のセッションでは：
+                </p>
+
+                <ul>
+                    <li>Build a <strong><code>Paddle</code> class</strong> that handles its own drawing and keyboard movement
+                        <br><span class="bilingual">自身の描画とキーボード移動を処理する<strong><code>Paddle</code>クラス</strong>を作る</span>
+                    </li>
+                    <li>Build a <strong><code>Brick</code> class</strong> and a <strong><code>BrickGrid</code> class</strong> that contains many bricks (composition)
+                        <br><span class="bilingual"><strong><code>Brick</code>クラス</strong>と、多数のブロックを含む<strong><code>BrickGrid</code>クラス</strong>を作る（コンポジション）</span>
+                    </li>
+                    <li>Learn about <strong>encapsulation</strong> and the <strong>single responsibility principle</strong>
+                        <br><span class="bilingual"><strong>カプセル化</strong>と<strong>単一責任の原則</strong>について学ぶ</span>
+                    </li>
+                </ul>
+
+                <p style="margin-top: 15px;">
+                    <strong>Prepare / 準備:</strong> Make sure Assignment 8 (the <code>Ball</code> class) is working before next class.
+                    <br><span class="bilingual">次の授業までに課題8（<code>Ball</code>クラス）が動作することを確認してください。</span>
+                </p>
+            </div>
+
+        </div><!-- end .lecture-content -->
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>WP-200: Web Programming | Kwansei Gakuin University</p>
+            <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+        </div>
+    </footer>
+
+</body>
+</html>
