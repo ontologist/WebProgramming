@@ -99,12 +99,19 @@ class WP200BotChat {
             }));
             history.push({ role: 'user', content: message });
 
+            const headers = {
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
+            };
+            const token = (window.siteAuth && window.siteAuth.getToken && window.siteAuth.getToken())
+                || localStorage.getItem('wp200_session_token');
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
             const response = await fetch(`${this.apiUrl}/chat`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'true'
-                },
+                headers: headers,
                 body: JSON.stringify({
                     user_id: this.currentUserId,
                     message: message,
