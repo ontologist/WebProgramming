@@ -17,7 +17,10 @@ class SiteAuth {
     _getApiUrl() {
         const override = localStorage.getItem('wp200_api_url');
         if (override) return override;
-        return 'https://api-wp.tijerino.ai/api';
+        if (window.location.hostname === 'webprogramming.tijerino.ai') {
+            return `${window.location.origin}/api`;
+        }
+        return 'https://webprogramming.tijerino.ai/api';
     }
 
     init() {

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 3: In-Class CSS Practice | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Practice-specific styles */
+        .practice-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .practice-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .practice-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .practice-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .practice-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .practice-content ul, .practice-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .practice-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .practice-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .practice-content pre {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .practice-content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #d1d5db;
+            font-size: inherit;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        /* Info box (blue) */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Tip box (green) */
+        .tip-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Warning box (yellow) */
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Step cards */
+        .step-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 5px solid #2563eb;
+        }
+
+        .step-card h4 {
+            font-size: 1.1rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            margin-bottom: 5px;
+        }
+
+        /* Checklist styling */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 15px;
+            padding-left: 40px;
+            position: relative;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 12px;
+            font-size: 1.3em;
+            color: #7c3aed;
+        }
+
+        @media (max-width: 768px) {
+            .practice-content {
+                padding: 20px;
+            }
+
+            .practice-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .practice-content pre {
+                font-size: 0.8rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Session 3: In-Class CSS Practice &mdash; Style Your MySite</h1>
+            <p class="subtitle">セッション3：授業内CSS練習 &mdash; MySiteをスタイリング</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+            <a href="lecture.html">Lecture / 講義</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="practice-content">
+
+            <!-- ============================================================ -->
+            <!-- INTRODUCTION -->
+            <!-- ============================================================ -->
+            <h2>About This Practice / この練習について</h2>
+
+            <p>This is a <strong>guided in-class practice exercise</strong>. We will work through it together during class. You will create an external stylesheet for your MySite template, practicing each CSS concept from today's lecture one step at a time.<br>
+            <span class="bilingual">これは授業内のガイド付き練習です。授業中に一緒に進めていきます。今日の講義で学んだ各CSSコンセプトを一つずつ実践しながら、MySiteテンプレート用の外部スタイルシートを作成します。</span></p>
+
+            <p>This exercise is <strong>not graded</strong>. Its purpose is to give you hands-on experience with CSS before you start Assignment 1. Every technique you practice here will directly help you complete the assignment.<br>
+            <span class="bilingual">この練習は採点されません。課題1を始める前にCSSの実践経験を積むことが目的です。ここで練習するすべてのテクニックは、課題の完成に直接役立ちます。</span></p>
+
+            <div class="info-box">
+                <p><strong>What you need:</strong> Your MySite template folder with the 4 HTML pages (aboutme.htm, hobbies.htm, job.htm, game.htm) open in VS Code.</p>
+                <p class="bilingual"><strong>必要なもの：</strong> 4つのHTMLページ（aboutme.htm, hobbies.htm, job.htm, game.htm）が入ったMySiteテンプレートフォルダをVS Codeで開いてください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 1 -->
+            <!-- ============================================================ -->
+            <h2>Step 1: Create style.css and Link It / style.cssの作成とリンク</h2>
+
+            <p>First, we will create a new external stylesheet and connect it to all of our HTML pages. This separates our styling from our content &mdash; a best practice in web development.<br>
+            <span class="bilingual">まず、新しい外部スタイルシートを作成し、すべてのHTMLページに接続します。これによりスタイリングとコンテンツが分離されます &mdash; Web開発のベストプラクティスです。</span></p>
+
+            <div class="step-card">
+                <h4>1a. Create the file</h4>
+                <p>In VS Code, create a new file called <code>style.css</code> in the <strong>same folder</strong> as your .htm files. Right-click in the file explorer panel and select "New File", then type <code>style.css</code>.<br>
+                <span class="bilingual">VS Codeで、.htmファイルと同じフォルダに<code>style.css</code>という新しいファイルを作成します。ファイルエクスプローラーパネルで右クリックし、「New File」を選択して、<code>style.css</code>と入力してください。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>1b. Link the stylesheet to ALL 4 pages</h4>
+                <p>Open each of the 4 .htm files and add the following line inside the <code>&lt;head&gt;</code> section:<br>
+                <span class="bilingual">4つの.htmファイルそれぞれを開き、<code>&lt;head&gt;</code>セクション内に以下の行を追加してください：</span></p>
+            </div>
+
+<pre><code>&lt;link rel="stylesheet" href="style.css"&gt;</code></pre>
+
+            <div class="step-card">
+                <h4>1c. Remove the internal styles</h4>
+                <p>In each .htm file, find the <code>&lt;style&gt;...&lt;/style&gt;</code> block and either delete it or comment it out. We will rebuild all the styles in the external file.<br>
+                <span class="bilingual">各.htmファイルで、<code>&lt;style&gt;...&lt;/style&gt;</code>ブロックを見つけて削除するかコメントアウトしてください。すべてのスタイルを外部ファイルで再構築します。</span></p>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>Tip:</strong> Save and check in browser &mdash; your pages should now look completely unstyled (plain text). That is correct! We will add all the styles back in the external file.</p>
+                <p class="bilingual"><strong>ヒント：</strong> 保存してブラウザで確認してください &mdash; ページは完全にスタイルなし（プレーンテキスト）に見えるはずです。それで正しいです！外部ファイルですべてのスタイルを追加し直します。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 2 -->
+            <!-- ============================================================ -->
+            <h2>Step 2: Reset and Base Styles / リセットとベーススタイル</h2>
+
+            <p>Every stylesheet should start with a reset and base styles. This ensures consistent behavior across different browsers and sets sensible defaults for your entire site.<br>
+            <span class="bilingual">すべてのスタイルシートはリセットとベーススタイルから始めるべきです。これにより、異なるブラウザ間で一貫した動作が保証され、サイト全体に適切なデフォルトが設定されます。</span></p>
+
+            <p>Open your new <code>style.css</code> file and add the following code:<br>
+            <span class="bilingual">新しい<code>style.css</code>ファイルを開き、以下のコードを追加してください：</span></p>
+
+<pre><code>/* Reset - removes default browser spacing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base styles for the entire page */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}</code></pre>
+
+            <div class="step-card">
+                <h4>What each line does:</h4>
+                <p><code>* { ... }</code> &mdash; The universal selector. Applies to ALL elements on the page. We use it to remove default margins and padding that browsers add automatically.<br>
+                <span class="bilingual">ユニバーサルセレクタ。ページ上のすべての要素に適用されます。ブラウザが自動的に追加するデフォルトのマージンとパディングを削除するために使用します。</span></p>
+                <p><code>box-sizing: border-box</code> &mdash; Makes padding and border included in the element's total width. This prevents layout surprises.<br>
+                <span class="bilingual">パディングとボーダーを要素の合計幅に含めます。レイアウトの予期しない挙動を防ぎます。</span></p>
+                <p><code>font-family</code> &mdash; Sets the default font for all text on the page.<br>
+                <span class="bilingual">ページ上のすべてのテキストのデフォルトフォントを設定します。</span></p>
+                <p><code>line-height: 1.6</code> &mdash; Adds spacing between lines of text for readability.<br>
+                <span class="bilingual">テキストの行間にスペースを追加して読みやすくします。</span></p>
+                <p><code>color: #333</code> &mdash; Sets the default text color (dark gray, easier on the eyes than pure black).<br>
+                <span class="bilingual">デフォルトのテキスト色を設定します（ダークグレー、純粋な黒より目に優しい）。</span></p>
+                <p><code>background-color: #f5f5f5</code> &mdash; Sets a light gray background for the entire page.<br>
+                <span class="bilingual">ページ全体に薄いグレーの背景色を設定します。</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 3 -->
+            <!-- ============================================================ -->
+            <h2>Step 3: Style the Header (Colors and Typography) / ヘッダーのスタイル（色とタイポグラフィ）</h2>
+
+            <p>Now let us make the header look professional. We will practice using background colors, gradients, text color, alignment, padding, and font sizing.<br>
+            <span class="bilingual">次に、ヘッダーをプロフェッショナルな見た目にしましょう。背景色、グラデーション、テキスト色、配置、パディング、フォントサイズを練習します。</span></p>
+
+            <p>Add the following to your <code>style.css</code>:<br>
+            <span class="bilingual">以下を<code>style.css</code>に追加してください：</span></p>
+
+<pre><code>/* Header styling */
+header {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* Descendant selector: h1 inside header */
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}</code></pre>
+
+            <div class="info-box">
+                <p><strong>Selectors used here:</strong> You just used an <strong>element selector</strong> (<code>header</code>) and a <strong>descendant selector</strong> (<code>header h1</code>). The descendant selector targets only <code>&lt;h1&gt;</code> elements that are inside a <code>&lt;header&gt;</code> element.</p>
+                <p class="bilingual"><strong>使用したセレクタ：</strong> <strong>要素セレクタ</strong>（<code>header</code>）と<strong>子孫セレクタ</strong>（<code>header h1</code>）を使いました。子孫セレクタは、<code>&lt;header&gt;</code>要素の中にある<code>&lt;h1&gt;</code>要素のみを対象にします。</p>
+            </div>
+
+            <p>Save and refresh your browser. Your header should now have a blue-to-purple gradient background with white centered text.<br>
+            <span class="bilingual">保存してブラウザを更新してください。ヘッダーに青から紫のグラデーション背景と白い中央揃えテキストが表示されるはずです。</span></p>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 4 -->
+            <!-- ============================================================ -->
+            <h2>Step 4: Style the Navigation with Flexbox / Flexboxでナビゲーションをスタイル</h2>
+
+            <p>This is the key Flexbox exercise. We will turn the navigation list into a horizontal bar using <code>display: flex</code>. This is one of the most useful layout techniques in modern CSS.<br>
+            <span class="bilingual">これが重要なFlexbox演習です。<code>display: flex</code>を使って、ナビゲーションリストを水平バーに変えます。これは現代のCSSで最も便利なレイアウトテクニックの一つです。</span></p>
+
+            <p>Add the following to your <code>style.css</code>:<br>
+            <span class="bilingual">以下を<code>style.css</code>に追加してください：</span></p>
+
+<pre><code>/* Navigation bar */
+nav {
+    background-color: #1f2937;
+    padding: 10px 20px;
+}
+
+/* Remove bullet points and make horizontal with Flexbox */
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 5px;
+    padding: 0;
+}
+
+/* Style the links */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+/* Hover effect - changes when mouse is over the link */
+nav a:hover {
+    background-color: #4b5563;
+}</code></pre>
+
+            <div class="step-card">
+                <h4>Key concepts:</h4>
+                <p><code>display: flex</code> &mdash; This is the magic line! It makes the <code>&lt;ul&gt;</code> a flex container, which automatically places its children (the <code>&lt;li&gt;</code> items) side by side in a row.<br>
+                <span class="bilingual"><code>display: flex</code> &mdash; これが魔法の行です！<code>&lt;ul&gt;</code>をフレックスコンテナにし、子要素（<code>&lt;li&gt;</code>項目）を自動的に横並びに配置します。</span></p>
+                <p><code>gap: 5px</code> &mdash; Adds space between flex items without needing margins.<br>
+                <span class="bilingual"><code>gap: 5px</code> &mdash; マージンを使わずにフレックスアイテム間にスペースを追加します。</span></p>
+                <p><code>:hover</code> &mdash; A pseudo-class that applies styles only when the user's mouse is over the element.<br>
+                <span class="bilingual"><code>:hover</code> &mdash; ユーザーのマウスが要素の上にあるときのみスタイルを適用する擬似クラスです。</span></p>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>Tip:</strong> Try changing <code>gap</code>, <code>justify-content</code>, and <code>background-color</code> to see what changes! For example, add <code>justify-content: center;</code> to the <code>nav ul</code> rule to center the links.</p>
+                <p class="bilingual"><strong>ヒント：</strong> <code>gap</code>、<code>justify-content</code>、<code>background-color</code>を変更して何が変わるか試してみてください！例えば、<code>nav ul</code>ルールに<code>justify-content: center;</code>を追加するとリンクが中央に配置されます。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 5 -->
+            <!-- ============================================================ -->
+            <h2>Step 5: Style the Main Content (Box Model) / メインコンテンツのスタイル（ボックスモデル）</h2>
+
+            <p>This is the box model exercise. We will use margin, padding, borders, and border-radius to create a clean content area. Understanding the box model is essential for controlling layout and spacing in CSS.<br>
+            <span class="bilingual">これがボックスモデルの演習です。マージン、パディング、ボーダー、ボーダーラディウスを使って、きれいなコンテンツ領域を作成します。ボックスモデルの理解は、CSSでレイアウトとスペーシングを制御するために不可欠です。</span></p>
+
+            <p>Add the following to your <code>style.css</code>:<br>
+            <span class="bilingual">以下を<code>style.css</code>に追加してください：</span></p>
+
+<pre><code>/* Main content section */
+section {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}</code></pre>
+
+            <div class="step-card">
+                <h4>Box model breakdown:</h4>
+                <p><code>margin: 30px auto</code> &mdash; The top and bottom margin is 30px. The left and right margin is <code>auto</code>, which <strong>centers</strong> the element horizontally on the page.<br>
+                <span class="bilingual"><code>margin: 30px auto</code> &mdash; 上下のマージンは30px。左右のマージンは<code>auto</code>で、要素をページ上で水平方向に<strong>中央揃え</strong>します。</span></p>
+                <p><code>padding: 30px</code> &mdash; Adds 30px of breathing room inside the box, between the border and the content.<br>
+                <span class="bilingual"><code>padding: 30px</code> &mdash; ボックスの内側、ボーダーとコンテンツの間に30pxの余白を追加します。</span></p>
+                <p><code>border-radius: 12px</code> &mdash; Rounds the corners of the box.<br>
+                <span class="bilingual"><code>border-radius: 12px</code> &mdash; ボックスの角を丸くします。</span></p>
+                <p><code>box-shadow</code> &mdash; Adds a subtle shadow beneath the box, creating a "floating card" effect.<br>
+                <span class="bilingual"><code>box-shadow</code> &mdash; ボックスの下に微妙な影を追加し、「浮いているカード」効果を作成します。</span></p>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>Try this:</strong> Open DevTools (F12) and hover over your section element. You will see the box model with margin (orange), padding (green), and content (blue) highlighted! This visual tool helps you understand exactly how spacing works.</p>
+                <p class="bilingual"><strong>試してみよう：</strong> DevTools（F12）を開き、section要素にカーソルを合わせてください。マージン（オレンジ）、パディング（緑）、コンテンツ（青）がハイライトされたボックスモデルが表示されます！このビジュアルツールでスペーシングの仕組みを正確に理解できます。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 6 -->
+            <!-- ============================================================ -->
+            <h2>Step 6: Style the Articles (Class Selectors) / 記事のスタイル（クラスセレクタ）</h2>
+
+            <p>Now we introduce <strong>class selectors</strong> &mdash; the most powerful and commonly used type of CSS selector. Unlike element selectors, classes let you target specific elements without affecting all elements of the same type.<br>
+            <span class="bilingual">ここで<strong>クラスセレクタ</strong>を紹介します &mdash; CSSセレクタの中で最も強力で一般的に使用されるタイプです。要素セレクタと違い、クラスを使うと同じタイプのすべての要素に影響を与えずに特定の要素を対象にできます。</span></p>
+
+            <h3>First: Add the class to your HTML</h3>
+
+            <p>Open each .htm file and find the <code>&lt;article&gt;</code> elements. Add <code>class="card"</code> to each one:<br>
+            <span class="bilingual">各.htmファイルを開き、<code>&lt;article&gt;</code>要素を見つけてください。それぞれに<code>class="card"</code>を追加します：</span></p>
+
+<pre><code>&lt;!-- Before --&gt;
+&lt;article&gt;
+    &lt;h2&gt;Your Title&lt;/h2&gt;
+    &lt;p&gt;Your content...&lt;/p&gt;
+&lt;/article&gt;
+
+&lt;!-- After --&gt;
+&lt;article class="card"&gt;
+    &lt;h2&gt;Your Title&lt;/h2&gt;
+    &lt;p&gt;Your content...&lt;/p&gt;
+&lt;/article&gt;</code></pre>
+
+            <h3>Then: Style the class in CSS</h3>
+
+            <p>Add the following to your <code>style.css</code>:<br>
+            <span class="bilingual">以下を<code>style.css</code>に追加してください：</span></p>
+
+<pre><code>/* Card styling using class selector */
+.card {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+}
+
+/* Descendant selectors: elements inside .card */
+.card h2 {
+    color: #2563eb;
+    margin-bottom: 10px;
+}
+
+.card p {
+    line-height: 1.8;
+}</code></pre>
+
+            <div class="info-box">
+                <p><strong>Selectors used here:</strong> You just used a <strong>class selector</strong> (<code>.card</code>) and <strong>descendant selectors</strong> (<code>.card h2</code>, <code>.card p</code>). Classes are the most powerful selector &mdash; you can reuse them on any element! Any element with <code>class="card"</code> will receive these styles.</p>
+                <p class="bilingual"><strong>使用したセレクタ：</strong> <strong>クラスセレクタ</strong>（<code>.card</code>）と<strong>子孫セレクタ</strong>（<code>.card h2</code>、<code>.card p</code>）を使いました。クラスは最も強力なセレクタです &mdash; どの要素にも再利用できます！<code>class="card"</code>を持つすべての要素がこれらのスタイルを受け取ります。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 7 -->
+            <!-- ============================================================ -->
+            <h2>Step 7: Style the Footer / フッターのスタイル</h2>
+
+            <p>Finally, let us style the footer to match the professional look of our header. The footer uses familiar properties you have already practiced.<br>
+            <span class="bilingual">最後に、ヘッダーのプロフェッショナルな見た目に合わせてフッターをスタイルしましょう。フッターには、すでに練習した馴染みのあるプロパティを使います。</span></p>
+
+            <p>Add the following to your <code>style.css</code>:<br>
+            <span class="bilingual">以下を<code>style.css</code>に追加してください：</span></p>
+
+<pre><code>/* Footer styling */
+footer {
+    background-color: #1f2937;
+    color: #d1d5db;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Tip:</strong> You now have a complete external stylesheet! Every concept from today's lecture is in your style.css. Use this as a starting point for Assignment 1 &mdash; customize colors, fonts, spacing, and add more advanced techniques from W3Schools.</p>
+                <p class="bilingual"><strong>ヒント：</strong> これで完全な外部スタイルシートが完成しました！今日の講義のすべてのコンセプトがstyle.cssに入っています。これを課題1の出発点として使い、色、フォント、スペーシングをカスタマイズし、W3Schoolsからさらに高度なテクニックを追加してください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- SUMMARY -->
+            <!-- ============================================================ -->
+            <h2>What You Practiced Today / 今日練習したこと</h2>
+
+            <p>Here is a summary of all the CSS concepts you applied in this exercise. Use this as a self-check &mdash; you should feel comfortable with each item:<br>
+            <span class="bilingual">この演習で適用したすべてのCSSコンセプトのまとめです。セルフチェックとして使ってください &mdash; 各項目に自信を持てるようにしましょう：</span></p>
+
+            <ul class="checklist">
+                <li>Created an external stylesheet and linked it to multiple pages<br>
+                    <span class="bilingual">外部スタイルシートを作成し、複数のページにリンクした</span></li>
+                <li>Used element selectors (<code>body</code>, <code>header</code>, <code>nav</code>, <code>footer</code>)<br>
+                    <span class="bilingual">要素セレクタを使用した（<code>body</code>、<code>header</code>、<code>nav</code>、<code>footer</code>）</span></li>
+                <li>Used descendant selectors (<code>nav a</code>, <code>header h1</code>, <code>.card h2</code>)<br>
+                    <span class="bilingual">子孫セレクタを使用した（<code>nav a</code>、<code>header h1</code>、<code>.card h2</code>）</span></li>
+                <li>Used a class selector (<code>.card</code>)<br>
+                    <span class="bilingual">クラスセレクタを使用した（<code>.card</code>）</span></li>
+                <li>Applied colors (named, hex) and typography (font-family, font-size, text-align)<br>
+                    <span class="bilingual">色（名前付き、16進数）とタイポグラフィ（font-family、font-size、text-align）を適用した</span></li>
+                <li>Used the box model (margin, padding, border, border-radius)<br>
+                    <span class="bilingual">ボックスモデルを使用した（margin、padding、border、border-radius）</span></li>
+                <li>Used Flexbox (display: flex, gap) for navigation layout<br>
+                    <span class="bilingual">ナビゲーションレイアウトにFlexbox（display: flex、gap）を使用した</span></li>
+                <li>Used :hover for interactivity<br>
+                    <span class="bilingual">インタラクティブ性のために:hoverを使用した</span></li>
+            </ul>
+
+            <div class="tip-box">
+                <p><strong>Next step:</strong> You are now ready to start Assignment 1! Take what you built today and expand it &mdash; change the colors to match your personality, try different fonts, experiment with more advanced techniques from W3Schools.</p>
+                <p class="bilingual"><strong>次のステップ：</strong> これで課題1を始める準備ができました！今日作ったものを土台にして拡張しましょう &mdash; 色を自分の個性に合わせて変え、異なるフォントを試し、W3Schoolsのより高度なテクニックを実験してください。</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>

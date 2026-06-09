@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3: Canvas Drawing | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Assignment-specific styles */
+        .assignment-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .assignment-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .assignment-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .assignment-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .assignment-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .assignment-content ul, .assignment-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .assignment-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .assignment-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .assignment-content pre {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .assignment-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        /* Info box (blue) */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Warning box (yellow) */
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Success box (green) */
+        .success-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .success-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Tip box (green) */
+        .tip-box {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        .tip-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Checklist styling */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 15px;
+            padding-left: 40px;
+            position: relative;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 12px;
+            font-size: 1.3em;
+            color: #7c3aed;
+        }
+
+        /* Step cards */
+        .step-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 5px solid #2563eb;
+        }
+
+        .step-card h4 {
+            font-size: 1.1rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            margin-bottom: 5px;
+        }
+
+        /* Grading table */
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .grading-table thead th {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .grading-table tbody td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .grading-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .grading-table tbody tr:last-child {
+            background-color: #eff6ff;
+            font-weight: 700;
+        }
+
+        .grading-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Folder tree */
+        .folder-tree {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin: 15px 0 25px 0;
+        }
+
+        /* Mistakes list */
+        .mistakes-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mistakes-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #991b1b;
+        }
+
+        .mistakes-list li::before {
+            content: "\2718";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #dc2626;
+        }
+
+        /* Tips list */
+        .tips-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #065f46;
+        }
+
+        .tips-list li::before {
+            content: "\2714";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .assignment-content {
+                padding: 20px;
+            }
+
+            .assignment-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .assignment-content pre {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Assignment 3: Canvas Drawing</h1>
+            <p class="subtitle">課題3：Canvas描画</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+            <a href="lecture.html">Lecture / 講義</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="assignment-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. ASSIGNMENT OVERVIEW -->
+            <!-- ============================================================ -->
+            <h2>1. Assignment Overview / 課題概要</h2>
+
+            <p>In this assignment, you will create your first JavaScript drawing using the HTML5 Canvas. You will draw a <strong>ball</strong> and a <strong>rectangle (paddle)</strong> on the canvas, using <strong>variables</strong> to store all positions, sizes, and colors.<br>
+            <span class="bilingual">この課題では、HTML5 Canvasを使って初めてのJavaScript描画を作成します。<strong>変数</strong>を使ってすべての位置、サイズ、色を保存しながら、canvas上に<strong>ボール</strong>と<strong>長方形（パドル）</strong>を描きます。</span></p>
+
+            <p>This is the first step toward building our Breakout game. The ball and paddle you draw today will eventually move and interact!<br>
+            <span class="bilingual">これはブロック崩しゲームを作るための最初のステップです。今日描くボールとパドルは、最終的には動いて相互作用するようになります！</span></p>
+
+            <div class="info-box">
+                <p><strong>Goal:</strong> Demonstrate that you understand variables, data types, the canvas coordinate system, and basic drawing methods.</p>
+                <p class="bilingual"><strong>目標：</strong>変数、データ型、canvas座標系、基本的な描画メソッドを理解していることを示す。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. WHAT YOU NEED TO DO -->
+            <!-- ============================================================ -->
+            <h2>2. What You Need To Do / やるべきこと</h2>
+
+            <p>Follow these steps to complete the assignment:<br>
+            <span class="bilingual">以下のステップに従って課題を完成させてください：</span></p>
+
+            <div class="step-card">
+                <h4>Step 1: Create the HTML File / HTMLファイルを作成する</h4>
+                <p>Create a new file called <code>canvas-drawing.html</code>. Start with the HTML template that includes a <code>&lt;canvas&gt;</code> element and a <code>&lt;script&gt;</code> tag. See the Starter Code in Section 5 below.<br>
+                <span class="bilingual"><code>canvas-drawing.html</code>という新しいファイルを作成します。&lt;canvas&gt;要素と&lt;script&gt;タグを含むHTMLテンプレートから始めましょう。下のセクション5のスターターコードを参照してください。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 2: Get the Canvas Context / Canvasコンテキストを取得する</h4>
+                <p>Inside the <code>&lt;script&gt;</code> tag, use <code>document.getElementById()</code> to find your canvas and <code>getContext("2d")</code> to get the drawing context.<br>
+                <span class="bilingual">&lt;script&gt;タグ内で、<code>document.getElementById()</code>でcanvasを見つけ、<code>getContext("2d")</code>で描画コンテキストを取得します。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 3: Declare Ball Variables / ボールの変数を宣言する</h4>
+                <p>Create variables for the ball's position (x, y), radius, and color. Use <code>const</code> since these values will not change in this assignment.<br>
+                <span class="bilingual">ボールの位置（x, y）、半径、色の変数を作成します。この課題では値が変わらないので<code>const</code>を使います。</span></p>
+                <pre><code>const ballX = ...;       // pick your x position
+const ballY = ...;       // pick your y position
+const ballRadius = ...;  // pick a radius (e.g., 10-20)
+const ballColor = "..."; // pick a color</code></pre>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 4: Declare Paddle Variables / パドルの変数を宣言する</h4>
+                <p>Create variables for the paddle's position (x, y), width, height, and color.<br>
+                <span class="bilingual">パドルの位置（x, y）、幅、高さ、色の変数を作成します。</span></p>
+                <pre><code>const paddleX = ...;      // pick your x position
+const paddleY = ...;      // pick your y position
+const paddleWidth = ...;  // pick a width (e.g., 80-120)
+const paddleHeight = ...; // pick a height (e.g., 10-20)
+const paddleColor = "..."; // pick a DIFFERENT color from the ball</code></pre>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 5: Draw the Ball / ボールを描く</h4>
+                <p>Use <code>beginPath()</code>, <code>arc()</code>, <code>fillStyle</code>, <code>fill()</code>, and <code>closePath()</code> to draw the ball using your variables.<br>
+                <span class="bilingual"><code>beginPath()</code>、<code>arc()</code>、<code>fillStyle</code>、<code>fill()</code>、<code>closePath()</code>を使って、変数を使いボールを描きます。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 6: Draw the Paddle / パドルを描く</h4>
+                <p>Use <code>fillStyle</code> and <code>fillRect()</code> to draw the paddle using your variables.<br>
+                <span class="bilingual"><code>fillStyle</code>と<code>fillRect()</code>を使って、変数を使いパドルを描きます。</span></p>
+            </div>
+
+            <div class="step-card" style="border-left-color: #7c3aed;">
+                <h4 style="color: #7c3aed;">Step 7: Add Comments / コメントを追加する</h4>
+                <p>Add comments to explain what each section of your code does. This helps you and others understand your code.<br>
+                <span class="bilingual">コードの各セクションが何をしているかを説明するコメントを追加してください。</span></p>
+            </div>
+
+            <div class="step-card" style="border-left-color: #10b981;">
+                <h4 style="color: #10b981;">Bonus: Add Extra Creativity / ボーナス：創造性を追加する</h4>
+                <p>Want extra points? Add more shapes! Draw a background, add extra circles, create a simple scene. Show off your creativity!<br>
+                <span class="bilingual">追加点が欲しいですか？もっと図形を追加しましょう！背景を描いたり、円を追加したり、簡単なシーンを作ったりして、創造性を発揮してください！</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. REQUIREMENTS CHECKLIST -->
+            <!-- ============================================================ -->
+            <h2>3. Requirements Checklist / 要件チェックリスト</h2>
+
+            <p>Before submitting, make sure you can check off every item:<br>
+            <span class="bilingual">提出前に、すべての項目をチェックできることを確認してください：</span></p>
+
+            <ul class="checklist">
+                <li>HTML file contains a <code>&lt;canvas&gt;</code> element with id, width, and height attributes<br>
+                    <span class="bilingual">HTMLファイルにid、width、height属性を持つ&lt;canvas&gt;要素がある</span></li>
+                <li>JavaScript code is inside a <code>&lt;script&gt;</code> tag before <code>&lt;/body&gt;</code><br>
+                    <span class="bilingual">JavaScriptコードが&lt;/body&gt;の前の&lt;script&gt;タグ内にある</span></li>
+                <li>Variables are used for ALL ball properties (x, y, radius, color)<br>
+                    <span class="bilingual">ボールのすべてのプロパティ（x, y, 半径, 色）に変数が使われている</span></li>
+                <li>Variables are used for ALL paddle properties (x, y, width, height, color)<br>
+                    <span class="bilingual">パドルのすべてのプロパティ（x, y, 幅, 高さ, 色）に変数が使われている</span></li>
+                <li>Ball is drawn using <code>arc()</code> with <code>beginPath()</code> and <code>closePath()</code><br>
+                    <span class="bilingual">ボールがbeginPath()とclosePath()と共にarc()を使って描かれている</span></li>
+                <li>Paddle (rectangle) is drawn using <code>fillRect()</code><br>
+                    <span class="bilingual">パドル（長方形）がfillRect()を使って描かれている</span></li>
+                <li>At least 2 different colors are used (ball and paddle must be different colors)<br>
+                    <span class="bilingual">少なくとも2つの異なる色が使われている（ボールとパドルは異なる色にする）</span></li>
+                <li>Code includes comments explaining what each section does<br>
+                    <span class="bilingual">各セクションの説明コメントがコードに含まれている</span></li>
+                <li>No "magic numbers" -- all positions and sizes are stored in named variables<br>
+                    <span class="bilingual">「マジックナンバー」がない -- すべての位置とサイズが名前付き変数に保存されている</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. GRADING CRITERIA -->
+            <!-- ============================================================ -->
+            <h2>4. Grading Criteria / 評価基準</h2>
+
+            <p>Your assignment will be graded on the following criteria:<br>
+            <span class="bilingual">課題は以下の基準で評価されます：</span></p>
+
+            <table class="grading-table">
+                <thead>
+                    <tr>
+                        <th>Criteria / 評価項目</th>
+                        <th>Points / 配点</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Variables and data types (proper use of const/let, meaningful names, correct types)<br><span class="bilingual">変数とデータ型（const/letの適切な使用、意味のある名前、正しい型）</span></td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>Canvas drawing correctness (ball drawn with arc, paddle drawn with fillRect, both visible)<br><span class="bilingual">Canvas描画の正確さ（arcで描かれたボール、fillRectで描かれたパドル、両方が表示される）</span></td>
+                        <td>25</td>
+                    </tr>
+                    <tr>
+                        <td>Code organization and comments (clear structure, helpful comments, logical flow)<br><span class="bilingual">コードの整理とコメント（明確な構造、役立つコメント、論理的な流れ）</span></td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>Visual creativity (interesting colors, good positioning, extra shapes or design elements)<br><span class="bilingual">視覚的な創造性（面白い色使い、良い配置、追加の図形やデザイン要素）</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td>Code quality (no errors in console, proper HTML structure, clean formatting)<br><span class="bilingual">コード品質（コンソールにエラーがない、適切なHTML構造、きれいなフォーマット）</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total / 合計</strong></td>
+                        <td><strong>100</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <p><strong>Note:</strong> Using hard-coded numbers directly in drawing commands (e.g., <code>ctx.fillRect(190, 280, 100, 20)</code>) instead of variables will lose significant points in the "Variables and data types" category.</p>
+                <p class="bilingual"><strong>注意：</strong>変数の代わりに描画コマンドに直接数値を書く（例：<code>ctx.fillRect(190, 280, 100, 20)</code>）と、「変数とデータ型」カテゴリで大幅に減点されます。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. STARTER CODE -->
+            <!-- ============================================================ -->
+            <h2>5. Starter Code / スターターコード</h2>
+
+            <p>Use this template to get started. Fill in the parts marked with <code>// TODO</code>:<br>
+            <span class="bilingual">このテンプレートを使って始めましょう。<code>// TODO</code>とマークされた部分を記入してください：</span></p>
+
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Assignment 3: Canvas Drawing&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;My Canvas Drawing&lt;/h1&gt;
+    &lt;canvas id="myCanvas" width="480" height="320"
+        style="border: 2px solid #333;"&gt;&lt;/canvas&gt;
+
+    &lt;script&gt;
+        // ============================================
+        // SETUP: Get the canvas and context
+        // ============================================
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // ============================================
+        // BALL VARIABLES
+        // TODO: Replace the ... with your own values
+        // ============================================
+        const ballX = ...;         // x position of ball center
+        const ballY = ...;         // y position of ball center
+        const ballRadius = ...;    // radius of the ball
+        const ballColor = "...";   // color of the ball
+
+        // ============================================
+        // PADDLE VARIABLES
+        // TODO: Replace the ... with your own values
+        // ============================================
+        const paddleX = ...;       // x position of paddle (top-left)
+        const paddleY = ...;       // y position of paddle (top-left)
+        const paddleWidth = ...;   // width of the paddle
+        const paddleHeight = ...;  // height of the paddle
+        const paddleColor = "..."; // color of the paddle
+
+        // ============================================
+        // DRAW THE BALL
+        // TODO: Use arc() to draw a circle
+        // ============================================
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = ballColor;
+        ctx.fill();
+        ctx.closePath();
+
+        // ============================================
+        // DRAW THE PADDLE
+        // TODO: Use fillRect() to draw a rectangle
+        // ============================================
+        ctx.fillStyle = paddleColor;
+        ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Tip:</strong> The starter code already has the drawing commands set up. You just need to replace the <code>...</code> with actual numbers and color strings. Once you do that, you should see shapes on your canvas!</p>
+                <p class="bilingual"><strong>ヒント：</strong>スターターコードには描画コマンドが既に設定されています。<code>...</code>を実際の数値と色文字列に置き換えるだけです。それだけでcanvas上に図形が表示されます！</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. SUBMISSION -->
+            <!-- ============================================================ -->
+            <h2>6. Submission / 提出方法</h2>
+
+            <p>Submit your completed assignment through the course website:<br>
+            <span class="bilingual">完成した課題をコースウェブサイトから提出してください：</span></p>
+
+            <ol>
+                <li>Go to the course website's <strong>Submissions</strong> section<br>
+                    <span class="bilingual">コースウェブサイトの「提出」セクションに移動する</span></li>
+                <li>Upload your <code>canvas-drawing.html</code> file<br>
+                    <span class="bilingual"><code>canvas-drawing.html</code>ファイルをアップロードする</span></li>
+                <li>Or paste your complete code in the text field provided<br>
+                    <span class="bilingual">またはテキストフィールドに完全なコードを貼り付ける</span></li>
+            </ol>
+
+            <div class="info-box">
+                <p><strong>Before submitting:</strong> Open your HTML file in a browser and make sure both the ball and paddle are visible. Also open the browser console (F12 > Console tab) and check that there are no red error messages.</p>
+                <p class="bilingual"><strong>提出前に：</strong>HTMLファイルをブラウザで開き、ボールとパドルの両方が表示されていることを確認してください。また、ブラウザコンソール（F12 > コンソールタブ）を開いて、赤いエラーメッセージがないことを確認してください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. TIPS FOR SUCCESS -->
+            <!-- ============================================================ -->
+            <h2>7. Tips for Success / 成功のためのヒント</h2>
+
+            <ul class="tips-list">
+                <li>Start with the starter code and replace values one at a time. Test after each change to make sure nothing breaks.<br>
+                    <span class="bilingual">スターターコードから始めて、一度に1つずつ値を置き換えましょう。変更のたびにテストして何も壊れていないことを確認してください。</span></li>
+                <li>Use the browser console (F12) to check for errors. If something is not showing up, the console will usually tell you why.<br>
+                    <span class="bilingual">ブラウザコンソール（F12）を使ってエラーを確認しましょう。何かが表示されない場合、通常コンソールが理由を教えてくれます。</span></li>
+                <li>Remember that the canvas coordinate system starts at (0,0) in the top-left corner. If your shapes are not where you expect them, double-check your x and y values.<br>
+                    <span class="bilingual">Canvas座標系は左上の角の(0,0)から始まることを覚えておきましょう。図形が予想した場所にない場合は、xとyの値を再確認してください。</span></li>
+                <li>Choose colors that contrast well with each other and with the white background so you can clearly see your shapes.<br>
+                    <span class="bilingual">お互いに、また白い背景と良いコントラストを持つ色を選んで、図形がはっきり見えるようにしましょう。</span></li>
+                <li>Be creative with positioning! Try placing the ball in different locations, or make the paddle a unique size. This is YOUR drawing.<br>
+                    <span class="bilingual">配置に創造性を発揮しましょう！ ボールを色々な場所に置いてみたり、パドルをユニークなサイズにしてみてください。これはあなたの描画です。</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. COMMON MISTAKES TO AVOID -->
+            <!-- ============================================================ -->
+            <h2>8. Common Mistakes to Avoid / よくある間違い</h2>
+
+            <ul class="mistakes-list">
+                <li>Forgetting <code>beginPath()</code> before <code>arc()</code> -- the ball will not draw correctly without it.<br>
+                    <span class="bilingual"><code>arc()</code>の前に<code>beginPath()</code>を忘れる -- これなしではボールが正しく描画されません。</span></li>
+                <li>Using hard-coded numbers instead of variables -- <code>ctx.arc(240, 160, 10, ...)</code> should be <code>ctx.arc(ballX, ballY, ballRadius, ...)</code>.<br>
+                    <span class="bilingual">変数の代わりにハードコードされた数値を使う -- <code>ctx.arc(240, 160, 10, ...)</code>ではなく<code>ctx.arc(ballX, ballY, ballRadius, ...)</code>にする。</span></li>
+                <li>Setting <code>fillStyle</code> after <code>fillRect()</code> or <code>fill()</code> -- the color must be set BEFORE the drawing command.<br>
+                    <span class="bilingual"><code>fillRect()</code>や<code>fill()</code>の後に<code>fillStyle</code>を設定する -- 色は描画コマンドの前に設定する必要があります。</span></li>
+                <li>Putting the <code>&lt;script&gt;</code> tag in the <code>&lt;head&gt;</code> instead of before <code>&lt;/body&gt;</code> -- the canvas element will not exist yet when the script runs.<br>
+                    <span class="bilingual"><code>&lt;/body&gt;</code>の前ではなく<code>&lt;head&gt;</code>に&lt;script&gt;タグを置く -- スクリプト実行時にcanvas要素がまだ存在しません。</span></li>
+                <li>Misspelling the canvas <code>id</code> -- if the HTML says <code>id="myCanvas"</code> but the JavaScript says <code>getElementById("mycanvas")</code>, it will not work (case-sensitive!).<br>
+                    <span class="bilingual">canvasの<code>id</code>のスペルミス -- HTMLが<code>id="myCanvas"</code>でJavaScriptが<code>getElementById("mycanvas")</code>だと動きません（大文字小文字を区別します！）。</span></li>
+                <li>Forgetting quotes around color strings -- <code>const color = red;</code> will cause an error. It must be <code>const color = "red";</code>.<br>
+                    <span class="bilingual">色文字列の引用符を忘れる -- <code>const color = red;</code>はエラーになります。<code>const color = "red";</code>にする必要があります。</span></li>
+                <li>Drawing the ball or paddle completely outside the canvas boundaries -- make sure x and y values are within your canvas width and height.<br>
+                    <span class="bilingual">ボールやパドルをcanvasの境界の完全に外に描く -- xとyの値がcanvasの幅と高さの範囲内にあることを確認してください。</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. RESOURCES -->
+            <!-- ============================================================ -->
+            <h2>9. Resources / 参考資料</h2>
+
+            <p>Use these resources if you need additional help:<br>
+            <span class="bilingual">追加のヘルプが必要な場合は、これらのリソースを使ってください：</span></p>
+
+            <ul>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Create_the_Canvas_and_draw_on_it" target="_blank" style="color: #2563eb;">MDN: Create the Canvas and draw on it</a> -- The official tutorial this assignment is based on<br>
+                    <span class="bilingual">この課題のベースとなる公式チュートリアル</span></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial" target="_blank" style="color: #2563eb;">MDN Canvas Tutorial</a> -- Complete guide to the Canvas API<br>
+                    <span class="bilingual">Canvas APIの完全ガイド</span></li>
+                <li><a href="https://www.w3schools.com/html/html5_canvas.asp" target="_blank" style="color: #2563eb;">W3Schools HTML Canvas</a> -- Beginner-friendly canvas reference<br>
+                    <span class="bilingual">初心者向けcanvasリファレンス</span></li>
+                <li><a href="https://www.w3schools.com/js/js_variables.asp" target="_blank" style="color: #2563eb;">W3Schools JavaScript Variables</a> -- Reference for let and const<br>
+                    <span class="bilingual">letとconstのリファレンス</span></li>
+            </ul>
+
+            <div class="success-box">
+                <p><strong>You can do this!</strong> This assignment only requires about 20 lines of JavaScript. Start with the starter code, replace the placeholder values with your own numbers and colors, and you will have a working canvas drawing in no time. Have fun with it!</p>
+                <p class="bilingual"><strong>あなたならできます！</strong>この課題に必要なJavaScriptは約20行だけです。スターターコードから始めて、プレースホルダーの値を自分の数値と色に置き換えれば、すぐに動作するcanvas描画ができます。楽しんで取り組みましょう！</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>

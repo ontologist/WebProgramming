@@ -34,10 +34,13 @@ class OllamaService:
             data = response.json()
             return data.get("message", {}).get("content", "")
 
-    async def generate(self, prompt: str, temperature: float = 0.7, max_tokens: int = 2000) -> str:
+    async def generate(self, prompt: str, temperature: float = 0.7, max_tokens: int = 2000,
+                       model: str | None = None) -> str:
+        """Generate a completion. Pass `model` to override settings.OLLAMA_MODEL
+        for this one call (e.g. a prose model during grading)."""
         url = f"{self.base_url}/api/generate"
         payload = {
-            "model": self.model,
+            "model": model or self.model,
             "prompt": prompt,
             "stream": False,
             "options": {

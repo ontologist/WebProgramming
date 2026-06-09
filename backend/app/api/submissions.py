@@ -2,6 +2,8 @@
 # 著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
 # Unauthorized copying, modification, or distribution of this file is prohibited.
 # 本ファイルの無断複製、改変、配布を禁じます。
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -11,10 +13,14 @@ router = APIRouter()
 
 
 class SubmissionRequest(BaseModel):
-    student_id: str
+    # student_id is accepted from the client but ignored: we derive the
+    # authoritative value from the authenticated handle to prevent spoofing
+    # and to survive a client that sends the wrong label (e.g. "INSTRUCTOR").
+    student_id: Optional[str] = None
+    handle: str = ""  # authenticated handle; required to satisfy the FK to students.handle
     assignment_id: int
-    code: str = None
-    files: dict = None  # {filename: content}
+    code: Optional[str] = None
+    files: Optional[dict] = None  # {filename: content}
     language: str = "en"  # en, ja, zh, ko, es
 
 
@@ -29,12 +35,31 @@ async def submit_assignment(request: SubmissionRequest):
     if not request.code and not request.files:
         raise HTTPException(status_code=400, detail="No code or files provided")
 
+    # Resolve submitter identity. Prefer the authenticated handle (required by
+    # the FK to students.handle). Fall back to a student_id lookup for clients
+    # that only send student_id. We then derive the authoritative student_id
+    # from the student row — the client's label is never trusted.
+    handle = (request.handle or "").strip().lower()
+    student = db_service.get_student(handle) if handle else None
+    if not student and request.student_id:
+        student = next(
+            (s for s in db_service.get_all_students() if s["student_id"] == request.student_id),
+            None,
+        )
+    if not student:
+        raise HTTPException(
+            status_code=401,
+            detail="Cannot identify submitter. Please log in again and resubmit.",
+        )
+    handle = student["handle"]
+    authoritative_student_id = student["student_id"]
+
     rubric = grading_service.get_rubric(request.assignment_id)
     if not rubric:
         raise HTTPException(status_code=400, detail=f"Unknown assignment: {request.assignment_id}")
 
-    # Run deterministic checks
-    det_results = grading_service.run_deterministic_checks(
+    # Run deterministic checks (async — some graders call the model internally)
+    det_results = await grading_service.run_deterministic_checks(
         request.assignment_id, request.code, request.files
     )
     det_score = sum(r["points"] for r in det_results)
@@ -46,7 +71,8 @@ async def submit_assignment(request: SubmissionRequest):
 
     # Save submission
     submission = db_service.create_submission(
-        student_id=request.student_id,
+        student_id=authoritative_student_id,
+        handle=handle,
         assignment_id=request.assignment_id,
         code=request.code,
         files=request.files,

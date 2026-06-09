@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6: In-Class Practice | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Practice-specific styles */
+        .practice-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .practice-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .practice-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .practice-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .practice-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .practice-content ul, .practice-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .practice-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .practice-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .practice-content pre {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .practice-content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #d1d5db;
+            font-size: inherit;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        /* Info box (blue) */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Tip box (green) */
+        .tip-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Warning box (yellow) */
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Step cards */
+        .step-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 5px solid #2563eb;
+        }
+
+        .step-card h4 {
+            font-size: 1.1rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            margin-bottom: 5px;
+        }
+
+        /* Checklist styling */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 15px;
+            padding-left: 40px;
+            position: relative;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 12px;
+            font-size: 1.3em;
+            color: #7c3aed;
+        }
+
+        @media (max-width: 768px) {
+            .practice-content {
+                padding: 20px;
+            }
+
+            .practice-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .practice-content pre {
+                font-size: 0.8rem;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Session 6: In-Class Practice &mdash; Make the Ball Bounce</h1>
+            <p class="subtitle">セッション6：授業内練習 &mdash; ボールを跳ね返らせよう</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+            <a href="lecture.html">Lecture / 講義</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="practice-content">
+
+            <!-- ============================================================ -->
+            <!-- INTRODUCTION -->
+            <!-- ============================================================ -->
+            <h2>About This Practice / この練習について</h2>
+
+            <p>This is a <strong>guided in-class practice exercise</strong>. We will work through it together during class. You will take your moving ball from Session 5 and add wall bouncing, one wall at a time.<br>
+            <span class="bilingual">これは授業内のガイド付き練習です。授業中に一緒に進めていきます。セッション5で作った動くボールに、壁の跳ね返りを1つずつ追加していきます。</span></p>
+
+            <p>This exercise is <strong>not graded</strong>. Its purpose is to give you hands-on experience with if statements and boundary detection. You are building on your game -- the same code you will continue to develop in future sessions.<br>
+            <span class="bilingual">この練習は採点されません。if文と境界検出の実践経験を積むことが目的です。ゲームの上に構築しています -- 今後のセッションでも引き続き開発する同じコードです。</span></p>
+
+            <div class="info-box">
+                <p><strong>What you need:</strong> Your game file from Session 5 (the moving ball animation) open in VS Code. If you do not have it, use the starter code in Step 1 below.</p>
+                <p class="bilingual"><strong>必要なもの：</strong> セッション5のゲームファイル（動くボールのアニメーション）をVS Codeで開いてください。持っていない場合は、下のステップ1のスターターコードを使ってください。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 1 -->
+            <!-- ============================================================ -->
+            <h2>Step 1: Start with Your Moving Ball / 動くボールから始める</h2>
+
+            <p>Open your game file from Session 5. Your code should look like this. If you do not have it, create a new file called <code>game.html</code> and type this code:<br>
+            <span class="bilingual">セッション5のゲームファイルを開いてください。コードはこのようになっているはずです。持っていない場合は、<code>game.html</code>という新しいファイルを作成し、このコードを入力してください：</span></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Breakout Game&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;canvas id="myCanvas" width="480" height="320"
+        style="border: 1px solid #000;"&gt;&lt;/canvas&gt;
+    &lt;script&gt;
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var x = canvas.width / 2;
+        var y = canvas.height - 30;
+        var dx = 2;
+        var dy = -2;
+        var ballRadius = 10;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+            x += dx;
+            y += dy;
+        }
+
+        setInterval(draw, 10);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <div class="step-card">
+                <h4>Test it first</h4>
+                <p>Open this file in your browser. You should see a blue ball that moves diagonally and then flies off the screen. That is the problem we are going to fix!<br>
+                <span class="bilingual">このファイルをブラウザで開いてください。斜めに動いて画面外に飛んでいく青いボールが見えるはずです。それが今から修正する問題です！</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 2 -->
+            <!-- ============================================================ -->
+            <h2>Step 2: Add Right Wall Detection / 右壁の検出を追加</h2>
+
+            <p>Let's start by making the ball bounce off the right wall. We need to add an if statement that checks if the ball is about to go past the right edge.<br>
+            <span class="bilingual">まず、ボールが右壁で跳ね返るようにしましょう。ボールが右端を超えようとしているかチェックするif文を追加する必要があります。</span></p>
+
+            <p>In your <code>draw()</code> function, add this code <strong>before</strong> the lines <code>x += dx;</code> and <code>y += dy;</code>:<br>
+            <span class="bilingual"><code>draw()</code>関数の中で、<code>x += dx;</code> と <code>y += dy;</code> の行の<strong>前に</strong>、このコードを追加してください：</span></p>
+
+<pre><code>// Bounce off the right wall
+if (x + dx > canvas.width) {
+    dx = -dx;
+}</code></pre>
+
+            <div class="step-card">
+                <h4>What this does:</h4>
+                <p><code>x + dx</code> -- calculates where the ball will be next frame.<br>
+                <code>> canvas.width</code> -- checks if that position is past the right edge.<br>
+                <code>dx = -dx</code> -- reverses the horizontal direction (e.g., 2 becomes -2).<br>
+                <span class="bilingual"><code>x + dx</code> -- 次のフレームでのボールの位置を計算する。<code>> canvas.width</code> -- その位置が右端を超えているかチェック。<code>dx = -dx</code> -- 水平方向を反転する（例：2が-2になる）。</span></p>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>Test it!</strong> Save and refresh your browser. The ball should now bounce off the right wall, but it still flies off the left, top, and bottom. We will fix those next.</p>
+                <p class="bilingual"><strong>テストしよう！</strong> 保存してブラウザを更新してください。ボールが右壁で跳ね返るはずですが、左、上、下ではまだ飛んでいきます。次にそれらを修正します。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 3 -->
+            <!-- ============================================================ -->
+            <h2>Step 3: Add Left Wall Detection / 左壁の検出を追加</h2>
+
+            <p>Now let's handle the left wall. Add this code right after the right wall check:<br>
+            <span class="bilingual">次に左壁を処理しましょう。右壁のチェックの直後に、このコードを追加してください：</span></p>
+
+<pre><code>// Bounce off the left wall
+if (x + dx < 0) {
+    dx = -dx;
+}</code></pre>
+
+            <div class="step-card">
+                <h4>Or combine both into one statement:</h4>
+                <p>Since both the left and right wall use <code>dx = -dx</code>, you can write them as one if statement using the OR operator (<code>||</code>):<br>
+                <span class="bilingual">左壁と右壁の両方が<code>dx = -dx</code>を使うので、OR演算子（<code>||</code>）を使って1つのif文にまとめることもできます：</span></p>
+            </div>
+
+<pre><code>// Bounce off left OR right wall
+if (x + dx > canvas.width || x + dx < 0) {
+    dx = -dx;
+}</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Test it!</strong> The ball should now bounce off both left and right walls. It bounces horizontally but still escapes through the top and bottom.</p>
+                <p class="bilingual"><strong>テストしよう！</strong> ボールが左右の壁で跳ね返るはずです。水平方向には跳ね返りますが、上下にはまだ逃げます。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 4 -->
+            <!-- ============================================================ -->
+            <h2>Step 4: Add Top Wall Detection / 上壁の検出を追加</h2>
+
+            <p>The top wall works the same way, but for the y-axis. The top of the canvas is y = 0. Add this code after your horizontal wall check:<br>
+            <span class="bilingual">上壁も同じように機能しますが、y軸に対してです。キャンバスの上端はy = 0です。水平方向の壁チェックの後に、このコードを追加してください：</span></p>
+
+<pre><code>// Bounce off the top wall
+if (y + dy < 0) {
+    dy = -dy;
+}</code></pre>
+
+            <div class="step-card">
+                <h4>What this does:</h4>
+                <p><code>y + dy</code> -- calculates the ball's next vertical position.<br>
+                <code>< 0</code> -- checks if it has gone above the top edge.<br>
+                <code>dy = -dy</code> -- reverses the vertical direction.<br>
+                <span class="bilingual"><code>y + dy</code> -- ボールの次の垂直位置を計算。<code>< 0</code> -- 上端を超えたかチェック。<code>dy = -dy</code> -- 垂直方向を反転。</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 5 -->
+            <!-- ============================================================ -->
+            <h2>Step 5: Add Bottom Wall Detection / 下壁の検出を追加</h2>
+
+            <p>Add the bottom wall detection. You can combine it with the top wall check:<br>
+            <span class="bilingual">下壁の検出を追加してください。上壁のチェックと組み合わせることができます：</span></p>
+
+<pre><code>// Bounce off top OR bottom wall
+if (y + dy > canvas.height || y + dy < 0) {
+    dy = -dy;
+}</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Test it!</strong> Your ball should now bounce off ALL four walls! It will keep bouncing forever, never escaping the canvas. Congratulations -- you just implemented collision detection!</p>
+                <p class="bilingual"><strong>テストしよう！</strong> ボールが4つの壁すべてで跳ね返るはずです！永遠に跳ね返り続け、キャンバスから逃げません。おめでとうございます -- 衝突検出を実装しました！</p>
+            </div>
+
+            <div class="step-card">
+                <h4>Your draw() function should now look like this:</h4>
+                <p>Here is the complete function with all boundary checks added:<br>
+                <span class="bilingual">すべての境界チェックを追加した完全な関数がこちらです：</span></p>
+            </div>
+
+<pre><code>function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+
+    // Bounce off left and right walls
+    if (x + dx > canvas.width || x + dx < 0) {
+        dx = -dx;
+    }
+    // Bounce off top and bottom walls
+    if (y + dy > canvas.height || y + dy < 0) {
+        dy = -dy;
+    }
+
+    x += dx;
+    y += dy;
+}</code></pre>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 6 -->
+            <!-- ============================================================ -->
+            <h2>Step 6: Fix the Edge Clipping / 端の食い込みを修正</h2>
+
+            <p>Look closely at your bouncing ball. Do you notice that it seems to partially disappear into the wall before bouncing back? This is because we are checking the ball's <strong>center point</strong>, not its <strong>edge</strong>.<br>
+            <span class="bilingual">跳ね返るボールをよく見てください。跳ね返る前に壁に部分的に消えているように見えませんか？これはボールの<strong>端</strong>ではなく<strong>中心点</strong>をチェックしているためです。</span></p>
+
+            <p>Fix this by accounting for <code>ballRadius</code> in all four boundary checks. Replace your existing boundary code with:<br>
+            <span class="bilingual">4つの境界チェックすべてで<code>ballRadius</code>を考慮して修正してください。既存の境界コードを以下に置き換えます：</span></p>
+
+<pre><code>// Bounce off left and right walls (accounting for radius)
+if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    dx = -dx;
+}
+// Bounce off top and bottom walls (accounting for radius)
+if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+    dy = -dy;
+}</code></pre>
+
+            <div class="step-card">
+                <h4>Why this works:</h4>
+                <p><strong>Right wall:</strong> Instead of checking if center > canvas.width, we check if center > canvas.width - ballRadius. This means the ball's right edge (center + radius) will just touch the wall.<br>
+                <span class="bilingual"><strong>右壁：</strong> 中心 > canvas.widthではなく、中心 > canvas.width - ballRadiusをチェックします。これにより、ボールの右端（中心 + 半径）がちょうど壁に触れます。</span></p>
+                <p><strong>Left wall:</strong> Instead of checking if center < 0, we check if center < ballRadius. This ensures the ball's left edge (center - radius) touches x = 0.<br>
+                <span class="bilingual"><strong>左壁：</strong> 中心 < 0ではなく、中心 < ballRadiusをチェックします。これにより、ボールの左端（中心 - 半径）がx = 0に触れます。</span></p>
+            </div>
+
+            <div class="tip-box">
+                <p><strong>Test it!</strong> The ball should now bounce cleanly off all walls without clipping. Its edge touches the wall exactly at the moment it reverses direction.</p>
+                <p class="bilingual"><strong>テストしよう！</strong> ボールが食い込みなく全ての壁できれいに跳ね返るはずです。方向が反転する瞬間に、端がちょうど壁に触れます。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- STEP 7 -->
+            <!-- ============================================================ -->
+            <h2>Step 7: Experiment! / 実験しよう！</h2>
+
+            <p>Your bouncing ball is working! Now let's experiment with different values to build your intuition about how the variables affect behavior.<br>
+            <span class="bilingual">跳ね返るボールが動いています！変数が動作にどう影響するか直感を養うために、いろいろな値を試してみましょう。</span></p>
+
+            <div class="step-card">
+                <h4>Try these experiments:</h4>
+                <p><strong>1. Change the speed:</strong> Try setting <code>dx = 4</code> and <code>dy = -4</code>. What happens? Try <code>dx = 1</code> and <code>dy = -1</code>.<br>
+                <span class="bilingual"><strong>1. 速度を変更：</strong> <code>dx = 4</code>と<code>dy = -4</code>にしてみてください。何が起こりますか？<code>dx = 1</code>と<code>dy = -1</code>も試しましょう。</span></p>
+                <p><strong>2. Change the angle:</strong> Try <code>dx = 3</code> and <code>dy = -1</code>. The ball moves mostly horizontal! Try <code>dx = 1</code> and <code>dy = -3</code> for mostly vertical.<br>
+                <span class="bilingual"><strong>2. 角度を変更：</strong> <code>dx = 3</code>と<code>dy = -1</code>を試してください。ボールはほぼ水平に動きます！<code>dx = 1</code>と<code>dy = -3</code>でほぼ垂直にも。</span></p>
+                <p><strong>3. Change the starting position:</strong> Try <code>x = 50</code> and <code>y = 50</code> to start from the top-left corner.<br>
+                <span class="bilingual"><strong>3. 開始位置を変更：</strong> <code>x = 50</code>と<code>y = 50</code>で左上隅から開始してみてください。</span></p>
+                <p><strong>4. Change the ball size:</strong> Try <code>ballRadius = 20</code> for a bigger ball, or <code>ballRadius = 5</code> for a tiny one.<br>
+                <span class="bilingual"><strong>4. ボールのサイズを変更：</strong> <code>ballRadius = 20</code>で大きなボール、<code>ballRadius = 5</code>で小さなボールを試しましょう。</span></p>
+                <p><strong>5. Change the color:</strong> Try <code>ctx.fillStyle = "#FF0000"</code> (red) or <code>"#00FF00"</code> (green).<br>
+                <span class="bilingual"><strong>5. 色を変更：</strong> <code>ctx.fillStyle = "#FF0000"</code>（赤）や<code>"#00FF00"</code>（緑）を試しましょう。</span></p>
+            </div>
+
+            <div class="warning-box">
+                <p><strong>What happens if ballRadius is bigger than the canvas?</strong> Try <code>ballRadius = 200</code> -- the ball gets stuck! This is because it is always past both walls simultaneously. This is a good lesson about edge cases in programming.</p>
+                <p class="bilingual"><strong>ballRadiusがキャンバスより大きいとどうなるか？</strong> <code>ballRadius = 200</code>を試してみてください -- ボールが動けなくなります！常に両方の壁を同時に超えているためです。プログラミングにおけるエッジケースについての良い教訓です。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- SUMMARY -->
+            <!-- ============================================================ -->
+            <h2>What You Practiced Today / 今日練習したこと</h2>
+
+            <p>Here is a summary of all the concepts you applied in this exercise. Use this as a self-check:<br>
+            <span class="bilingual">この演習で適用したすべてのコンセプトのまとめです。セルフチェックとして使ってください：</span></p>
+
+            <ul class="checklist">
+                <li>Used <strong>if statements</strong> to make decisions in code<br>
+                    <span class="bilingual"><strong>if文</strong>を使ってコード内で判断を下した</span></li>
+                <li>Used <strong>comparison operators</strong> (&gt;, &lt;) to check boundary conditions<br>
+                    <span class="bilingual"><strong>比較演算子</strong>（>, <）を使って境界条件をチェックした</span></li>
+                <li>Used the <strong>OR operator</strong> (||) to combine multiple conditions<br>
+                    <span class="bilingual"><strong>OR演算子</strong>（||）を使って複数の条件を組み合わせた</span></li>
+                <li>Implemented <strong>velocity reversal</strong> (dx = -dx, dy = -dy) to create bouncing<br>
+                    <span class="bilingual"><strong>速度の反転</strong>（dx = -dx, dy = -dy）を実装して跳ね返りを作成した</span></li>
+                <li>Detected boundaries on all <strong>four walls</strong> (left, right, top, bottom)<br>
+                    <span class="bilingual"><strong>4つの壁</strong>すべて（左、右、上、下）で境界を検出した</span></li>
+                <li>Accounted for <strong>ball radius</strong> to prevent visual clipping at walls<br>
+                    <span class="bilingual">壁での視覚的な食い込みを防ぐため<strong>ボールの半径</strong>を考慮した</span></li>
+                <li>Experimented with different <strong>speed, angle, and size</strong> values<br>
+                    <span class="bilingual">異なる<strong>速度、角度、サイズ</strong>の値を実験した</span></li>
+            </ul>
+
+            <div class="tip-box">
+                <p><strong>Keep this code!</strong> You will continue building on it in the coming sessions. Next time, we will add a paddle that the player controls with the keyboard. Your bouncing ball is becoming a real game!</p>
+                <p class="bilingual"><strong>このコードを保存しておきましょう！</strong> 今後のセッションでも引き続きこの上に構築していきます。次回は、プレイヤーがキーボードで操作するパドルを追加します。跳ね返るボールが本物のゲームになっていきます！</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>

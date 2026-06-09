@@ -1,0 +1,864 @@
+<!-- Copyright (c) 2026 Yuri Tijerino. All rights reserved. / 著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 4: Canvas & Drawing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 80px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 3em;
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            color: #7c3aed;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #2563eb;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .slide h4 {
+            font-size: 1.4em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .slide ul, .slide ol {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+        }
+
+        .content-section {
+            margin: 20px 0;
+        }
+
+        .japanese-content {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #7c3aed;
+            border-radius: 8px;
+        }
+
+        .japanese-heading {
+            color: #7c3aed;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: #fef3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-box {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            color: #2563eb;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 2em;
+            color: #7c3aed;
+            margin-bottom: 40px;
+        }
+
+        .title-slide .info {
+            font-size: 1.3em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .column-section {
+            margin: 20px 0;
+        }
+
+        .column-item {
+            margin-bottom: 30px;
+        }
+
+        .column-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 1024px) {
+            .slide {
+                padding: 40px 50px;
+            }
+
+            .slide h1 {
+                font-size: 2.5em;
+            }
+
+            .slide h2 {
+                font-size: 2em;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .slide-container {
+                padding: 0;
+            }
+
+            .slide {
+                width: 100vw;
+                height: auto;
+                min-height: 100vh;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .slide h1 {
+                font-size: 2em;
+            }
+
+            .slide h2 {
+                font-size: 1.6em;
+            }
+
+            .slide h3 {
+                font-size: 1.5em;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+
+            .title-slide .subtitle {
+                font-size: 1.4em;
+            }
+
+            .navigation {
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="slide-number" id="slideNumber">Slide 1 / 15</div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Session 4</h1>
+            <p class="subtitle">Canvas &amp; Drawing<br>Canvasと描画</p>
+            <p class="info"><strong>Course:</strong> WP-200 Web Programming</p>
+            <p class="info"><strong>Topic:</strong> Introduction to JavaScript &amp; Canvas</p>
+        </div>
+
+        <!-- Slide 2: What is JavaScript? -->
+        <div class="slide">
+            <h2>What is JavaScript? / JavaScriptとは？</h2>
+            <div class="content-section">
+                <h3>The Third Language of the Web:</h3>
+                <p>Remember our building analogy?</p>
+                <ul>
+                    <li><strong>HTML</strong> -- the skeleton (structure)</li>
+                    <li><strong>CSS</strong> -- the paint and decoration (style)</li>
+                    <li><strong>JavaScript</strong> -- the electricity and brain (behavior)</li>
+                </ul>
+
+                <p>JavaScript makes your web pages <strong>come alive</strong>. It can move things, respond to clicks, do math, and draw graphics!</p>
+
+                <div class="highlight-box">
+                    <p><strong>Today is your first time writing JavaScript!</strong> Do not worry -- we will start simple and build up step by step.</p>
+                    <p><strong>今日がJavaScriptを初めて書く日です！</strong>心配しないでください。シンプルなところから段階的に学んでいきます。</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">Webの3番目の言語：</h3>
+                    <p>建物のたとえを覚えていますか？</p>
+                    <ul>
+                        <li><strong>HTML</strong> -- 骨格（構造）</li>
+                        <li><strong>CSS</strong> -- ペンキと装飾（スタイル）</li>
+                        <li><strong>JavaScript</strong> -- 電気と脳（動作）</li>
+                    </ul>
+                    <p>JavaScriptはWebページに<strong>命を吹き込みます</strong>。物を動かしたり、クリックに反応したり、計算したり、グラフィックスを描いたりできます！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The <script> Tag -->
+        <div class="slide">
+            <h2>The &lt;script&gt; Tag / &lt;script&gt;タグ</h2>
+            <div class="content-section">
+                <h3>Where Does JavaScript Go?</h3>
+                <p>JavaScript code goes inside the <strong>&lt;script&gt;</strong> tag. Place it just before the closing <strong>&lt;/body&gt;</strong> tag:</p>
+
+                <div class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello!&lt;/h1&gt;
+
+    &lt;script&gt;
+        // Your JavaScript code goes here
+        // あなたのJavaScriptコードはここに書く
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <div class="highlight-box">
+                    <p><strong>Why at the bottom?</strong> The browser reads your page from top to bottom. If we put the script at the bottom, the HTML is already loaded when our code runs.</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">JavaScriptはどこに書く？</h3>
+                    <p>JavaScriptのコードは<strong>&lt;script&gt;</strong>タグの中に書きます。&lt;/body&gt;の直前に置きましょう。</p>
+                    <p><strong>なぜ下に置く？</strong>ブラウザはページを上から下へ読みます。スクリプトを下に置けば、コードが実行される時にはHTMLがすでに読み込まれています。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Variables: let and const -->
+        <div class="slide">
+            <h2>Variables: let and const / 変数：letとconst</h2>
+            <div class="content-section">
+                <h3>What is a Variable?</h3>
+                <p>A variable is like a <strong>labeled box</strong> that stores a value. You give it a name and put something inside.</p>
+
+                <div class="code-box">// Declare a variable with let (value CAN change later)
+let score = 0;
+let playerName = "Yuki";
+
+// Declare a constant with const (value CANNOT change)
+const canvasWidth = 480;
+const canvasHeight = 320;</div>
+
+                <h4>Rules:</h4>
+                <ul>
+                    <li><strong>let</strong> -- use when the value might change later</li>
+                    <li><strong>const</strong> -- use when the value should never change</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Naming rules:</strong> Start with a letter, no spaces, use camelCase (like <code>ballColor</code>). Names are case-sensitive!</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">変数とは？</h3>
+                    <p>変数は値を保存する<strong>ラベル付きの箱</strong>のようなものです。名前を付けて、中に何かを入れます。</p>
+                    <ul>
+                        <li><strong>let</strong> -- 後で値が変わる可能性がある場合に使う</li>
+                        <li><strong>const</strong> -- 値が絶対に変わらない場合に使う</li>
+                    </ul>
+                    <p><strong>命名ルール：</strong>文字で始める、スペースなし、キャメルケースを使う（例：ballColor）。大文字と小文字は区別されます！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Data Types -->
+        <div class="slide">
+            <h2>Data Types / データ型</h2>
+            <div class="content-section">
+                <h3>Two Basic Types for Today:</h3>
+
+                <h4>1. Numbers (数値):</h4>
+                <div class="code-box">let x = 100;        // whole number (integer)
+let y = 3.14;       // decimal number
+let sum = x + y;    // math works! sum = 103.14</div>
+
+                <h4>2. Strings (文字列) -- text inside quotes:</h4>
+                <div class="code-box">let color = "red";
+let greeting = 'Hello, World!';
+let name = "Canvas";</div>
+
+                <div class="highlight-box">
+                    <p><strong>Numbers vs Strings:</strong></p>
+                    <p><code>42</code> is a number (you can do math with it)</p>
+                    <p><code>"42"</code> is a string (it is just text that looks like a number)</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">今日学ぶ2つの基本型：</h3>
+                    <ul>
+                        <li><strong>数値（Numbers）</strong> -- 計算に使える数字：100、3.14</li>
+                        <li><strong>文字列（Strings）</strong> -- 引用符で囲まれたテキスト："red"、'Hello'</li>
+                    </ul>
+                    <p><code>42</code>は数値（計算できる）、<code>"42"</code>は文字列（数字に見えるただのテキスト）</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: The <canvas> Element -->
+        <div class="slide">
+            <h2>The &lt;canvas&gt; Element / &lt;canvas&gt;要素</h2>
+            <div class="content-section">
+                <h3>What is Canvas?</h3>
+                <p>The <strong>&lt;canvas&gt;</strong> element is like a blank drawing board on your web page. You can use JavaScript to draw shapes, lines, text, and images on it.</p>
+
+                <div class="code-box">&lt;!-- In your HTML body: --&gt;
+&lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;</div>
+
+                <h4>Important attributes:</h4>
+                <ul>
+                    <li><strong>id</strong> -- a unique name so JavaScript can find it</li>
+                    <li><strong>width</strong> -- how wide the canvas is (in pixels)</li>
+                    <li><strong>height</strong> -- how tall the canvas is (in pixels)</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Think of it like this:</strong> The &lt;canvas&gt; tag creates an empty painting canvas. JavaScript is your paintbrush.</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">Canvasとは？</h3>
+                    <p><strong>&lt;canvas&gt;</strong>要素は、Webページ上の白い画用紙のようなものです。JavaScriptを使って図形、線、テキスト、画像を描くことができます。</p>
+                    <p><strong>こう考えましょう：</strong>&lt;canvas&gt;タグは空のキャンバスを作ります。JavaScriptがあなたの絵筆です。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Getting the Drawing Context -->
+        <div class="slide">
+            <h2>Getting the Drawing Context / 描画コンテキストの取得</h2>
+            <div class="content-section">
+                <h3>Before You Can Draw:</h3>
+                <p>You need to get the <strong>2D rendering context</strong> -- this is the object that has all the drawing methods.</p>
+
+                <div class="code-box">&lt;script&gt;
+    // Step 1: Find the canvas element
+    const canvas = document.getElementById("myCanvas");
+
+    // Step 2: Get the 2D drawing context
+    const ctx = canvas.getContext("2d");
+
+    // Now you can use ctx to draw!
+&lt;/script&gt;</div>
+
+                <h4>What just happened?</h4>
+                <ul>
+                    <li><code>document.getElementById("myCanvas")</code> -- finds the canvas in your HTML</li>
+                    <li><code>.getContext("2d")</code> -- gets the toolbox for 2D drawing</li>
+                    <li><code>ctx</code> -- short for "context"; this is your drawing tool</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">描画する前に：</h3>
+                    <p><strong>2D描画コンテキスト</strong>を取得する必要があります。これがすべての描画メソッドを持つオブジェクトです。</p>
+                    <ul>
+                        <li><code>document.getElementById("myCanvas")</code> -- HTMLからcanvasを見つける</li>
+                        <li><code>.getContext("2d")</code> -- 2D描画のツールボックスを取得する</li>
+                        <li><code>ctx</code> -- "context"の略；これがあなたの描画ツール</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: The Coordinate System -->
+        <div class="slide">
+            <h2>The Coordinate System / 座標系</h2>
+            <div class="content-section">
+                <h3>How Canvas Coordinates Work:</h3>
+                <p>The canvas uses an (x, y) coordinate system, but it is <strong>different from math class</strong>:</p>
+
+                <ul>
+                    <li><strong>(0, 0)</strong> is at the <strong>top-left corner</strong></li>
+                    <li><strong>x increases</strong> going to the <strong>right</strong></li>
+                    <li><strong>y increases</strong> going <strong>DOWN</strong> (not up!)</li>
+                </ul>
+
+                <div class="code-box">    (0,0) -----> x increases (right)
+      |
+      |
+      |
+      v
+    y increases (down)
+
+    Example: (200, 150) means
+    200 pixels from left, 150 pixels from top</div>
+
+                <div class="highlight-box">
+                    <p><strong>Warning:</strong> In math, y goes UP. In canvas, y goes DOWN. This is the most confusing part for beginners!</p>
+                    <p><strong>注意：</strong>数学ではyは上に向かいますが、canvasではyは下に向かいます。これが初心者にとって最も混乱するポイントです！</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">Canvas座標の仕組み：</h3>
+                    <ul>
+                        <li><strong>(0, 0)</strong>は<strong>左上の角</strong>にある</li>
+                        <li><strong>x</strong>は<strong>右</strong>に行くほど増える</li>
+                        <li><strong>y</strong>は<strong>下</strong>に行くほど増える（上ではない！）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Drawing Rectangles -->
+        <div class="slide">
+            <h2>Drawing Rectangles / 長方形の描画</h2>
+            <div class="content-section">
+                <h3>Three Rectangle Methods:</h3>
+
+                <div class="code-box">// Fill a solid rectangle
+ctx.fillRect(x, y, width, height);
+
+// Draw just the outline
+ctx.strokeRect(x, y, width, height);
+
+// Erase a rectangle area
+ctx.clearRect(x, y, width, height);</div>
+
+                <h4>Example -- Draw a blue paddle:</h4>
+                <div class="code-box">// Set the color first
+ctx.fillStyle = "blue";
+
+// Draw a rectangle at position (190, 280), size 100x20
+ctx.fillRect(190, 280, 100, 20);</div>
+
+                <ul>
+                    <li><strong>x, y</strong> = the top-left corner of the rectangle</li>
+                    <li><strong>width, height</strong> = how wide and tall it is</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">3つの長方形メソッド：</h3>
+                    <ul>
+                        <li><code>fillRect(x, y, width, height)</code> -- 塗りつぶした長方形</li>
+                        <li><code>strokeRect(x, y, width, height)</code> -- 枠線だけの長方形</li>
+                        <li><code>clearRect(x, y, width, height)</code> -- 長方形の領域を消去</li>
+                    </ul>
+                    <p>x, y = 長方形の左上の角の位置。width, height = 幅と高さ。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Drawing Circles -->
+        <div class="slide">
+            <h2>Drawing Circles / 円の描画</h2>
+            <div class="content-section">
+                <h3>Using arc() to Draw Circles:</h3>
+                <p>There is no "circle" method. Instead, we draw an arc that goes all the way around (360 degrees):</p>
+
+                <div class="code-box">// Start a new shape
+ctx.beginPath();
+
+// Draw a circle: arc(centerX, centerY, radius, startAngle, endAngle)
+ctx.arc(240, 160, 10, 0, Math.PI * 2);
+
+// Fill it with color
+ctx.fillStyle = "red";
+ctx.fill();
+
+// Close the path
+ctx.closePath();</div>
+
+                <h4>Understanding the Parameters:</h4>
+                <ul>
+                    <li><strong>centerX, centerY</strong> = the center point of the circle</li>
+                    <li><strong>radius</strong> = how big the circle is</li>
+                    <li><strong>0</strong> = start angle (beginning of circle)</li>
+                    <li><strong>Math.PI * 2</strong> = end angle (full circle = 360 degrees)</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">arc()を使って円を描く：</h3>
+                    <p>"circle"メソッドはありません。代わりに、一周する弧（360度）を描きます。</p>
+                    <ul>
+                        <li><strong>centerX, centerY</strong> = 円の中心点</li>
+                        <li><strong>radius</strong> = 円の大きさ（半径）</li>
+                        <li><strong>Math.PI * 2</strong> = 完全な円（360度）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: The Path Pattern -->
+        <div class="slide">
+            <h2>The Path Pattern / パスのパターン</h2>
+            <div class="content-section">
+                <h3>Always Follow This Pattern for Circles:</h3>
+                <p>When drawing shapes like circles, you must follow these steps in order:</p>
+
+                <div class="code-box">// 1. Begin a new path (start fresh)
+ctx.beginPath();
+
+// 2. Define the shape (arc, lineTo, etc.)
+ctx.arc(100, 100, 30, 0, Math.PI * 2);
+
+// 3. Set color and fill (or stroke for outline)
+ctx.fillStyle = "green";
+ctx.fill();
+
+// 4. Close the path
+ctx.closePath();</div>
+
+                <div class="highlight-box">
+                    <p><strong>Think of it like a pen:</strong></p>
+                    <p>1. Pick up the pen (beginPath)</p>
+                    <p>2. Draw the shape (arc)</p>
+                    <p>3. Fill it with color (fill)</p>
+                    <p>4. Put the pen down (closePath)</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">円を描くときは常にこのパターンに従う：</h3>
+                    <p>ペンのように考えましょう：</p>
+                    <ol>
+                        <li>ペンを持ち上げる（beginPath）</li>
+                        <li>形を描く（arc）</li>
+                        <li>色で塗りつぶす（fill）</li>
+                        <li>ペンを置く（closePath）</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Colors and Styles -->
+        <div class="slide">
+            <h2>Colors and Styles / 色とスタイル</h2>
+            <div class="content-section">
+                <h3>Setting Colors:</h3>
+                <p>You must set the color <strong>before</strong> drawing the shape:</p>
+
+                <div class="code-box">// Fill color (inside of shape)
+ctx.fillStyle = "red";
+ctx.fillStyle = "#0095DD";      // hex color
+ctx.fillStyle = "rgb(0,149,221)"; // RGB color
+
+// Outline color
+ctx.strokeStyle = "black";
+
+// Outline thickness
+ctx.lineWidth = 3;</div>
+
+                <h4>Common Color Names:</h4>
+                <ul>
+                    <li>"red", "blue", "green", "yellow", "orange", "purple", "white", "black"</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Important:</strong> Set fillStyle BEFORE calling fillRect() or fill(). The color applies to everything drawn after it until you change it again.</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">色の設定：</h3>
+                    <p>図形を描く<strong>前に</strong>色を設定する必要があります。</p>
+                    <ul>
+                        <li><code>fillStyle</code> -- 塗りつぶしの色</li>
+                        <li><code>strokeStyle</code> -- 枠線の色</li>
+                        <li><code>lineWidth</code> -- 枠線の太さ</li>
+                    </ul>
+                    <p><strong>重要：</strong>fillRect()やfill()を呼ぶ前にfillStyleを設定しましょう。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Using Variables for Drawing -->
+        <div class="slide">
+            <h2>Using Variables for Drawing / 変数を使った描画</h2>
+            <div class="content-section">
+                <h3>Why Use Variables?</h3>
+                <p>Instead of "magic numbers", store values in variables with meaningful names. This makes your code easy to read and change.</p>
+
+                <div class="code-box">// Ball properties
+const ballX = 240;
+const ballY = 160;
+const ballRadius = 10;
+const ballColor = "#0095DD";
+
+// Paddle properties
+const paddleWidth = 100;
+const paddleHeight = 20;
+const paddleX = 190;
+const paddleY = 280;
+const paddleColor = "green";
+
+// Draw the ball
+ctx.beginPath();
+ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+ctx.fillStyle = ballColor;
+ctx.fill();
+ctx.closePath();
+
+// Draw the paddle
+ctx.fillStyle = paddleColor;
+ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">なぜ変数を使う？</h3>
+                    <p>「マジックナンバー」の代わりに、意味のある名前の変数に値を保存します。コードが読みやすく、変更しやすくなります。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Complete Example -->
+        <div class="slide">
+            <h2>Putting It All Together / すべてをまとめる</h2>
+            <div class="content-section">
+                <h3>Complete Working Example:</h3>
+                <div class="code-box">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;My Canvas Drawing&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;canvas id="myCanvas" width="480" height="320"
+        style="border: 1px solid black;"&gt;&lt;/canvas&gt;
+
+    &lt;script&gt;
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Ball
+        const ballX = 240;
+        const ballY = 160;
+        const ballRadius = 12;
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+
+        // Paddle
+        const paddleX = 190;
+        const paddleY = 290;
+        ctx.fillStyle = "#2563eb";
+        ctx.fillRect(paddleX, paddleY, 100, 15);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">完全な動作例：</h3>
+                    <p>このコードをコピーしてHTMLファイルに貼り付け、ブラウザで開いてみましょう。青いボールと青いパドルが表示されます！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Key Takeaways & Next Session -->
+        <div class="slide">
+            <h2>Key Takeaways / 重要なポイント</h2>
+            <div class="content-section">
+                <h3>What We Learned Today:</h3>
+                <ul>
+                    <li><strong>JavaScript</strong> adds behavior to web pages (placed in &lt;script&gt; tags)</li>
+                    <li><strong>Variables</strong> store values: <code>let</code> (can change) and <code>const</code> (cannot change)</li>
+                    <li><strong>&lt;canvas&gt;</strong> is a drawing surface; get its context with <code>getContext("2d")</code></li>
+                    <li><strong>Coordinates:</strong> (0,0) is top-left, x goes right, y goes DOWN</li>
+                    <li><strong>fillRect()</strong> draws rectangles; <strong>arc()</strong> draws circles</li>
+                    <li><strong>fillStyle</strong> sets the color BEFORE drawing</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Next Session / 次回のセッション:</h4>
+                    <p><strong>Session 5: Animation &amp; the Game Loop</strong> -- We will make our ball MOVE across the canvas!</p>
+                    <p><strong>セッション5：アニメーションとゲームループ</strong> -- ボールをキャンバス上で動かします！</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">今日学んだこと：</h3>
+                    <ul>
+                        <li><strong>JavaScript</strong>はWebページに動作を追加する（&lt;script&gt;タグ内に記述）</li>
+                        <li><strong>変数</strong>は値を保存する：let（変更可能）とconst（変更不可）</li>
+                        <li><strong>&lt;canvas&gt;</strong>は描画面；getContext("2d")でコンテキストを取得</li>
+                        <li><strong>座標：</strong>(0,0)は左上、xは右へ、yは下へ</li>
+                        <li><strong>fillRect()</strong>は長方形、<strong>arc()</strong>は円を描く</li>
+                        <li><strong>fillStyle</strong>は描画の前に色を設定する</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#9664; Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &#9654;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                showSlide(0);
+            } else if (event.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

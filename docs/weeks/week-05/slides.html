@@ -1,0 +1,788 @@
+<!-- Copyright (c) 2026 Yuri Tijerino. All rights reserved. / 著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 5: Animation &amp; the Game Loop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 60px 80px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 3em;
+            color: #2563eb;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide h2 {
+            font-size: 2.2em;
+            color: #7c3aed;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .slide h3 {
+            font-size: 1.8em;
+            color: #2563eb;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .slide h4 {
+            font-size: 1.4em;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .slide p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .slide ul, .slide ol {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+        }
+
+        .content-section {
+            margin: 20px 0;
+        }
+
+        .japanese-content {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #7c3aed;
+            border-radius: 8px;
+        }
+
+        .japanese-heading {
+            color: #7c3aed;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: #fef3cd;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-box {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            top: 70px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            color: #2563eb;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 2em;
+            color: #7c3aed;
+            margin-bottom: 40px;
+        }
+
+        .title-slide .info {
+            font-size: 1.3em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        .column-section {
+            margin: 20px 0;
+        }
+
+        .column-item {
+            margin-bottom: 30px;
+        }
+
+        .column-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 1024px) {
+            .slide {
+                padding: 40px 50px;
+            }
+
+            .slide h1 {
+                font-size: 2.5em;
+            }
+
+            .slide h2 {
+                font-size: 2em;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .slide-container {
+                padding: 0;
+            }
+
+            .slide {
+                width: 100vw;
+                height: auto;
+                min-height: 100vh;
+                padding: 20px;
+                border-radius: 0;
+            }
+
+            .slide h1 {
+                font-size: 2em;
+            }
+
+            .slide h2 {
+                font-size: 1.6em;
+            }
+
+            .slide h3 {
+                font-size: 1.5em;
+            }
+
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+
+            .title-slide .subtitle {
+                font-size: 1.4em;
+            }
+
+            .navigation {
+                bottom: 15px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.95em;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="slide-number" id="slideNumber">Slide 1 / 15</div>
+
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>Session 5</h1>
+            <p class="subtitle">Animation &amp; the Game Loop<br>アニメーションとゲームループ</p>
+            <p class="info"><strong>Course:</strong> WP-200 Web Programming</p>
+            <p class="info"><strong>Topic:</strong> Functions, setInterval, and the Clear-Update-Draw Pattern</p>
+        </div>
+
+        <!-- Slide 2: Review of Session 4 -->
+        <div class="slide">
+            <h2>Review: What We Know So Far / 前回の復習</h2>
+            <div class="content-section">
+                <h3>From Session 4, you can:</h3>
+                <ul>
+                    <li>Declare variables with <strong>var</strong>, <strong>let</strong>, and <strong>const</strong></li>
+                    <li>Get the canvas context with <strong>getContext("2d")</strong></li>
+                    <li>Draw shapes: <strong>arc()</strong> for circles, <strong>rect()</strong> for rectangles</li>
+                    <li>Use <strong>fillStyle</strong> and <strong>fill()</strong> to color shapes</li>
+                </ul>
+
+                <div class="code-box">var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+ctx.beginPath();
+ctx.arc(50, 50, 10, 0, Math.PI * 2);
+ctx.fillStyle = "#0095DD";
+ctx.fill();
+ctx.closePath();</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">セッション4でできるようになったこと：</h3>
+                    <ul>
+                        <li>var、let、constで変数を宣言する</li>
+                        <li>getContext("2d")でキャンバスコンテキストを取得する</li>
+                        <li>arc()で円を、rect()で四角形を描く</li>
+                        <li>fillStyleとfill()で図形に色を塗る</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Problem - Static Drawing -->
+        <div class="slide">
+            <h2>The Problem: Our Ball Does Not Move / 問題：ボールが動かない</h2>
+            <div class="content-section">
+                <p>Right now, our code draws a ball <strong>once</strong> and then stops. The ball just sits there on the canvas. It does not move.</p>
+
+                <p>But in a game, things need to <strong>move</strong>! How do we make the ball change position over time?</p>
+
+                <div class="highlight-box">
+                    <p><strong>Key Question:</strong> How do we go from a static picture to a moving animation?</p>
+                    <p><strong>Answer:</strong> We need to draw the ball, erase it, move it slightly, and draw it again -- over and over, very fast!</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">問題：ボールが動かない</h3>
+                    <p>現在のコードはボールを<strong>一度</strong>描いて終わります。ボールはキャンバスの上に静止しています。</p>
+                    <p>ゲームでは物が<strong>動く</strong>必要があります！ どうすればボールの位置を時間とともに変えられるでしょうか？</p>
+                    <p><strong>答え：</strong> ボールを描いて、消して、少し動かして、また描く -- これを非常に速く繰り返します！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Animation is Like a Flipbook -->
+        <div class="slide">
+            <h2>Animation = Flipbook / アニメーション = パラパラ漫画</h2>
+            <div class="content-section">
+                <p>Think of a <strong>flipbook</strong> (parapara manga). Each page has a slightly different drawing. When you flip through the pages quickly, the pictures appear to move!</p>
+
+                <p>Computer animation works the same way:</p>
+                <ol>
+                    <li>Draw a picture (frame 1)</li>
+                    <li>Erase it</li>
+                    <li>Draw a slightly different picture (frame 2)</li>
+                    <li>Erase it</li>
+                    <li>Repeat 60 times per second!</li>
+                </ol>
+
+                <div class="highlight-box">
+                    <p><strong>60 frames per second (fps)</strong> = the standard speed for smooth animation. Each frame lasts about 16 milliseconds.</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">アニメーション = パラパラ漫画</h3>
+                    <p><strong>パラパラ漫画</strong>を思い出してください。各ページには少し違う絵があります。素早くめくると、絵が動いて見えます！</p>
+                    <p>コンピュータアニメーションも同じ仕組みです。1秒間に60回（60fps）絵を描き直すと、滑らかに動いて見えます。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: What is a Function? -->
+        <div class="slide">
+            <h2>What is a Function? / 関数とは？</h2>
+            <div class="content-section">
+                <p>A <strong>function</strong> is a reusable block of code that performs a specific task. Think of it like a <strong>recipe</strong>:</p>
+
+                <ul>
+                    <li>A recipe has a <strong>name</strong> (e.g., "Make Curry")</li>
+                    <li>A recipe has <strong>steps</strong> (instructions inside)</li>
+                    <li>You can <strong>follow the recipe</strong> (call it) whenever you want</li>
+                    <li>You can follow it <strong>many times</strong> without rewriting the steps</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Why functions?</strong> Without functions, we would have to copy-paste the same code over and over. Functions let us write code once and reuse it!</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">関数とは？</h3>
+                    <p><strong>関数</strong>は特定のタスクを実行する再利用可能なコードのブロックです。<strong>レシピ</strong>のようなものです：</p>
+                    <ul>
+                        <li>レシピには<strong>名前</strong>がある（例：「カレーを作る」）</li>
+                        <li>レシピには<strong>手順</strong>がある（中の指示）</li>
+                        <li>いつでもレシピに<strong>従う</strong>（呼び出す）ことができる</li>
+                        <li>手順を書き直さずに<strong>何度でも</strong>従える</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Defining a Function -->
+        <div class="slide">
+            <h2>Defining a Function / 関数の定義</h2>
+            <div class="content-section">
+                <p>To create a function, use the <strong>function</strong> keyword:</p>
+
+                <div class="code-box">function sayHello() {
+    console.log("Hello, World!");
+}</div>
+
+                <h4>The Parts:</h4>
+                <ul>
+                    <li><strong>function</strong> -- the keyword that starts the definition</li>
+                    <li><strong>sayHello</strong> -- the name you choose (use camelCase)</li>
+                    <li><strong>()</strong> -- parentheses (for parameters, more on this later)</li>
+                    <li><strong>{ }</strong> -- curly braces contain the code that runs</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Important:</strong> Defining a function does NOT run it! It just creates the recipe. You must <strong>call</strong> it to run it.</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">関数の定義</h3>
+                    <p><strong>function</strong>キーワードで関数を作成します。</p>
+                    <ul>
+                        <li><strong>function</strong> -- 定義を開始するキーワード</li>
+                        <li><strong>sayHello</strong> -- 自分で選ぶ名前（キャメルケース）</li>
+                        <li><strong>()</strong> -- 括弧（パラメータ用）</li>
+                        <li><strong>{ }</strong> -- 波括弧に実行するコードを入れる</li>
+                    </ul>
+                    <p><strong>重要：</strong> 関数を定義しても実行されません！呼び出さなければ動きません。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Calling a Function -->
+        <div class="slide">
+            <h2>Calling a Function / 関数の呼び出し</h2>
+            <div class="content-section">
+                <p>To <strong>run</strong> a function, write its name followed by parentheses:</p>
+
+                <div class="code-box">// Define the function (create the recipe)
+function sayHello() {
+    console.log("Hello, World!");
+}
+
+// Call the function (follow the recipe)
+sayHello();
+sayHello();
+sayHello();</div>
+
+                <p>The code above prints "Hello, World!" <strong>three times</strong>. We wrote the code once but used it three times!</p>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">関数の呼び出し</h3>
+                    <p>関数を<strong>実行</strong>するには、名前の後に括弧を書きます：</p>
+                    <p>上のコードは「Hello, World!」を<strong>3回</strong>表示します。コードを1回書いて、3回使いました！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Function Parameters -->
+        <div class="slide">
+            <h2>Function Parameters / 関数のパラメータ</h2>
+            <div class="content-section">
+                <p>Parameters let you pass <strong>values into</strong> a function, making it more flexible:</p>
+
+                <div class="code-box">function greet(name) {
+    console.log("Hello, " + name + "!");
+}
+
+greet("Tanaka");   // prints: Hello, Tanaka!
+greet("Suzuki");   // prints: Hello, Suzuki!</div>
+
+                <h4>Multiple Parameters:</h4>
+                <div class="code-box">function drawCircle(x, y, radius) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.closePath();
+}
+
+drawCircle(100, 50, 10);
+drawCircle(200, 80, 20);</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">パラメータ</h3>
+                    <p>パラメータを使うと、関数に<strong>値を渡す</strong>ことができ、より柔軟になります。</p>
+                    <p>複数のパラメータをカンマで区切って渡すことができます。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: setInterval - Repeating a Function -->
+        <div class="slide">
+            <h2>setInterval -- Repeating a Function / 関数の繰り返し</h2>
+            <div class="content-section">
+                <p><strong>setInterval()</strong> calls a function repeatedly at a fixed time interval:</p>
+
+                <div class="code-box">setInterval(functionName, milliseconds);</div>
+
+                <h4>Example:</h4>
+                <div class="code-box">function sayHi() {
+    console.log("Hi!");
+}
+
+// Call sayHi every 1000 milliseconds (= 1 second)
+setInterval(sayHi, 1000);</div>
+
+                <div class="highlight-box">
+                    <p><strong>For smooth animation:</strong> Use 10 milliseconds as the interval. This gives us approximately 100 frames per second -- more than enough for smooth motion.</p>
+                    <p><code>setInterval(draw, 10);</code></p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">setInterval -- 関数を繰り返し呼び出す</h3>
+                    <p><strong>setInterval()</strong>は関数を一定の時間間隔で繰り返し呼び出します。</p>
+                    <p><strong>滑らかなアニメーションには：</strong> 10ミリ秒の間隔を使います。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: The Problem - Ghost Trails -->
+        <div class="slide">
+            <h2>The Problem: Ghost Trails / 問題：残像</h2>
+            <div class="content-section">
+                <p>If we just draw the ball in a new position every frame <strong>without erasing</strong> the old one, we get "ghost trails" -- all the previous positions stay visible!</p>
+
+                <div class="code-box">var x = 0;
+
+function draw() {
+    // This draws a new ball but the old one is still there!
+    ctx.beginPath();
+    ctx.arc(x, 50, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+    x = x + 2;
+}
+
+setInterval(draw, 10);</div>
+
+                <p>Result: You see a long line of overlapping circles instead of one moving ball!</p>
+
+                <div class="highlight-box">
+                    <p><strong>Solution:</strong> Before drawing each frame, we need to <strong>erase the entire canvas</strong>!</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">問題：残像（ゴーストトレイル）</h3>
+                    <p>古いボールを<strong>消さずに</strong>毎フレーム新しい位置にボールを描くと、「残像」ができます。以前の位置がすべて見えたままになります！</p>
+                    <p><strong>解決策：</strong> 各フレームを描く前に、<strong>キャンバス全体を消す</strong>必要があります！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: clearRect - Erasing the Canvas -->
+        <div class="slide">
+            <h2>clearRect -- Erasing the Canvas / キャンバスを消す</h2>
+            <div class="content-section">
+                <p><strong>clearRect(x, y, width, height)</strong> erases a rectangular area of the canvas. To erase the entire canvas:</p>
+
+                <div class="code-box">ctx.clearRect(0, 0, canvas.width, canvas.height);</div>
+
+                <h4>What the parameters mean:</h4>
+                <ul>
+                    <li><strong>0, 0</strong> -- start from the top-left corner</li>
+                    <li><strong>canvas.width</strong> -- erase all the way to the right edge</li>
+                    <li><strong>canvas.height</strong> -- erase all the way to the bottom edge</li>
+                </ul>
+
+                <p>This clears <strong>everything</strong> on the canvas, giving us a blank slate for the next frame.</p>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">clearRect -- キャンバスを消す</h3>
+                    <p><strong>clearRect(x, y, width, height)</strong>はキャンバスの四角形の領域を消します。キャンバス全体を消すには上のコードを使います。</p>
+                    <ul>
+                        <li><strong>0, 0</strong> -- 左上の角から開始</li>
+                        <li><strong>canvas.width</strong> -- 右端まで消す</li>
+                        <li><strong>canvas.height</strong> -- 下端まで消す</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: The Game Loop Pattern -->
+        <div class="slide">
+            <h2>The Game Loop: Clear, Update, Draw / ゲームループ</h2>
+            <div class="content-section">
+                <p>Every game and animation follows the same pattern, called the <strong>Game Loop</strong>:</p>
+
+                <div class="highlight-box">
+                    <h3>1. CLEAR -- Erase everything</h3>
+                    <h3>2. UPDATE -- Change positions/values</h3>
+                    <h3>3. DRAW -- Draw everything in new positions</h3>
+                    <p>Repeat forever!</p>
+                </div>
+
+                <div class="code-box">function draw() {
+    // 1. CLEAR
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 2. UPDATE
+    x = x + dx;
+    y = y + dy;
+
+    // 3. DRAW
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">ゲームループパターン：クリア・更新・描画</h3>
+                    <p>すべてのゲームとアニメーションは<strong>ゲームループ</strong>と呼ばれる同じパターンに従います：</p>
+                    <ol>
+                        <li><strong>クリア</strong> -- すべてを消す</li>
+                        <li><strong>更新</strong> -- 位置や値を変更する</li>
+                        <li><strong>描画</strong> -- 新しい位置にすべてを描く</li>
+                    </ol>
+                    <p>これを永遠に繰り返します！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Velocity Variables dx and dy -->
+        <div class="slide">
+            <h2>Velocity: dx and dy / 速度変数</h2>
+            <div class="content-section">
+                <p><strong>dx</strong> and <strong>dy</strong> are velocity variables that control how fast and in which direction the ball moves:</p>
+
+                <ul>
+                    <li><strong>dx</strong> = how many pixels to move horizontally each frame</li>
+                    <li><strong>dy</strong> = how many pixels to move vertically each frame</li>
+                </ul>
+
+                <div class="code-box">var dx = 2;   // move 2 pixels to the right each frame
+var dy = -2;  // move 2 pixels upward each frame</div>
+
+                <h4>How direction works:</h4>
+                <ul>
+                    <li><strong>dx positive</strong> = move right / <strong>dx negative</strong> = move left</li>
+                    <li><strong>dy positive</strong> = move down / <strong>dy negative</strong> = move up</li>
+                </ul>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">速度変数：dxとdy</h3>
+                    <p><strong>dx</strong>と<strong>dy</strong>はボールの移動速度と方向を制御する速度変数です：</p>
+                    <ul>
+                        <li><strong>dx</strong> = 各フレームで水平方向に移動するピクセル数</li>
+                        <li><strong>dy</strong> = 各フレームで垂直方向に移動するピクセル数</li>
+                    </ul>
+                    <p>正の値は右/下へ、負の値は左/上へ移動します。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Complete Moving Ball -->
+        <div class="slide">
+            <h2>The Complete Moving Ball / 完成：動くボール</h2>
+            <div class="content-section">
+                <p>Here is the complete code that makes a ball move across the canvas:</p>
+
+                <div class="code-box">var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var x = canvas.width / 2;
+var y = canvas.height - 30;
+var dx = 2;
+var dy = -2;
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+
+    x = x + dx;
+    y = y + dy;
+}
+
+setInterval(draw, 10);</div>
+
+                <div class="japanese-content">
+                    <h3 class="japanese-heading">完成コード</h3>
+                    <p>上のコードでボールがキャンバス上を動きます。クリア→描画→更新の順で、10ミリ秒ごとに繰り返します。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Next Session Preview -->
+        <div class="slide">
+            <h2>Next Session Preview / 次回のプレビュー</h2>
+            <div class="highlight-box">
+                <h3>Session 6: Collision Detection &amp; Conditionals</h3>
+                <h3 class="japanese-heading">セッション6：衝突判定と条件分岐</h3>
+            </div>
+            <div class="content-section">
+                <h4>What's Coming:</h4>
+                <ul>
+                    <li><strong>if/else statements:</strong> Making decisions in code (conditionals)</li>
+                    <li><strong>Wall bouncing:</strong> Detecting when the ball hits the edge of the canvas</li>
+                    <li><strong>Reversing direction:</strong> Flipping dx or dy to make the ball bounce</li>
+                    <li><strong>Comparison operators:</strong> &lt;, &gt;, &lt;=, &gt;=, ===</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <p><strong>Assignment 4:</strong> Make the ball move across the screen using a draw function with setInterval, clearRect, and velocity variables!</p>
+                    <p><strong>課題4：</strong> draw関数、setInterval、clearRect、速度変数を使ってボールを画面上で動かそう！</p>
+                </div>
+
+                <div class="japanese-content">
+                    <h4 class="japanese-heading">次回の内容：</h4>
+                    <ul>
+                        <li><strong>if/else文：</strong> コードで判断を下す（条件分岐）</li>
+                        <li><strong>壁での跳ね返り：</strong> ボールがキャンバスの端に当たったことを検知</li>
+                        <li><strong>方向の反転：</strong> dxやdyを反転させてボールを跳ね返す</li>
+                        <li><strong>比較演算子：</strong> &lt;、&gt;、&lt;=、&gt;=、===</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#9664; Previous</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next &#9654;</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNumber').textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowLeft') {
+                changeSlide(-1);
+            } else if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                changeSlide(1);
+            } else if (event.key === 'Home') {
+                showSlide(0);
+            } else if (event.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

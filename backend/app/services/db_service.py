@@ -6,7 +6,10 @@ import csv
 import io
 import json
 import logging
+import os
+import re
 from datetime import datetime, timezone
+from pathlib import Path
 
 from sqlalchemy import select, update, delete, func
 
@@ -14,6 +17,76 @@ from app.core.database import SessionLocal, engine, get_engine_type
 from app.core.models import Base, Student, Session, OTPCode, Submission, Conversation, Message
 
 logger = logging.getLogger(__name__)
+
+# Belt-and-suspenders: every accepted submission is also written to disk at
+# backend/data/submissions/<student_id>/<assignment_id>/<YYYYMMDD-HHMMSS>-<id>/.
+# Survives DB corruption, accidental table drops, and gives a human-readable
+# audit trail the instructor can grep from the filesystem.
+_SUBMISSIONS_DUMP_DIR = Path(__file__).resolve().parents[2] / "data" / "submissions"
+_SAFE_FILENAME_RE = re.compile(r"[^A-Za-z0-9._-]")
+
+
+def _safe_name(name: str, fallback: str) -> str:
+    name = (name or "").strip().replace("\\", "/").split("/")[-1]
+    cleaned = _SAFE_FILENAME_RE.sub("_", name)
+    return cleaned or fallback
+
+
+def _dump_submission_to_disk(
+    submission_id: int,
+    student_id: str,
+    handle: str,
+    assignment_id: int,
+    code: str | None,
+    files: dict | None,
+    ai_score: int,
+    ai_max: int,
+    ai_feedback: str,
+    deterministic_score: int,
+    max_score: int,
+) -> None:
+    """Write submission content to disk in addition to the DB row.
+
+    Failures are logged but never raised — the DB row is already committed
+    and a student's submit must not fail because of a local FS glitch.
+    """
+    try:
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        sid = _safe_name(student_id, "unknown")
+        folder = _SUBMISSIONS_DUMP_DIR / sid / str(assignment_id) / f"{stamp}-{submission_id}"
+        folder.mkdir(parents=True, exist_ok=True)
+
+        if files:
+            for raw_name, content in files.items():
+                fname = _safe_name(raw_name, f"file-{submission_id}.txt")
+                (folder / fname).write_text(
+                    content if isinstance(content, str) else str(content),
+                    encoding="utf-8",
+                )
+
+        if code:
+            (folder / "code.txt").write_text(code, encoding="utf-8")
+
+        metadata = {
+            "submission_id": submission_id,
+            "student_id": student_id,
+            "handle": handle,
+            "assignment_id": assignment_id,
+            "submitted_at": datetime.now(timezone.utc).isoformat(),
+            "deterministic_score": deterministic_score,
+            "ai_score": ai_score,
+            "ai_max": ai_max,
+            "max_score": max_score,
+            "ai_feedback": ai_feedback,
+            "file_names": list((files or {}).keys()),
+            "has_code": bool(code),
+        }
+        (folder / "metadata.json").write_text(
+            json.dumps(metadata, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except Exception as e:
+        logger.error(f"failed to dump submission {submission_id} to disk: {e}")
 
 
 def init_db():
@@ -198,7 +271,22 @@ def create_submission(
         db.add(sub)
         db.commit()
         db.refresh(sub)
-        return _submission_to_dict(sub)
+        result = _submission_to_dict(sub)
+
+    _dump_submission_to_disk(
+        submission_id=result["id"],
+        student_id=student_id,
+        handle=handle,
+        assignment_id=assignment_id,
+        code=code,
+        files=files,
+        ai_score=ai_score,
+        ai_max=ai_max,
+        ai_feedback=ai_feedback,
+        deterministic_score=deterministic_score,
+        max_score=max_score,
+    )
+    return result
 
 
 def get_submission(submission_id: int) -> dict:
