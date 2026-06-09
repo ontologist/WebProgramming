@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2026 Yuri Tijerino. All rights reserved.
+  著作権 (c) 2026 ティヘリノ ユリ. 全著作権所有.
+  Unauthorized copying, modification, or distribution of this file is prohibited.
+  本ファイルの無断複製、改変、配布を禁じます。
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 8: Refactor the Ball into a Class | WP-200</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <style>
+        /* Assignment-specific styles */
+        .assignment-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+
+        .assignment-content h2 {
+            font-size: 1.8rem;
+            margin-top: 50px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+
+        .assignment-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .assignment-content h3 {
+            font-size: 1.3rem;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            color: #7c3aed;
+        }
+
+        .assignment-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .assignment-content ul, .assignment-content ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .assignment-content li {
+            margin-bottom: 8px;
+            line-height: 1.7;
+        }
+
+        .assignment-content code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            color: #e11d48;
+        }
+
+        .assignment-content pre {
+            background: #1f2937;
+            color: #d1d5db;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0 25px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .assignment-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-family: 'Courier New', Consolas, monospace;
+        }
+
+        .bilingual {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            margin: 40px 0;
+        }
+
+        /* Info box (blue) */
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Warning box (yellow) */
+        .warning-box {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Success box (green) */
+        .success-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .success-box p {
+            margin-bottom: 5px;
+        }
+
+        /* Tip box (green) */
+        .tip-box {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .tip-box p {
+            margin-bottom: 5px;
+        }
+
+        .tip-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Checklist styling */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 10px 15px;
+            padding-left: 40px;
+            position: relative;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist li::before {
+            content: "\2610";
+            position: absolute;
+            left: 12px;
+            font-size: 1.3em;
+            color: #7c3aed;
+        }
+
+        /* Step cards */
+        .step-card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 15px 0;
+            border-left: 5px solid #2563eb;
+        }
+
+        .step-card h4 {
+            font-size: 1.1rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .step-card p {
+            margin-bottom: 5px;
+        }
+
+        /* Grading table */
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .grading-table thead th {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .grading-table tbody td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .grading-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
+        .grading-table tbody tr:last-child {
+            background-color: #eff6ff;
+            font-weight: 700;
+        }
+
+        .grading-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Mistakes list */
+        .mistakes-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .mistakes-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #991b1b;
+        }
+
+        .mistakes-list li::before {
+            content: "\2718";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #dc2626;
+        }
+
+        /* Tips list */
+        .tips-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-list li {
+            padding: 10px 15px;
+            padding-left: 35px;
+            position: relative;
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #065f46;
+        }
+
+        .tips-list li::before {
+            content: "\2714";
+            position: absolute;
+            left: 12px;
+            font-size: 1.1em;
+            color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .assignment-content {
+                padding: 20px;
+            }
+
+            .assignment-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .assignment-content pre {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>Assignment 8: Refactor the Ball into a Class</h1>
+            <p class="subtitle">課題8：ボールをクラスにリファクタリング</p>
+            <p class="instructor">WP-200 Web Programming | Instructor: Tijerino Y.A.</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <a href="../../index.html">Home / ホーム</a>
+            <a href="slides.html">Slides / スライド</a>
+            <a href="lecture.html">Lecture / 講義</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="assignment-content">
+
+            <!-- ============================================================ -->
+            <!-- 1. ASSIGNMENT OVERVIEW -->
+            <!-- ============================================================ -->
+            <h2>1. Assignment Overview / 課題概要</h2>
+
+            <p>In this assignment, you will take the <strong>procedural ball code</strong> from your Breakout game and refactor it into a clean, reusable <code>Ball</code> <strong>class</strong> &mdash; without changing how the game looks or plays. This is your first real piece of <strong>object-oriented JavaScript</strong>.<br>
+            <span class="bilingual">この課題では、ブレイクアウトゲームの<strong>手続き型のボールコード</strong>を、きれいで再利用可能な<code>Ball</code><strong>クラス</strong>にリファクタリングします &mdash; ゲームの見た目や動作は変えずに。これがあなたの最初の本格的な<strong>オブジェクト指向JavaScript</strong>です。</span></p>
+
+            <p>The game should look <strong>identical</strong> to the procedural version: the same yellow ball bouncing in the same canvas. But the code underneath will be much cleaner, and you will be ready to build more classes in Sessions 11&ndash;13.<br>
+            <span class="bilingual">ゲームは手続き型版と<strong>同じ</strong>見た目になります：同じ黄色いボールが同じキャンバスで跳ね返る。しかし、内部のコードはずっとクリーンになり、セッション11&ndash;13でさらに多くのクラスを作る準備が整います。</span></p>
+
+            <div class="info-box">
+                <p><strong>Goal:</strong> Demonstrate that you understand <code>class</code> syntax, the <code>constructor()</code>, the <code>this</code> keyword, methods, and creating objects with <code>new</code>.</p>
+                <p class="bilingual"><strong>目標：</strong><code>class</code>構文、<code>constructor()</code>、<code>this</code>キーワード、メソッド、<code>new</code>でのオブジェクト作成を理解していることを示す。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 2. WHAT YOU NEED TO DO -->
+            <!-- ============================================================ -->
+            <h2>2. What You Need To Do / やるべきこと</h2>
+
+            <p>Open your existing <code>game.htm</code> from Session 6 (or use the procedural version in Section 5 below as your starting point) and follow these steps:<br>
+            <span class="bilingual">セッション6の既存の<code>game.htm</code>を開く（または、下のセクション5にある手続き型版をスタート地点として使う）か、以下のステップに従ってください：</span></p>
+
+            <div class="step-card">
+                <h4>Step 1: Define the <code>Ball</code> class / <code>Ball</code>クラスを定義する</h4>
+                <p>Above your game code, write <code>class Ball { ... }</code>. By convention, the class name begins with a <strong>capital letter</strong>.<br>
+                <span class="bilingual">ゲームコードの上に、<code>class Ball { ... }</code>と書きます。慣習として、クラス名は<strong>大文字</strong>で始めます。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 2: Write the <code>constructor()</code> / <code>constructor()</code>を書く</h4>
+                <p>Inside the class, write a <code>constructor(startX, startY, radius)</code>. Assign every piece of ball state onto <code>this</code>: <code>this.x</code>, <code>this.y</code>, <code>this.startX</code>, <code>this.startY</code> (so you can reset later), <code>this.radius</code>, <code>this.dx</code>, <code>this.dy</code>, and <code>this.color</code>.<br>
+                <span class="bilingual">クラス内に<code>constructor(startX, startY, radius)</code>を書きます。すべてのボール状態を<code>this</code>に代入してください：<code>this.x</code>、<code>this.y</code>、<code>this.startX</code>、<code>this.startY</code>（後でリセットするため）、<code>this.radius</code>、<code>this.dx</code>、<code>this.dy</code>、<code>this.color</code>。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 3: Write the <code>draw(ctx)</code> method / <code>draw(ctx)</code>メソッドを書く</h4>
+                <p>Copy the body of your old <code>drawBall()</code> function inside the class, but read every value from <code>this</code> (e.g., <code>this.x</code> instead of <code>x</code>). The only parameter should be <code>ctx</code>, the canvas drawing context.<br>
+                <span class="bilingual">古い<code>drawBall()</code>関数の中身をクラス内にコピーし、すべての値を<code>this</code>から読み取ります（例：<code>x</code>ではなく<code>this.x</code>）。唯一のパラメーターは<code>ctx</code>、つまりキャンバス描画コンテキストにします。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 4: Write the <code>move(canvasWidth, canvasHeight)</code> method / <code>move(canvasWidth, canvasHeight)</code>メソッドを書く</h4>
+                <p>Move the ball <em>and</em> bounce it off all four walls inside this method. Use <code>this.x</code>, <code>this.y</code>, <code>this.dx</code>, <code>this.dy</code>, and <code>this.radius</code>. The two parameters tell the method how big the canvas is.<br>
+                <span class="bilingual">このメソッド内でボールを動かし、4つの壁で跳ね返らせます。<code>this.x</code>、<code>this.y</code>、<code>this.dx</code>、<code>this.dy</code>、<code>this.radius</code>を使います。2つのパラメーターはキャンバスのサイズをメソッドに伝えます。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 5: Write the <code>reset()</code> method / <code>reset()</code>メソッドを書く</h4>
+                <p>Send <code>this.x</code> and <code>this.y</code> back to <code>this.startX</code> and <code>this.startY</code>, and restore <code>this.dx</code> and <code>this.dy</code> to their original values.<br>
+                <span class="bilingual"><code>this.x</code>と<code>this.y</code>を<code>this.startX</code>と<code>this.startY</code>に戻し、<code>this.dx</code>と<code>this.dy</code>を元の値に戻します。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 6: Create the ball with <code>new</code> / <code>new</code>でボールを作成する</h4>
+                <p>Replace your old global variables (<code>var x</code>, <code>var y</code>, <code>var dx</code>, ...) with a single line: <code>let ball = new Ball(240, 160, 10);</code>.<br>
+                <span class="bilingual">古いグローバル変数（<code>var x</code>、<code>var y</code>、<code>var dx</code>、...）を1行に置き換えます：<code>let ball = new Ball(240, 160, 10);</code>。</span></p>
+            </div>
+
+            <div class="step-card">
+                <h4>Step 7: Use the methods in the game loop / ゲームループでメソッドを使う</h4>
+                <p>Inside <code>draw()</code>, replace the old drawing and movement calls with <code>ball.draw(ctx);</code> and <code>ball.move(canvas.width, canvas.height);</code>. Delete the old <code>drawBall()</code> function and the loose <code>x += dx; y += dy;</code> lines.<br>
+                <span class="bilingual"><code>draw()</code>内で、古い描画と移動の呼び出しを<code>ball.draw(ctx);</code>と<code>ball.move(canvas.width, canvas.height);</code>に置き換えます。古い<code>drawBall()</code>関数とバラバラの<code>x += dx; y += dy;</code>行を削除します。</span></p>
+            </div>
+
+            <div class="step-card" style="border-left-color: #10b981;">
+                <h4 style="color: #10b981;">Challenge (optional) / チャレンジ（任意）</h4>
+                <p>From the <strong>same class</strong>, create <strong>two or three balls</strong>, each with a different starting position, size, and color (e.g., <code>let ball2 = new Ball(100, 50, 15);</code>). Call <code>draw()</code> and <code>move()</code> on each one in the loop. Notice you did <em>not</em> rewrite any ball logic!<br>
+                <span class="bilingual"><strong>同じクラス</strong>から、それぞれ異なる開始位置・サイズ・色の<strong>2〜3個のボール</strong>を作成します（例：<code>let ball2 = new Ball(100, 50, 15);</code>）。ループでそれぞれに<code>draw()</code>と<code>move()</code>を呼び出します。ボールのロジックを<em>一切</em>書き直していないことに気づくはずです！</span></p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 3. REQUIREMENTS CHECKLIST -->
+            <!-- ============================================================ -->
+            <h2>3. Requirements Checklist / 要件チェックリスト</h2>
+
+            <p>Before submitting, make sure you can check off every item:<br>
+            <span class="bilingual">提出前に、すべての項目をチェックできることを確認してください：</span></p>
+
+            <ul class="checklist">
+                <li>A <code>class Ball { ... }</code> block exists, with a capital "B"<br>
+                    <span class="bilingual">大文字の「B」を持つ<code>class Ball { ... }</code>ブロックが存在する</span></li>
+                <li>The <code>constructor()</code> sets <code>this.x</code>, <code>this.y</code>, <code>this.startX</code>, <code>this.startY</code>, <code>this.radius</code>, <code>this.dx</code>, <code>this.dy</code>, and <code>this.color</code><br>
+                    <span class="bilingual"><code>constructor()</code>が<code>this.x</code>、<code>this.y</code>、<code>this.startX</code>、<code>this.startY</code>、<code>this.radius</code>、<code>this.dx</code>、<code>this.dy</code>、<code>this.color</code>を設定する</span></li>
+                <li>A <code>draw(ctx)</code> method exists and draws the ball using <code>this.x</code>, <code>this.y</code>, <code>this.radius</code>, <code>this.color</code><br>
+                    <span class="bilingual"><code>draw(ctx)</code>メソッドが存在し、<code>this.x</code>、<code>this.y</code>、<code>this.radius</code>、<code>this.color</code>を使ってボールを描く</span></li>
+                <li>A <code>move(canvasWidth, canvasHeight)</code> method exists and bounces off <strong>all four walls</strong><br>
+                    <span class="bilingual"><code>move(canvasWidth, canvasHeight)</code>メソッドが存在し、<strong>4つの壁すべて</strong>で跳ね返る</span></li>
+                <li>A <code>reset()</code> method exists and returns the ball to its starting position and speed<br>
+                    <span class="bilingual"><code>reset()</code>メソッドが存在し、ボールを開始位置と速度に戻す</span></li>
+                <li>The ball is created with <code>let ball = new Ball(...)</code> &mdash; the <code>new</code> keyword is present<br>
+                    <span class="bilingual">ボールが<code>let ball = new Ball(...)</code>で作成される &mdash; <code>new</code>キーワードがある</span></li>
+                <li>The game loop calls <code>ball.draw(ctx)</code> and <code>ball.move(...)</code>; old global <code>x</code>, <code>y</code>, <code>dx</code>, <code>dy</code> variables are <strong>removed</strong><br>
+                    <span class="bilingual">ゲームループが<code>ball.draw(ctx)</code>と<code>ball.move(...)</code>を呼び出し、古いグローバル<code>x</code>、<code>y</code>、<code>dx</code>、<code>dy</code>変数は<strong>削除されている</strong></span></li>
+                <li>The game still looks and runs the same as before (bouncing yellow ball)<br>
+                    <span class="bilingual">ゲームは以前と同じ見た目と動作（跳ね返る黄色いボール）のまま</span></li>
+                <li>Every reference to a ball property uses <code>this.</code> inside the class &mdash; no naked <code>x</code> or <code>dx</code><br>
+                    <span class="bilingual">クラス内でボールのプロパティを参照するすべての箇所が<code>this.</code>を使う &mdash; 裸の<code>x</code>や<code>dx</code>はない</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 4. GRADING CRITERIA -->
+            <!-- ============================================================ -->
+            <h2>4. Grading Criteria / 評価基準</h2>
+
+            <p>Your assignment will be graded on the following criteria:<br>
+            <span class="bilingual">課題は以下の基準で評価されます：</span></p>
+
+            <table class="grading-table">
+                <thead>
+                    <tr>
+                        <th>Criteria / 評価項目</th>
+                        <th>Points / 配点</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Class syntax (proper <code>class Ball { ... }</code> block, capitalised name, no commas between methods)<br><span class="bilingual">クラス構文（適切な<code>class Ball { ... }</code>ブロック、大文字の名前、メソッド間にカンマなし）</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td>Constructor sets all required properties on <code>this</code>, including <code>startX</code> / <code>startY</code> for reset<br><span class="bilingual">コンストラクターがリセット用の<code>startX</code> / <code>startY</code>を含む、必要なすべてのプロパティを<code>this</code>に設定する</span></td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td><code>draw(ctx)</code> method draws correctly using only <code>this</code> (no globals)<br><span class="bilingual"><code>draw(ctx)</code>メソッドが<code>this</code>のみを使って正しく描画する（グローバルなし）</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td><code>move(canvasWidth, canvasHeight)</code> method updates position and bounces off all four walls<br><span class="bilingual"><code>move(canvasWidth, canvasHeight)</code>メソッドが位置を更新し、4つの壁で跳ね返る</span></td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td><code>reset()</code> method correctly restores starting position and speed<br><span class="bilingual"><code>reset()</code>メソッドが開始位置と速度を正しく復元する</span></td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Game loop uses <code>new Ball(...)</code> and calls <code>ball.draw()</code> / <code>ball.move()</code>; old globals removed<br><span class="bilingual">ゲームループが<code>new Ball(...)</code>を使い<code>ball.draw()</code> / <code>ball.move()</code>を呼ぶ；古いグローバルが削除されている</span></td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td>Code quality (no console errors, runs at the same speed, sensible comments)<br><span class="bilingual">コード品質（コンソールエラーなし、同じ速度で動く、適切なコメント）</span></td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total / 合計</strong></td>
+                        <td><strong>100</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <p><strong>Note:</strong> Leaving the old global <code>x</code>, <code>y</code>, <code>dx</code>, <code>dy</code> variables in place &mdash; even if the game still runs &mdash; will lose points in both "Class syntax" and "Game loop uses <code>new Ball</code>" categories. The point of the assignment is the <em>refactor</em>: the data must live <strong>only</strong> on the object.</p>
+                <p class="bilingual"><strong>注意：</strong>古いグローバル<code>x</code>、<code>y</code>、<code>dx</code>、<code>dy</code>変数を残したままにすると &mdash; ゲームが動いても &mdash; 「クラス構文」と「ゲームループが<code>new Ball</code>を使う」の両方で減点されます。この課題のポイントは<em>リファクタリング</em>です：データはオブジェクトの<strong>上にのみ</strong>存在する必要があります。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 5. STARTING POINT (PROCEDURAL CODE) -->
+            <!-- ============================================================ -->
+            <h2>5. Starting Point (Procedural Code) / スタート地点（手続き型コード）</h2>
+
+            <p>This is the procedural ball code from Session 6 that you will refactor. Save it as <code>game.htm</code> if you do not already have it:<br>
+            <span class="bilingual">これがセッション6の手続き型ボールコードで、これをリファクタリングします。まだ持っていない場合は<code>game.htm</code>として保存してください：</span></p>
+
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+&lt;title&gt;My Game&lt;/title&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;style&gt;
+canvas { background: #eee; display: block; margin: 0 auto; }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;canvas id="myCanvas" width="480" height="320"&gt;&lt;/canvas&gt;
+
+&lt;script&gt;
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+
+// ===== Procedural ball state (these will all go away!) =====
+var x = 240;
+var y = 160;
+var dx = 2;
+var dy = -2;
+var radius = 10;
+
+function drawBall(x, y, radius) {
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fillStyle = "yellow";
+    ctx.strokeStyle = "blue";
+    ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall(x, y, radius);
+    // bounce off walls
+    if (x + dx + radius &gt; canvas.width || x + dx - radius &lt; 0) {
+        dx = -dx;
+    }
+    if (y + dy - radius &lt; 0 || y + dy + radius &gt; canvas.height) {
+        dy = -dy;
+    }
+    x += dx;
+    y += dy;
+}
+
+setInterval(draw, 10);
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h3>Target Skeleton (after refactor) / リファクタリング後の骨格</h3>
+
+            <p>By the end, your code should match this shape. Fill in every <code>// TODO</code> with the correct line:<br>
+            <span class="bilingual">最終的に、コードはこの形に合致するはずです。すべての<code>// TODO</code>を正しい行で埋めてください：</span></p>
+
+            <pre><code>// ===== The Ball Blueprint / ボールの設計図 =====
+class Ball {
+    constructor(startX, startY, radius) {
+        // TODO: store current position, start position, radius, speed, color
+        // TODO: 現在位置、開始位置、半径、速度、色を保存する
+    }
+
+    draw(ctx) {
+        // TODO: same drawing as drawBall(), but read from this.*
+        // TODO: drawBall()と同じ描画。ただしthis.*から読み取る
+    }
+
+    move(canvasWidth, canvasHeight) {
+        // TODO: bounce off all 4 walls using this.dx / this.dy
+        // TODO: this.dx / this.dyを使って4つの壁で跳ね返る
+        // TODO: update this.x and this.y
+        // TODO: this.x と this.y を更新する
+    }
+
+    reset() {
+        // TODO: snap back to startX, startY and reset dx, dy
+        // TODO: startX、startYに戻し、dx、dyをリセットする
+    }
+}
+
+// ===== Create one ball and run the loop =====
+// ===== 1つのボールを作成し、ループを実行 =====
+let ball = new Ball(240, 160, 10);
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ball.draw(ctx);
+    ball.move(canvas.width, canvas.height);
+}
+
+setInterval(draw, 10);</code></pre>
+
+            <div class="tip-box">
+                <p><strong>Tip:</strong> The lecture page (Section 12) shows the <strong>complete worked solution</strong>. Try the refactor on your own first &mdash; you will learn far more from a few small mistakes than from copy-pasting the answer.</p>
+                <p class="bilingual"><strong>ヒント：</strong>講義ページ（セクション12）に<strong>完全な解答例</strong>があります。まず自分で挑戦してみましょう &mdash; 答えをコピペするより、小さな間違いをいくつか経験する方がずっと多くを学べます。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 6. SUBMISSION -->
+            <!-- ============================================================ -->
+            <h2>6. Submission / 提出方法</h2>
+
+            <p>Submit your completed <code>game.htm</code> through the course website:<br>
+            <span class="bilingual">完成した<code>game.htm</code>をコースウェブサイトから提出してください：</span></p>
+
+            <ol>
+                <li>Go to the course website's <strong>Submissions</strong> section<br>
+                    <span class="bilingual">コースウェブサイトの「提出」セクションに移動する</span></li>
+                <li>Select <strong>Assignment 8</strong> and upload your <code>game.htm</code> file<br>
+                    <span class="bilingual"><strong>Assignment 8</strong>を選択し、<code>game.htm</code>ファイルをアップロードする</span></li>
+                <li>Or paste your complete code in the text field provided<br>
+                    <span class="bilingual">またはテキストフィールドに完全なコードを貼り付ける</span></li>
+            </ol>
+
+            <div class="info-box">
+                <p><strong>Before submitting:</strong> Open <code>game.htm</code> in your browser and watch the ball bounce for at least 10 seconds. Open the browser console (F12 &gt; Console) and check that there are <strong>no red errors</strong>. Then search your file for the word <code>var</code> &mdash; if any old global ball variables remain, delete them.</p>
+                <p class="bilingual"><strong>提出前に：</strong>ブラウザで<code>game.htm</code>を開き、少なくとも10秒間ボールが跳ね返る様子を見てください。ブラウザコンソール（F12 &gt; コンソール）を開き、<strong>赤いエラーがないこと</strong>を確認してください。次にファイル内で<code>var</code>という単語を検索してください &mdash; 古いグローバルボール変数が残っていれば削除します。</p>
+            </div>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 7. TIPS FOR SUCCESS -->
+            <!-- ============================================================ -->
+            <h2>7. Tips for Success / 成功のためのヒント</h2>
+
+            <ul class="tips-list">
+                <li>Refactor in <strong>small steps</strong>. After each step (constructor, then <code>draw</code>, then <code>move</code>, ...), reload the browser and confirm nothing broke before moving on.<br>
+                    <span class="bilingual"><strong>小さなステップ</strong>でリファクタリングしましょう。各ステップ（コンストラクター、次に<code>draw</code>、次に<code>move</code>...）の後、ブラウザを再読み込みして何も壊れていないことを確認してから次に進みます。</span></li>
+                <li>Inside any method, if you write <code>x</code> or <code>dx</code> by itself, that is almost always wrong &mdash; it should be <code>this.x</code> or <code>this.dx</code>.<br>
+                    <span class="bilingual">メソッド内で<code>x</code>や<code>dx</code>を単独で書いたら、ほぼ間違いなく誤りです &mdash; <code>this.x</code>や<code>this.dx</code>であるべきです。</span></li>
+                <li>Use <code>console.log(ball)</code> in the browser console (F12) to inspect your ball object and see all of its current properties at once.<br>
+                    <span class="bilingual">ブラウザコンソール（F12）で<code>console.log(ball)</code>を使ってボールオブジェクトを調べ、現在のすべてのプロパティを一度に確認しましょう。</span></li>
+                <li>If the ball stops moving, you probably forgot the <code>this.x += this.dx;</code> lines at the bottom of <code>move()</code>.<br>
+                    <span class="bilingual">ボールが動かなくなったら、おそらく<code>move()</code>の最後の<code>this.x += this.dx;</code>行を忘れています。</span></li>
+                <li>If the ball escapes the canvas, double-check that the wall-bounce conditions still use <code>this.radius</code> on both sides (top/bottom and left/right).<br>
+                    <span class="bilingual">ボールがキャンバスから出てしまったら、壁の跳ね返り条件で<code>this.radius</code>を両方の側（上/下と左/右）で使っているか再確認しましょう。</span></li>
+                <li>Once the single ball works, try the Challenge: <code>let ball2 = new Ball(100, 50, 15);</code> and call <code>ball2.draw(ctx); ball2.move(...)</code> in the loop. Watch the payoff of OOP appear with zero extra logic.<br>
+                    <span class="bilingual">1つのボールが動いたらチャレンジを試してみましょう：<code>let ball2 = new Ball(100, 50, 15);</code>とループ内で<code>ball2.draw(ctx); ball2.move(...)</code>を呼びます。追加ロジックゼロでOOPの見返りが現れます。</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 8. COMMON MISTAKES TO AVOID -->
+            <!-- ============================================================ -->
+            <h2>8. Common Mistakes to Avoid / よくある間違い</h2>
+
+            <ul class="mistakes-list">
+                <li>Forgetting <code>this.</code> inside methods &mdash; <code>x = x + dx</code> does NOT update the object's property.<br>
+                    <span class="bilingual">メソッド内で<code>this.</code>を忘れる &mdash; <code>x = x + dx</code>ではオブジェクトのプロパティは更新されません。</span></li>
+                <li>Forgetting <code>new</code> &mdash; <code>let ball = Ball(240, 160, 10);</code> will throw an error or produce <code>undefined</code>.<br>
+                    <span class="bilingual"><code>new</code>を忘れる &mdash; <code>let ball = Ball(240, 160, 10);</code>はエラーになるか<code>undefined</code>を返します。</span></li>
+                <li>Putting <strong>commas between methods</strong> in a class &mdash; class methods are separated by whitespace only, not commas.<br>
+                    <span class="bilingual">クラス内のメソッド間に<strong>カンマを置く</strong> &mdash; クラスメソッドは空白だけで区切ります、カンマではありません。</span></li>
+                <li>Naming the class with a lowercase letter (<code>class ball</code>) &mdash; works, but violates convention and will lose style points.<br>
+                    <span class="bilingual">クラスを小文字で命名する（<code>class ball</code>） &mdash; 動くが慣習に反し、スタイル点を失います。</span></li>
+                <li>Leaving the old <code>var x = 240; var y = 160;</code> globals in place. The game may still run, but the refactor is incomplete &mdash; the data must live on the ball object.<br>
+                    <span class="bilingual">古い<code>var x = 240; var y = 160;</code>グローバルを残したままにする。ゲームは動くかもしれませんが、リファクタリングは未完了です &mdash; データはボールオブジェクトの上にある必要があります。</span></li>
+                <li>Calling <code>ball.draw()</code> without the <code>ctx</code> argument &mdash; the method needs the drawing context.<br>
+                    <span class="bilingual"><code>ctx</code>引数なしで<code>ball.draw()</code>を呼び出す &mdash; メソッドは描画コンテキストを必要とします。</span></li>
+                <li>Calling <code>ball.move()</code> without the canvas dimensions &mdash; the ball cannot bounce if it does not know how big the canvas is.<br>
+                    <span class="bilingual">キャンバス寸法なしで<code>ball.move()</code>を呼び出す &mdash; キャンバスのサイズがわからないとボールは跳ね返れません。</span></li>
+            </ul>
+
+            <hr class="section-divider">
+
+            <!-- ============================================================ -->
+            <!-- 9. RESOURCES -->
+            <!-- ============================================================ -->
+            <h2>9. Resources / 参考資料</h2>
+
+            <p>Use these resources if you need additional help:<br>
+            <span class="bilingual">追加のヘルプが必要な場合は、これらのリソースを使ってください：</span></p>
+
+            <ul>
+                <li><a href="lecture.html" style="color: #2563eb;">Session 10 Lecture</a> &mdash; full explanation of classes, <code>this</code>, methods, and the complete worked <code>Ball</code> class<br>
+                    <span class="bilingual">セッション10講義 &mdash; クラス、<code>this</code>、メソッド、完全な<code>Ball</code>クラス解答の完全な説明</span></li>
+                <li><a href="../../assignments/MySite-template/game-class.htm" style="color: #2563eb;">In-class walkthrough: <code>game-class.htm</code></a> &mdash; reference implementation from the lecture<br>
+                    <span class="bilingual">授業内ウォークスルー：講義からのリファレンス実装</span></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank" style="color: #2563eb;">MDN: Classes</a> &mdash; the official JavaScript reference for <code>class</code> syntax<br>
+                    <span class="bilingual"><code>class</code>構文の公式JavaScriptリファレンス</span></li>
+                <li><a href="https://www.w3schools.com/js/js_classes.asp" target="_blank" style="color: #2563eb;">W3Schools: JavaScript Classes</a> &mdash; beginner-friendly intro to classes<br>
+                    <span class="bilingual">初心者向けクラス入門</span></li>
+                <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this" target="_blank" style="color: #2563eb;">MDN: <code>this</code></a> &mdash; deeper reference on the <code>this</code> keyword<br>
+                    <span class="bilingual"><code>this</code>キーワードの詳細リファレンス</span></li>
+            </ul>
+
+            <div class="success-box">
+                <p><strong>You can do this!</strong> Your procedural ball already works &mdash; the refactor is mostly about <em>moving lines around</em> and prefixing them with <code>this.</code>. When it clicks, you have unlocked one of the most important ideas in programming. In Sessions 11&ndash;13, we use the same recipe to turn the Paddle and the Bricks into classes too.</p>
+                <p class="bilingual"><strong>あなたならできます！</strong>手続き型のボールは既に動いています &mdash; リファクタリングは主に<em>行を移動させて</em><code>this.</code>を付けることです。ピンと来た瞬間、あなたはプログラミングで最も重要なアイデアの1つを手に入れたことになります。セッション11&ndash;13では、同じレシピでパドルとブロックもクラスにします。</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>WP-200: Web Programming &mdash; Spring 2026</p>
+        <p>Instructor: Tijerino Y.A. | School of Policy Studies</p>
+    </footer>
+
+</body>
+</html>
